@@ -1,0 +1,37 @@
+@model WebApp.ViewModels.PersonIndexViewModel
+
+@{
+    ViewData["Title"] = App.Resources.Views.Common.Persons;
+}
+
+<h1>@App.Resources.Views.Common.Persons</h1> 
+<h3>@App.Resources.Views.Persons.Index.MikkCount @Model.PersonCountByName</h3>
+
+<p>
+    <a asp-action="Create">@Base.Resources.Common.CreateNew</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Persons.First().PersonName)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Persons)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">@Base.Resources.Common.Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">@Base.Resources.Common.Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">@Base.Resources.Common.Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,77 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "App.BLL.DTO/1.0.0": {
+        "dependencies": {
+          "App.Resources": "1.0.0",
+          "Base.Contracts": "1.0.0",
+          "Base.Resources": "1.0.0"
+        },
+        "runtime": {
+          "App.BLL.DTO.dll": {}
+        }
+      },
+      "App.Resources/1.0.0": {
+        "runtime": {
+          "App.Resources.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "resources": {
+          "et/App.Resources.resources.dll": {
+            "locale": "et"
+          }
+        }
+      },
+      "Base.Contracts/1.0.0": {
+        "runtime": {
+          "Base.Contracts.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Base.Resources/1.0.0": {
+        "runtime": {
+          "Base.Resources.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "resources": {
+          "et/Base.Resources.resources.dll": {
+            "locale": "et"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "App.BLL.DTO/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "App.Resources/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Base.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Base.Resources/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

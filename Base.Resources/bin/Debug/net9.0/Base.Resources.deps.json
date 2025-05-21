@@ -1,0 +1,28 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Base.Resources/1.0.0": {
+        "runtime": {
+          "Base.Resources.dll": {}
+        },
+        "resources": {
+          "et/Base.Resources.resources.dll": {
+            "locale": "et"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Base.Resources/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

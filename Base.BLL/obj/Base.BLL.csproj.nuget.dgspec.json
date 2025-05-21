@@ -1,0 +1,336 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj": {}
+  },
+  "projects": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj",
+        "projectName": "Base.BLL.Contracts",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj",
+        "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              },
+              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj",
+        "projectName": "Base.BLL",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj",
+        "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj"
+              },
+              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj",
+        "projectName": "Base.Contracts",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj",
+        "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj",
+        "projectName": "Base.DAL.Contracts",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj",
+        "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj",
+        "projectName": "Base.Domain",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj",
+        "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.Extensions.Identity.Stores": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

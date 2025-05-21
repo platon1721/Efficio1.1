@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Domain\Contact.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Contact.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Views\Home\Index.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Views\Shared\_Layout.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_Layout.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\ContactType.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>ContactType.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Person.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Person.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Views\Common.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Common.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Views\Persons\Index.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Domain\Contact.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Contact.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Views\Home\Index.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Views\Shared\_Layout.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_Layout.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\ContactType.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ContactType.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Person.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Person.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Views\Common.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Common.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Views\Persons\Index.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Views\Contacts\" />
+      <Folder Include="Views\ContactTypes\" />
+    </ItemGroup>
+
+</Project>

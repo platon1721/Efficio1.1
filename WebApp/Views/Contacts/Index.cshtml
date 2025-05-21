@@ -1,0 +1,48 @@
+@model IEnumerable<App.BLL.DTO.Contact>
+
+@{
+    ViewData["Title"] = App.Resources.Views.Common.Contacts;
+}
+
+<h1>@App.Resources.Views.Common.Contacts</h1>
+
+<p>
+    <a asp-action="Create">@Base.Resources.Common.CreateNew</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Person)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                @item.ContactType!.ContactTypeName
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person!.PersonName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">@Base.Resources.Common.Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">@Base.Resources.Common.Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">@Base.Resources.Common.Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,17 @@
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/bin/Debug/net9.0/Base.Resources.deps.json
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/bin/Debug/net9.0/Base.Resources.dll
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/bin/Debug/net9.0/Base.Resources.pdb
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/bin/Debug/net9.0/et/Base.Resources.resources.dll
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.Common.resources
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.Common.et.resources
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.csproj.GenerateResource.cache
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.GeneratedMSBuildEditorConfig.editorconfig
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.AssemblyInfoInputs.cache
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.AssemblyInfo.cs
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.csproj.CoreCompileInputs.cache
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/et/Base.Resources.resources.cs
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/et/Base.Resources.resources.dll
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.dll
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/refint/Base.Resources.dll
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/Base.Resources.pdb
+/Users/platonmatsinski/RiderProjects/demo01/Base.Resources/obj/Debug/net9.0/ref/Base.Resources.dll

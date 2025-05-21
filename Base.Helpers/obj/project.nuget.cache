@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "LX4vH9hNy9Q=",
+  "success": true,
+  "projectFilePath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Helpers/Base.Helpers.csproj",
+  "expectedPackageFiles": [
+    "/Users/platonmatsinski/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.2/microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "/Users/platonmatsinski/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.2/microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "/Users/platonmatsinski/.nuget/packages/microsoft.identitymodel.abstractions/8.9.0/microsoft.identitymodel.abstractions.8.9.0.nupkg.sha512",
+    "/Users/platonmatsinski/.nuget/packages/microsoft.identitymodel.jsonwebtokens/8.9.0/microsoft.identitymodel.jsonwebtokens.8.9.0.nupkg.sha512",
+    "/Users/platonmatsinski/.nuget/packages/microsoft.identitymodel.logging/8.9.0/microsoft.identitymodel.logging.8.9.0.nupkg.sha512",
+    "/Users/platonmatsinski/.nuget/packages/microsoft.identitymodel.tokens/8.9.0/microsoft.identitymodel.tokens.8.9.0.nupkg.sha512",
+    "/Users/platonmatsinski/.nuget/packages/system.identitymodel.tokens.jwt/8.9.0/system.identitymodel.tokens.jwt.8.9.0.nupkg.sha512"
+  ],
+  "logs": []
+}
