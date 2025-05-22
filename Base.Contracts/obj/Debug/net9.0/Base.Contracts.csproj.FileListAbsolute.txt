@@ -9,3 +9,15 @@
 /Users/platonmatsinski/RiderProjects/demo01/Base.Contracts/obj/Debug/net9.0/refint/Base.Contracts.dll
 /Users/platonmatsinski/RiderProjects/demo01/Base.Contracts/obj/Debug/net9.0/Base.Contracts.pdb
 /Users/platonmatsinski/RiderProjects/demo01/Base.Contracts/obj/Debug/net9.0/ref/Base.Contracts.dll
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/bin/Debug/net9.0/Base.Contracts.deps.json
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/bin/Debug/net9.0/Base.Contracts.dll
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/bin/Debug/net9.0/Base.Contracts.pdb
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/Base.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/Base.Contracts.AssemblyInfoInputs.cache
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/Base.Contracts.AssemblyInfo.cs
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/Base.Contracts.csproj.CoreCompileInputs.cache
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/Base.Contracts.sourcelink.json
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/Base.Contracts.dll
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/refint/Base.Contracts.dll
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/Base.Contracts.pdb
+/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/Debug/net9.0/ref/Base.Contracts.dll

@@ -11,4 +11,6 @@ public class Person: IDomainId
     public string PersonName { get; set; } = default!;
 
     public ICollection<Contact>? Contacts { get; set; }
+    public ICollection<Department>? Departments { get; set; }
+    public ICollection<DepartmentPerson>? DepartmentPersons { get; set; }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/WebApp/WebApp.csproj": {}
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/WebApp.csproj": {}
   },
   "projects": {
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj",
         "projectName": "App.BLL.Contracts",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.Contracts/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -27,14 +27,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj"
               }
             }
           }
@@ -74,14 +74,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj",
         "projectName": "App.BLL.DTO",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -97,14 +97,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj"
               }
             }
           }
@@ -144,14 +144,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL/App.BLL.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL/App.BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL/App.BLL.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL/App.BLL.csproj",
         "projectName": "App.BLL",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL/App.BLL.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL/App.BLL.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -167,14 +167,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL/Base.BLL.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL/Base.BLL.csproj"
               }
             }
           }
@@ -214,14 +214,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj",
         "projectName": "App.DAL.Contracts",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.Contracts/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -237,14 +237,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.DTO/App.DAL.DTO.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.DTO/App.DAL.DTO.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.DTO/App.DAL.DTO.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.DTO/App.DAL.DTO.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Domain/App.Domain.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Domain/App.Domain.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Domain/App.Domain.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Domain/App.Domain.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
               }
             }
           }
@@ -284,14 +284,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.DTO/App.DAL.DTO.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.DTO/App.DAL.DTO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.DTO/App.DAL.DTO.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.DTO/App.DAL.DTO.csproj",
         "projectName": "App.DAL.DTO",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.DTO/App.DAL.DTO.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.DTO/App.DAL.DTO.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.DTO/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.DTO/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -307,14 +307,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj"
               }
             }
           }
@@ -354,14 +354,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj",
         "projectName": "App.DAL.EF",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -377,17 +377,17 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.Contracts/App.DAL.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.DTO/App.DAL.DTO.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.DTO/App.DAL.DTO.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.DTO/App.DAL.DTO.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.DTO/App.DAL.DTO.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Domain/App.Domain.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Domain/App.Domain.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Domain/App.Domain.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Domain/App.Domain.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.EF/Base.DAL.EF.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.EF/Base.DAL.EF.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.EF/Base.DAL.EF.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.EF/Base.DAL.EF.csproj"
               }
             }
           }
@@ -437,14 +437,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Domain/App.Domain.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Domain/App.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Domain/App.Domain.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Domain/App.Domain.csproj",
         "projectName": "App.Domain",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Domain/App.Domain.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Domain/App.Domain.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Domain/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -460,17 +460,17 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Domain/Base.Domain.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Domain/Base.Domain.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj"
               }
             }
           }
@@ -516,14 +516,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DTO/App.DTO.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DTO/App.DTO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DTO/App.DTO.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DTO/App.DTO.csproj",
         "projectName": "App.DTO",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DTO/App.DTO.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DTO/App.DTO.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DTO/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DTO/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -539,14 +539,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj"
               }
             }
           }
@@ -586,14 +586,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj",
         "projectName": "App.Resources",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -646,14 +646,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj",
         "projectName": "Base.BLL.Contracts",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -669,11 +669,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
               }
             }
           }
@@ -713,14 +713,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL/Base.BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL/Base.BLL.csproj",
         "projectName": "Base.BLL",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL/Base.BLL.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -736,11 +736,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL.Contracts/Base.BLL.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
               }
             }
           }
@@ -780,14 +780,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj",
         "projectName": "Base.Contracts",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -840,14 +840,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj",
         "projectName": "Base.DAL.Contracts",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -863,8 +863,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Domain/Base.Domain.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Domain/Base.Domain.csproj"
               }
             }
           }
@@ -904,14 +904,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.EF/Base.DAL.EF.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.EF/Base.DAL.EF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.EF/Base.DAL.EF.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.EF/Base.DAL.EF.csproj",
         "projectName": "Base.DAL.EF",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.EF/Base.DAL.EF.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.EF/Base.DAL.EF.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.EF/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.EF/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -927,11 +927,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.DAL.Contracts/Base.DAL.Contracts.csproj"
               }
             }
           }
@@ -977,14 +977,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Domain/Base.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Domain/Base.Domain.csproj",
         "projectName": "Base.Domain",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/Base.Domain.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Domain/Base.Domain.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Domain/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -1000,8 +1000,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
               }
             }
           }
@@ -1047,14 +1047,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Helpers/Base.Helpers.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Helpers/Base.Helpers.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Helpers/Base.Helpers.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Helpers/Base.Helpers.csproj",
         "projectName": "Base.Helpers",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Helpers/Base.Helpers.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Helpers/Base.Helpers.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Helpers/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Helpers/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -1070,8 +1070,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
               }
             }
           }
@@ -1121,14 +1121,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj",
         "projectName": "Base.Resources",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -1181,14 +1181,14 @@
         }
       }
     },
-    "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/WebApp/WebApp.csproj": {
+    "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/WebApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/WebApp/WebApp.csproj",
+        "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/WebApp.csproj",
         "projectName": "WebApp",
-        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/WebApp/WebApp.csproj",
+        "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/WebApp.csproj",
         "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/WebApp/obj/",
+        "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -1204,26 +1204,26 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.Contracts/App.BLL.Contracts.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL/App.BLL.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL/App.BLL.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL/App.BLL.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL/App.BLL.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DTO/App.DTO.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DTO/App.DTO.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DTO/App.DTO.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DTO/App.DTO.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Helpers/Base.Helpers.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Helpers/Base.Helpers.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Helpers/Base.Helpers.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Helpers/Base.Helpers.csproj"
               },
-              "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj": {
-                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj"
+              "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj": {
+                "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj"
               }
             }
           }

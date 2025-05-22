@@ -17098,11 +17098,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Tests/App.Tests.csproj",
+      "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Tests/App.Tests.csproj",
       "projectName": "App.Tests",
-      "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Tests/App.Tests.csproj",
+      "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Tests/App.Tests.csproj",
       "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-      "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Tests/obj/",
+      "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Tests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -17118,11 +17118,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj": {
-              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.DAL.EF/App.DAL.EF.csproj"
+            "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj": {
+              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.DAL.EF/App.DAL.EF.csproj"
             },
-            "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/WebApp/WebApp.csproj": {
-              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/WebApp/WebApp.csproj"
+            "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/WebApp.csproj": {
+              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/WebApp.csproj"
             }
           }
         }

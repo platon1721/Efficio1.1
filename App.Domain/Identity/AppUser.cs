@@ -16,6 +16,8 @@ public class AppUser : BaseUser<AppUserRole>
 
     public ICollection<Person>? Persons { get; set; }
     public ICollection<ContactType>? ContactTypes { get; set; }
+    public ICollection<Department>? Departments { get; set; }
+    public ICollection<DepartmentPerson>? DepartmentPersons { get; set; }
 
     public ICollection<AppRefreshToken>? RefreshTokens { get; set; }
 }

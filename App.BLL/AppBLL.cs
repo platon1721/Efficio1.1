@@ -36,5 +36,15 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
             new PersonBLLMapper()
         );
         
-   
+    private IDepartmentService? _departmentService;
+    public IDepartmentService DepartmentService =>
+        _departmentService ??= new DepartmentService(
+            BLLUOW,
+            new DepartmentBLLMapper());
+        
+    private IDepartmentPersonService? _departmentPersonService;
+    public IDepartmentPersonService DepartmentPersonService =>
+        _departmentPersonService ??= new DepartmentPersonService(
+            BLLUOW,
+            new DepartmentPersonBLLMapper());
 }

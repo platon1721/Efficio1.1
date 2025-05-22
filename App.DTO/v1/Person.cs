@@ -8,6 +8,6 @@ public class Person: IDomainId
     public Guid Id { get; set; }
 
     [Required]
-    [MaxLength(128, ErrorMessageResourceType = typeof(Base.Resources.Common), ErrorMessageResourceName = "MaxLength")]
+    [StringLength(128, ErrorMessageResourceType = typeof(Base.Resources.Common), ErrorMessageResourceName = "MaxLength"), MinLength(1)]
     public string PersonName { get; set; } = default!;
 }

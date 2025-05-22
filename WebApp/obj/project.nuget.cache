@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/1VpTwy6Vyw=",
+  "dgSpecHash": "7xOzDtttLYA=",
   "success": true,
-  "projectFilePath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/WebApp/WebApp.csproj",
+  "projectFilePath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/WebApp.csproj",
   "expectedPackageFiles": [
     "/Users/platonmatsinski/.nuget/packages/asp.versioning.abstractions/8.1.0/asp.versioning.abstractions.8.1.0.nupkg.sha512",
     "/Users/platonmatsinski/.nuget/packages/asp.versioning.http/8.1.0/asp.versioning.http.8.1.0.nupkg.sha512",

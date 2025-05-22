@@ -1,6 +1,5 @@
 using App.DAL.Contracts;
 using App.DAL.EF.Mappers;
-using App.Domain;
 using Base.DAL.EF;
 
 using Microsoft.EntityFrameworkCore;
@@ -25,5 +24,27 @@ public class PersonRepository :BaseRepository<App.DAL.DTO.Person, App.Domain.Per
         var query = GetQuery(userId);
         return await query
             .CountAsync(p => p.PersonName.ToUpper().Contains(name.Trim().ToUpper()));
+    }
+    
+    public async Task<App.DAL.DTO.Person?> GetWithDepartmentsAsync(Guid id, Guid userId)
+    {
+        var query = GetQuery(userId);
+        var domainEntity = await query
+            .Include(p => p.DepartmentPersons!)
+            .ThenInclude(dp => dp.Department)
+            .FirstOrDefaultAsync(p => p.Id.Equals(id));
+            
+        return Mapper.Map(domainEntity);
+    }
+    
+    public async Task<IEnumerable<App.DAL.DTO.Person>> GetAllByDepartmentAsync(Guid departmentId, Guid userId)
+    {
+        var query = GetQuery(userId);
+        var domainEntities = await query
+            .Include(p => p.DepartmentPersons!)
+            .Where(p => p.DepartmentPersons!.Any(dp => dp.DepartmentId.Equals(departmentId)))
+            .ToListAsync();
+            
+        return domainEntities.Select(e => Mapper.Map(e)!);
     }
 }

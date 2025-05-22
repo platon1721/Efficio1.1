@@ -14,6 +14,9 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
     public DbSet<Contact> Contacts { get; set; } = default!;
     public DbSet<ContactType> ContactTypes { get; set; } = default!;
     public DbSet<Person> Persons { get; set; } = default!;
+    public DbSet<Department> Departments { get; set; } = default!;
+    public DbSet<DepartmentPerson> DepartmentPersons { get; set; } = default!;
+    
 
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = default!;
 
@@ -58,6 +61,25 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
             .HasOne(a => a.Role)
             .WithMany(r => r.UserRoles)
             .HasForeignKey(a => a.RoleId);
+        // Configure Department entity
+        builder.Entity<Department>()
+            .HasOne(d => d.Manager)
+            .WithMany()
+            .HasForeignKey(d => d.ManagerId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // Configure DepartmentPerson entity
+        builder.Entity<DepartmentPerson>()
+            .HasOne(dp => dp.Department)
+            .WithMany(d => d.DepartmentPersons)
+            .HasForeignKey(dp => dp.DepartmentId)
+            .OnDelete(DeleteBehavior.Cascade);
+    
+        builder.Entity<DepartmentPerson>()
+            .HasOne(dp => dp.Person)
+            .WithMany(p => p.DepartmentPersons)
+            .HasForeignKey(dp => dp.PersonId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
 

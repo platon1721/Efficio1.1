@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Base.Resources")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute(" ")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ffb931fe538ea9e2601e1070fde6cb02a492967")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb19976dd9d4d96830ed1530117eb518ac8981de")]
 [assembly: System.Reflection.AssemblyProductAttribute("Base.Resources")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Base.Resources")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

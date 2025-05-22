@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj",
+      "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj",
       "projectName": "Base.Resources",
-      "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj",
+      "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj",
       "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-      "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/obj/",
+      "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"

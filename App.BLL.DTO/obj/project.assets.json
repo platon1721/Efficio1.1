@@ -64,11 +64,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj",
+      "projectUniqueName": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj",
       "projectName": "App.BLL.DTO",
-      "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/App.BLL.DTO.csproj",
+      "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/App.BLL.DTO.csproj",
       "packagesPath": "/Users/platonmatsinski/.nuget/packages/",
-      "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.BLL.DTO/obj/",
+      "outputPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.BLL.DTO/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/platonmatsinski/.nuget/NuGet/NuGet.Config"
@@ -84,14 +84,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj": {
-              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/App.Resources/App.Resources.csproj"
+            "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj": {
+              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/App.Resources/App.Resources.csproj"
             },
-            "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj": {
-              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Contracts/Base.Contracts.csproj"
+            "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj": {
+              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Contracts/Base.Contracts.csproj"
             },
-            "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj": {
-              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.Resources/Base.Resources.csproj"
+            "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj": {
+              "projectPath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.Resources/Base.Resources.csproj"
             }
           }
         }

@@ -1,6 +1,5 @@
 using App.DAL.DTO;
 using Base.Contracts;
-using Base.DAL.Contracts;
 
 namespace App.DAL.EF.Mappers;
 
@@ -18,23 +17,43 @@ public class PersonUOWMapper : IMapper<App.DAL.DTO.Person, App.Domain.Person>
             {
                 Id = c.Id,
                 Value = c.Value,
-                
                 ContactTypeId = c.ContactTypeId,
-                // TODO: Add ContactType mapping
                 ContactType = null,
-
                 PersonId = c.PersonId,
-                // TODO: Add Person mapping
                 Person = null
-                
-            }).ToList()
+            }).ToList(),
+            
+            // Map DepartmentPersons
+            DepartmentPersons = entity.DepartmentPersons?.Select(dp => new DepartmentPerson()
+            {
+                Id = dp.Id,
+                DepartmentId = dp.DepartmentId,
+                Department = dp.Department != null ? new Department()
+                {
+                    Id = dp.Department.Id,
+                    DepartmentName = dp.Department.DepartmentName
+                } : null,
+                PersonId = dp.PersonId,
+                Position = dp.Position
+            }).ToList(),
+            
+            // Map Departments from DepartmentPersons
+            Departments = entity.DepartmentPersons?.Select(dp => dp.Department)
+                                .Where(d => d != null)
+                                .Select(d => new Department()
+                                {
+                                    Id = d!.Id,
+                                    DepartmentName = d.DepartmentName
+                                }).ToList()
         };
+        
         return res;
     }
 
     public Domain.Person? Map(Person? entity)
     {
         if (entity == null) return null;
+        
         var res = new Domain.Person()
         {
             Id = entity.Id,
@@ -43,17 +62,29 @@ public class PersonUOWMapper : IMapper<App.DAL.DTO.Person, App.Domain.Person>
             {
                 Id = c.Id,
                 Value = c.Value,
-                
                 ContactTypeId = c.ContactTypeId,
-                // TODO: Add ContactType mapping
                 ContactType = null,
-
                 PersonId = c.PersonId,
-                // TODO: Add Person mapping
                 Person = null
-                
+            }).ToList(),
+            
+            // Map DepartmentPersons
+            DepartmentPersons = entity.DepartmentPersons?.Select(dp => new Domain.DepartmentPerson()
+            {
+                Id = dp.Id,
+                DepartmentId = dp.DepartmentId,
+                Department = dp.Department != null ? new Domain.Department()
+                {
+                    Id = dp.Department.Id,
+                    DepartmentName = dp.Department.DepartmentName
+                } : null,
+                PersonId = dp.PersonId,
+                Position = dp.Position
             }).ToList()
+            
+            // Note: We don't map Departments directly as it's a calculated property
         };
+        
         return res;
     }
 }

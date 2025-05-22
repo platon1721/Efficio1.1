@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FHLKGNTKdVE=",
+  "dgSpecHash": "BMuWg/TpCO4=",
   "success": true,
-  "projectFilePath": "/Users/platonmatsinski/RiderProjects/Efficio/Effisio1.1/Base.BLL/Base.BLL.csproj",
+  "projectFilePath": "/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/Base.BLL/Base.BLL.csproj",
   "expectedPackageFiles": [
     "/Users/platonmatsinski/.nuget/packages/microsoft.aspnetcore.cryptography.internal/9.0.4/microsoft.aspnetcore.cryptography.internal.9.0.4.nupkg.sha512",
     "/Users/platonmatsinski/.nuget/packages/microsoft.aspnetcore.cryptography.keyderivation/9.0.4/microsoft.aspnetcore.cryptography.keyderivation.9.0.4.nupkg.sha512",
