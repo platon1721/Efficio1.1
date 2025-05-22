@@ -30,7 +30,7 @@ public class TagService : BaseService<App.BLL.DTO.Tag, App.DAL.DTO.Tag, App.DAL.
 
     public async Task<IEnumerable<App.DAL.DTO.Tag>> GetTagsByTitleContainsAsync(string searchTerm)
     {
-        var dalTags = await ServiceRepository.GetTagsByTitleAsync(searchTerm);
+        var dalTags = await ServiceRepository.GetTagsByTitleContainsAsync(searchTerm);
         return dalTags;
     }
 }

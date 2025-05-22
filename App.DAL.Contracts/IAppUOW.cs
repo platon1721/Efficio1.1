@@ -10,4 +10,7 @@ public interface IAppUOW : IBaseUOW
     IDepartmentRepository DepartmentRepository { get; }
     IDepartmentPersonRepository DepartmentPersonRepository { get; }
     ITagRepository TagRepository { get; }
+    IPostRepository PostRepository { get; }
+    IPostTagRepository PostTagRepository { get; }
+    IPostDepartmentRepository PostDepartmentRepository { get; }
 }

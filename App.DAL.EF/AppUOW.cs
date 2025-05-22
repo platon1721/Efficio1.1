@@ -39,4 +39,16 @@ public class AppUOW : BaseUOW<AppDbContext>, IAppUOW
 
     public ITagRepository TagRepository =>
         _tagRepository ??= new TagRepository(UOWDbContext);
+    
+    private IPostRepository? _postRepository;
+    public IPostRepository PostRepository =>
+        _postRepository ??= new PostRepository(UOWDbContext);
+
+    private IPostTagRepository? _postTagRepository;
+    public IPostTagRepository PostTagRepository =>
+        _postTagRepository ??= new PostTagRepository(UOWDbContext);
+
+    private IPostDepartmentRepository? _postDepartmentRepository;
+    public IPostDepartmentRepository PostDepartmentRepository =>
+        _postDepartmentRepository ??= new PostDepartmentRepository(UOWDbContext);
 }

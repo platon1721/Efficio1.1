@@ -10,4 +10,8 @@ public interface IAppBLL : IBaseBLL
     IDepartmentService DepartmentService { get; }
     IDepartmentPersonService DepartmentPersonService { get; }
     ITagService TagService { get; }
+    IPostService PostService { get; }
+    IPostTagService PostTagService { get; }
+    IPostDepartmentService PostDepartmentService { get; }
+    
 }

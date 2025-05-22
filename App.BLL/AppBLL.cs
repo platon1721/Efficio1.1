@@ -53,4 +53,24 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
         _tagService ??= new TagService(
             BLLUOW,
             new TagBLLMapper());
+    
+    private IPostService? _postService;
+    public IPostService PostService =>
+        _postService ??= new PostService(
+            BLLUOW,
+            new PostBLLMapper(),
+            PostTagService,
+            PostDepartmentService);
+    
+    private IPostTagService? _postTagService;
+    public IPostTagService PostTagService =>
+        _postTagService ??= new PostTagService(
+            BLLUOW,
+            new PostTagBLLMapper());
+    
+    private IPostDepartmentService? _postDepartmentService;
+    public IPostDepartmentService PostDepartmentService =>
+        _postDepartmentService ??= new PostDepartmentService(
+            BLLUOW,
+            new PostDepartmentBLLMapper());
 }
