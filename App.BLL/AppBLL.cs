@@ -47,4 +47,10 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
         _departmentPersonService ??= new DepartmentPersonService(
             BLLUOW,
             new DepartmentPersonBLLMapper());
+    
+    private ITagService? _tagService;
+    public ITagService TagService =>
+        _tagService ??= new TagService(
+            BLLUOW,
+            new TagBLLMapper());
 }

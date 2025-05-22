@@ -9,4 +9,5 @@ public interface IAppUOW : IBaseUOW
     IContactTypeRepository ContactTypeRepository { get; }
     IDepartmentRepository DepartmentRepository { get; }
     IDepartmentPersonRepository DepartmentPersonRepository { get; }
+    ITagRepository TagRepository { get; }
 }

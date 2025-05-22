@@ -17,6 +17,11 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
     public DbSet<Department> Departments { get; set; } = default!;
     public DbSet<DepartmentPerson> DepartmentPersons { get; set; } = default!;
     
+    public DbSet<Tag> Tags { get; set; } = default!;
+    public DbSet<Post> Posts { get; set; } = default!;
+    public DbSet<PostTag> PostTags { get; set; } = default!;
+    public DbSet<PostDepartment> PostDepartments { get; set; } = default!;
+    
 
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = default!;
 
@@ -79,6 +84,43 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
             .HasOne(dp => dp.Person)
             .WithMany(p => p.DepartmentPersons)
             .HasForeignKey(dp => dp.PersonId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Entity<Tag>()
+            .HasIndex(t => t.Title)
+            .IsUnique(); // Ensure unique tag titles
+
+        builder.Entity<PostTag>()
+            .HasIndex(pt => new { pt.PostId, pt.TagId })
+            .IsUnique();
+        
+        builder.Entity<PostTag>()
+            .HasOne(pt => pt.Post)
+            .WithMany(p => p.PostTags)
+            .HasForeignKey(pt => pt.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<PostTag>()
+            .HasOne(pt => pt.Tag)
+            .WithMany()
+            .HasForeignKey(pt => pt.TagId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        
+        builder.Entity<PostDepartment>()
+            .HasIndex(pd => new { pd.PostId, pd.DepartmentId })
+            .IsUnique();
+        
+        builder.Entity<PostDepartment>()
+            .HasOne(pd => pd.Post)
+            .WithMany(p => p.PostDepartments)
+            .HasForeignKey(pd => pd.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<PostDepartment>()
+            .HasOne(pd => pd.Department)
+            .WithMany()
+            .HasForeignKey(pd => pd.DepartmentId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 

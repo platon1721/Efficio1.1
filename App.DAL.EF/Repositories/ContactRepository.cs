@@ -12,14 +12,8 @@ public class ContactRepository : BaseRepository<App.DAL.DTO.Contact, App.Domain.
     {
     }
 
-    public override async Task<IEnumerable<App.DAL.DTO.Contact>> AllAsync(Guid userId = default)
-    {
-        return (await RepositoryDbSet
-            .Include(c => c.Person)
-            .Include(c => c.ContactType)
-            .Where(c => c.Person!.UserId == userId)
-            .ToListAsync()).Select(e => Mapper.Map(e)!);
-    }
+    
+    
 
     public override async Task<App.DAL.DTO.Contact?> FindAsync(Guid id, Guid userId = default)
     {
