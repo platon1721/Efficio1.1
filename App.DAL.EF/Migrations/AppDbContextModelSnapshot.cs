@@ -105,6 +105,98 @@ namespace App.DAL.EF.Migrations
                     b.ToTable("ContactTypes");
                 });
 
+            modelBuilder.Entity("App.Domain.Department", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ChangedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("DepartmentName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid?>("ManagerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("App.Domain.DepartmentPerson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ChangedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Position")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("DepartmentPersons");
+                });
+
             modelBuilder.Entity("App.Domain.Identity.AppRefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -426,6 +518,45 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("App.Domain.Department", b =>
+                {
+                    b.HasOne("App.Domain.Identity.AppUser", null)
+                        .WithMany("Departments")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Domain.Person", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Manager");
+                });
+
+            modelBuilder.Entity("App.Domain.DepartmentPerson", b =>
+                {
+                    b.HasOne("App.Domain.Identity.AppUser", null)
+                        .WithMany("DepartmentPersons")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Domain.Department", "Department")
+                        .WithMany("DepartmentPersons")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("App.Domain.Person", "Person")
+                        .WithMany("DepartmentPersons")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Person");
+                });
+
             modelBuilder.Entity("App.Domain.Identity.AppRefreshToken", b =>
                 {
                     b.HasOne("App.Domain.Identity.AppUser", "User")
@@ -508,6 +639,11 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("Contacts");
                 });
 
+            modelBuilder.Entity("App.Domain.Department", b =>
+                {
+                    b.Navigation("DepartmentPersons");
+                });
+
             modelBuilder.Entity("App.Domain.Identity.AppRole", b =>
                 {
                     b.Navigation("UserRoles");
@@ -516,6 +652,10 @@ namespace App.DAL.EF.Migrations
             modelBuilder.Entity("App.Domain.Identity.AppUser", b =>
                 {
                     b.Navigation("ContactTypes");
+
+                    b.Navigation("DepartmentPersons");
+
+                    b.Navigation("Departments");
 
                     b.Navigation("Persons");
 
@@ -527,6 +667,8 @@ namespace App.DAL.EF.Migrations
             modelBuilder.Entity("App.Domain.Person", b =>
                 {
                     b.Navigation("Contacts");
+
+                    b.Navigation("DepartmentPersons");
                 });
 #pragma warning restore 612, 618
         }

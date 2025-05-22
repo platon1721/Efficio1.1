@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using App.BLL.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +14,18 @@ namespace WebApp.Controllers;
 [Authorize]
 public class DepartmentsController : Controller
 {
-    private readonly IAppBLL _bll;
+    private readonly AppDbContext _context;
 
-    public DepartmentsController(IAppBLL bll)
+    public DepartmentsController(AppDbContext context)
     {
-        _bll = bll;
+        _context = context;
     }
 
     // GET: Departments
     public async Task<IActionResult> Index()
     {
-        var res = await _bll.DepartmentService.AllAsync();
+        var appDbContext = _context.Departments.Include(d => d.Manager);
+        return View(await appDbContext.ToListAsync());
     }
 
     // GET: Departments/Details/5

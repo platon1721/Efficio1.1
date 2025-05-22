@@ -211,7 +211,6 @@ app.UseSwaggerUI(options =>
     }
 );
 
-
 app.UseAuthorization();
 
 app.MapStaticAssets();
