@@ -17,45 +17,41 @@ public class DepartmentService : BaseService<App.BLL.DTO.Department, App.DAL.DTO
     
     public async Task<IEnumerable<App.BLL.DTO.Department>> GetAllWithManagerAsync(bool noTracking = true)
     {
-        var departments = await ServiceRepository.GetAllWithManagerAsync(noTracking);
+        var domainDepartments = await ServiceRepository.GetAllWithManagerAsync(noTracking);
         
-        return departments
-            .Select(d => new App.DAL.DTO.Department
+        return domainDepartments.Select(d => new App.BLL.DTO.Department
+        {
+            Id = d.Id,
+            DepartmentName = d.DepartmentName,
+            ManagerId = d.ManagerId,
+            Manager = d.Manager != null ? new App.BLL.DTO.Person
             {
-                Id = d.Id,
-                DepartmentName = d.DepartmentName,
-                ManagerId = d.ManagerId,
-                Manager = d.Manager != null ? new App.DAL.DTO.Person
-                {
-                    Id = d.Manager.Id,
-                    PersonName = d.Manager.PersonName
-                } : null
-            })
-            .Select(d => Mapper.Map(d)!);
+                Id = d.Manager.Id,
+                PersonName = d.Manager.PersonName
+            } : null
+        });
     }
     
     public async Task<App.BLL.DTO.Department?> GetWithPersonsAsync(Guid id, bool noTracking = true)
     {
-        var department = await ServiceRepository.GetWithPersonsAsync(id, noTracking);
-        if (department == null) return null;
+        var domainDepartment = await ServiceRepository.GetWithPersonsAsync(id, noTracking);
+        if (domainDepartment == null) return null;
         
-        var dalDto = new App.DAL.DTO.Department
+        return new App.BLL.DTO.Department
         {
-            Id = department.Id,
-            DepartmentName = department.DepartmentName,
-            ManagerId = department.ManagerId,
-            Manager = department.Manager != null ? new App.DAL.DTO.Person
+            Id = domainDepartment.Id,
+            DepartmentName = domainDepartment.DepartmentName,
+            ManagerId = domainDepartment.ManagerId,
+            Manager = domainDepartment.Manager != null ? new App.BLL.DTO.Person
             {
-                Id = department.Manager.Id,
-                PersonName = department.Manager.PersonName
+                Id = domainDepartment.Manager.Id,
+                PersonName = domainDepartment.Manager.PersonName
             } : null,
-            Persons = department.DepartmentPersons?.Select(dp => new App.DAL.DTO.Person
+            Persons = domainDepartment.DepartmentPersons?.Select(dp => new App.BLL.DTO.Person
             {
                 Id = dp.Person!.Id,
                 PersonName = dp.Person.PersonName
             }).ToList()
         };
-        
-        return Mapper.Map(dalDto);
     }
 }

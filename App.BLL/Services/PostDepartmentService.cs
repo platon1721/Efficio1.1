@@ -15,14 +15,16 @@ public class PostDepartmentService : BaseService<App.BLL.DTO.PostDepartment, App
     {
     }
 
-    public async Task<IEnumerable<App.DAL.DTO.PostDepartment>> GetByPostIdAsync(Guid postId, bool noTracking = true)
+    public async Task<IEnumerable<App.BLL.DTO.PostDepartment>> GetByPostIdAsync(Guid postId, bool noTracking = true)
     {
-        return await ServiceRepository.GetByPostIdAsync(postId, noTracking);
+        var dalPostDepartments = await ServiceRepository.GetByPostIdAsync(postId, noTracking);
+        return dalPostDepartments.Select(pd => Mapper.Map(pd)!);
     }
 
-    public async Task<IEnumerable<App.DAL.DTO.PostDepartment>> GetByDepartmentIdAsync(Guid departmentId, bool noTracking = true)
+    public async Task<IEnumerable<App.BLL.DTO.PostDepartment>> GetByDepartmentIdAsync(Guid departmentId, bool noTracking = true)
     {
-        return await ServiceRepository.GetByDepartmentIdAsync(departmentId, noTracking);
+        var dalPostDepartments = await ServiceRepository.GetByDepartmentIdAsync(departmentId, noTracking);
+        return dalPostDepartments.Select(pd => Mapper.Map(pd)!);
     }
 
     public async Task<bool> PostDepartmentExistsAsync(Guid postId, Guid departmentId)

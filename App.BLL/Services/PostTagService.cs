@@ -15,14 +15,16 @@ public class PostTagService : BaseService<App.BLL.DTO.PostTag, App.DAL.DTO.PostT
     {
     }
 
-    public async Task<IEnumerable<App.DAL.DTO.PostTag>> GetByPostIdAsync(Guid postId, bool noTracking = true)
+    public async Task<IEnumerable<App.BLL.DTO.PostTag>> GetByPostIdAsync(Guid postId, bool noTracking = true)
     {
-        return await ServiceRepository.GetByPostIdAsync(postId, noTracking);
+        var dalPostTags = await ServiceRepository.GetByPostIdAsync(postId, noTracking);
+        return dalPostTags.Select(pt => Mapper.Map(pt)!);
     }
 
-    public async Task<IEnumerable<App.DAL.DTO.PostTag>> GetByTagIdAsync(Guid tagId, bool noTracking = true)
+    public async Task<IEnumerable<App.BLL.DTO.PostTag>> GetByTagIdAsync(Guid tagId, bool noTracking = true)
     {
-        return await ServiceRepository.GetByTagIdAsync(tagId, noTracking);
+        var dalPostTags = await ServiceRepository.GetByTagIdAsync(tagId, noTracking);
+        return dalPostTags.Select(pt => Mapper.Map(pt)!);
     }
 
     public async Task<bool> PostTagExistsAsync(Guid postId, Guid tagId)

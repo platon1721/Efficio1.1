@@ -22,24 +22,28 @@ public class PostService : BaseService<App.BLL.DTO.Post, App.DAL.DTO.Post, App.D
         _postDepartmentService = postDepartmentService;
     }
 
-    public async Task<IEnumerable<App.DAL.DTO.Post>> GetAllWithTagsAndDepartmentsAsync(bool noTracking = true)
+    public async Task<IEnumerable<App.BLL.DTO.Post>> GetAllWithTagsAndDepartmentsAsync(bool noTracking = true)
     {
-        return await ServiceRepository.GetAllWithTagsAndDepartmentsAsync(noTracking);
+        var dalPosts = await ServiceRepository.GetAllWithTagsAndDepartmentsAsync(noTracking);
+        return dalPosts.Select(p => Mapper.Map(p)!);
     }
 
-    public async Task<App.DAL.DTO.Post?> GetWithTagsAndDepartmentsAsync(Guid id, bool noTracking = true)
+    public async Task<App.BLL.DTO.Post?> GetWithTagsAndDepartmentsAsync(Guid id, bool noTracking = true)
     {
-        return await ServiceRepository.GetWithTagsAndDepartmentsAsync(id, noTracking);
+        var dalPost = await ServiceRepository.GetWithTagsAndDepartmentsAsync(id, noTracking);
+        return Mapper.Map(dalPost);
     }
 
-    public async Task<IEnumerable<App.DAL.DTO.Post>> GetByTagAsync(Guid tagId, bool noTracking = true)
+    public async Task<IEnumerable<App.BLL.DTO.Post>> GetByTagAsync(Guid tagId, bool noTracking = true)
     {
-        return await ServiceRepository.GetByTagAsync(tagId, noTracking);
+        var dalPosts = await ServiceRepository.GetByTagAsync(tagId, noTracking);
+        return dalPosts.Select(p => Mapper.Map(p)!);
     }
 
-    public async Task<IEnumerable<App.DAL.DTO.Post>> GetByDepartmentAsync(Guid departmentId, bool noTracking = true)
+    public async Task<IEnumerable<App.BLL.DTO.Post>> GetByDepartmentAsync(Guid departmentId, bool noTracking = true)
     {
-        return await ServiceRepository.GetByDepartmentAsync(departmentId, noTracking);
+        var dalPosts = await ServiceRepository.GetByDepartmentAsync(departmentId, noTracking);
+        return dalPosts.Select(p => Mapper.Map(p)!);
     }
 
     public async Task<App.BLL.DTO.Post?> CreatePostWithTagsAndDepartmentsAsync(
@@ -66,8 +70,7 @@ public class PostService : BaseService<App.BLL.DTO.Post, App.DAL.DTO.Post, App.D
         await ServiceUOW.SaveChangesAsync();
         
         // Return the post with all relationships
-        var dalPost = await GetWithTagsAndDepartmentsAsync(post.Id);
-        return dalPost != null ? Mapper.Map(dalPost) : null;
+        return await GetWithTagsAndDepartmentsAsync(post.Id);
     }
 
     public async Task<bool> UpdatePostTagsAsync(Guid postId, IEnumerable<Guid> tagIds)

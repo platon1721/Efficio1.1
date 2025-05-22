@@ -1,11 +1,16 @@
 using Base.BLL.Contracts;
-using App.DAL.Contracts;
 
 namespace App.BLL.Contracts;
 
-public interface IPostService : IBaseService<App.BLL.DTO.Post>, IPostRepositoryCustom
+public interface IPostService : IBaseService<App.BLL.DTO.Post>
 {
-    // Additional BLL-specific methods
+    // Custom repository methods - return BLL DTOs
+    Task<IEnumerable<App.BLL.DTO.Post>> GetAllWithTagsAndDepartmentsAsync(bool noTracking = true);
+    Task<App.BLL.DTO.Post?> GetWithTagsAndDepartmentsAsync(Guid id, bool noTracking = true);
+    Task<IEnumerable<App.BLL.DTO.Post>> GetByTagAsync(Guid tagId, bool noTracking = true);
+    Task<IEnumerable<App.BLL.DTO.Post>> GetByDepartmentAsync(Guid departmentId, bool noTracking = true);
+    
+    // BLL-specific methods
     Task<App.BLL.DTO.Post?> CreatePostWithTagsAndDepartmentsAsync(
         App.BLL.DTO.Post post, 
         IEnumerable<Guid> tagIds, 
