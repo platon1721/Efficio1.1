@@ -15,5 +15,5 @@ public class Person : BaseEntityUser<AppUser>
     
     public ICollection<DepartmentPerson>? DepartmentPersons { get; set; }
     [NotMapped]
-    public ICollection<Department>? Departments => DepartmentPersons?.Select(x => x.Department).ToList();
+    public ICollection<Department>? Departments => DepartmentPersons.Select(x => x.Department).ToList();
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using Base.Domain;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,8 +21,15 @@ public class Department : BaseEntity
     
     // Department Workers (collection of Persons)
     public ICollection<DepartmentPerson>? DepartmentPersons { get; set; }
+
     [NotMapped]
-    public ICollection<Person>? Persons => DepartmentPersons.Select(p => p.Person).ToList();
+    public IEnumerable<Person>? Persons => DepartmentPersons.Select(p => p.Person).OfType<Person>();
+    
+    
+    // Department Post
+    public ICollection<PostDepartment>? PostDepartments { get; set; }
+    [NotMapped]
+    public IEnumerable<Post>? Posts => PostDepartments.Select(p => p.Post).OfType<Post>();
     
     // [Required]
     // public Guid HeadId { get; set; }
