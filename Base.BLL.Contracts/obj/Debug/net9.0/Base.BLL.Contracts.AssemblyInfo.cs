@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Base.BLL.Contracts")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2dd296030248e17545192d3d81fb2da6b5fd37fb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+75cc1ec83042ad2329e1fbc625863fb524ad4587")]
 [assembly: System.Reflection.AssemblyProductAttribute("Base.BLL.Contracts")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Base.BLL.Contracts")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
