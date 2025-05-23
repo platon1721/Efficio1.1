@@ -119,7 +119,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
 
         builder.Entity<PostDepartment>()
             .HasOne(pd => pd.Department)
-            .WithMany()
+            .WithMany(d => d.PostDepartments)
             .HasForeignKey(pd => pd.DepartmentId)
             .OnDelete(DeleteBehavior.Cascade);
     }

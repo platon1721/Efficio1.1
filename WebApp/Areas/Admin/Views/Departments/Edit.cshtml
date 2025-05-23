@@ -1,3 +1,151 @@
+@* @model App.Domain.Department *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Edit"; *@
+@* } *@
+@* *@
+@* <h1>Edit</h1> *@
+@* *@
+@* <h4>Department</h4> *@
+@* <hr /> *@
+@* <div class="row"> *@
+@*     <div class="col-md-8"> *@
+@*         <form asp-action="Edit"> *@
+@*             <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+@*             <input type="hidden" asp-for="Id" /> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="DepartmentName" class="control-label"></label> *@
+@*                 <input asp-for="DepartmentName" class="form-control" /> *@
+@*                 <span asp-validation-for="DepartmentName" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="ManagerId" class="control-label">Manager</label> *@
+@*                 <select asp-for="ManagerId" class="form-control" asp-items="ViewBag.ManagerId"> *@
+@*                     <option value="">-- Select Manager (Optional) --</option> *@
+@*                 </select> *@
+@*                 <span asp-validation-for="ManagerId" class="text-danger"></span> *@
+@*             </div> *@
+@* *@
+@*             <!-- READ-ONLY metadata info --> *@
+@*             <div class="row mt-3"> *@
+@*                 <div class="col-md-6"> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Created By</label> *@
+@*                         <input value="@Model.CreatedBy" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Created At</label> *@
+@*                         <input value="@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                 </div> *@
+@*                 <div class="col-md-6"> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Changed By</label> *@
+@*                         <input value="@Model.ChangedBy" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Changed At</label> *@
+@*                         <input value="@Model.ChangedAt?.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                 </div> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <input type="submit" value="Save" class="btn btn-primary" /> *@
+@*             </div> *@
+@*         </form> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     <a asp-action="Index">Back to List</a> *@
+@* </div> *@
+@* *@
+@* @section Scripts { *@
+@*     @{ *@
+@*         await Html.RenderPartialAsync("_ValidationScriptsPartial"); *@
+@* *@
+@*     } *@
+@* } *@
+
+@* @model App.Domain.Department *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Edit"; *@
+@* } *@
+@* *@
+@* <h1>Edit</h1> *@
+@* *@
+@* <h4>Department</h4> *@
+@* <hr /> *@
+@* <div class="row"> *@
+@*     <div class="col-md-8"> *@
+@*         <form asp-action="Edit"> *@
+@*             <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+@*             <input type="hidden" asp-for="Id" /> *@
+@* *@
+@*             <div class="form-group mb-3"> *@
+@*                 <label asp-for="DepartmentName" class="control-label"></label> *@
+@*                 <input asp-for="DepartmentName" class="form-control" /> *@
+@*                 <span asp-validation-for="DepartmentName" class="text-danger"></span> *@
+@*             </div> *@
+@*              *@
+@*             <div class="form-group mb-3"> *@
+@*                 <label asp-for="ManagerId" class="control-label">Manager</label> *@
+@*                 <select asp-for="ManagerId" class="form-control" asp-items="ViewBag.ManagerId"> *@
+@*                     <option value="">-- Select Manager (Optional) --</option> *@
+@*                 </select> *@
+@*                 <span asp-validation-for="ManagerId" class="text-danger"></span> *@
+@*             </div> *@
+@*              *@
+@*             <div class="form-group mb-3"> *@
+@*                 <label class="control-label">Department Workers</label> *@
+@*                 <select name="selectedPersons" class="form-control" asp-items="ViewBag.Persons" multiple="multiple"> *@
+@*                 </select> *@
+@*                 <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple workers</small> *@
+@*             </div> *@
+@* *@
+@*             <!-- READ-ONLY metadata info --> *@
+@*             <div class="row mt-3"> *@
+@*                 <div class="col-md-6"> *@
+@*                     <div class="form-group mb-2"> *@
+@*                         <label class="control-label">Created By</label> *@
+@*                         <input value="@Model.CreatedBy" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                     <div class="form-group mb-2"> *@
+@*                         <label class="control-label">Created At</label> *@
+@*                         <input value="@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                 </div> *@
+@*                 <div class="col-md-6"> *@
+@*                     <div class="form-group mb-2"> *@
+@*                         <label class="control-label">Changed By</label> *@
+@*                         <input value="@Model.ChangedBy" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                     <div class="form-group mb-2"> *@
+@*                         <label class="control-label">Changed At</label> *@
+@*                         <input value="@Model.ChangedAt?.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                 </div> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group mt-3"> *@
+@*                 <input type="submit" value="Save" class="btn btn-primary" /> *@
+@*                 <a asp-action="Index" class="btn btn-secondary">Cancel</a> *@
+@*             </div> *@
+@*         </form> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     <a asp-action="Index">Back to List</a> *@
+@* </div> *@
+@* *@
+@* @section Scripts { *@
+@*     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} *@
+@* } *@
+
 @model App.Domain.Department
 
 @{
@@ -14,45 +162,54 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="DepartmentName" class="control-label"></label>
                 <input asp-for="DepartmentName" class="form-control" />
                 <span asp-validation-for="DepartmentName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            
+            <div class="form-group mb-3">
                 <label asp-for="ManagerId" class="control-label">Manager</label>
                 <select asp-for="ManagerId" class="form-control" asp-items="ViewBag.ManagerId">
                     <option value="">-- Select Manager (Optional) --</option>
                 </select>
                 <span asp-validation-for="ManagerId" class="text-danger"></span>
             </div>
+            
+            <div class="form-group mb-3">
+                <label class="control-label">Department Workers</label>
+                <select name="selectedPersons" class="form-control" asp-items="ViewBag.Persons" multiple="multiple">
+                </select>
+                <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple workers</small>
+            </div>
 
             <!-- READ-ONLY metadata info -->
             <div class="row mt-3">
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Created By</label>
                         <input value="@Model.CreatedBy" class="form-control" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Created At</label>
                         <input value="@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Changed By</label>
                         <input value="@Model.ChangedBy" class="form-control" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Changed At</label>
                         <input value="@Model.ChangedAt?.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly />
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
@@ -63,8 +220,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

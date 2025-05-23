@@ -1,63 +1,338 @@
+@* @model App.Domain.Department *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Department Details"; *@
+@* } *@
+@* *@
+@* <h1>Details</h1> *@
+@* *@
+@* <div> *@
+@*     <h4>Department</h4> *@
+@*     <hr /> *@
+@*     <dl class="row"> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.DepartmentName) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.DepartmentName) *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             Manager *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @(Model.Manager?.PersonName ?? "No Manager Assigned") *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.CreatedBy) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.CreatedBy) *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.CreatedAt) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.CreatedAt) *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.ChangedBy) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.ChangedBy) *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.ChangedAt) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.ChangedAt) *@
+@*         </dd> *@
+@*         @if (!string.IsNullOrEmpty(Model.SysNotes)) *@
+@*         { *@
+@*             <dt class="col-sm-2"> *@
+@*                 @Html.DisplayNameFor(model => model.SysNotes) *@
+@*             </dt> *@
+@*             <dd class="col-sm-10"> *@
+@*                 @Html.DisplayFor(model => model.SysNotes) *@
+@*             </dd> *@
+@*         } *@
+@*     </dl> *@
+@* </div> *@
+@* <div> *@
+@*     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a> | *@
+@*     <a asp-action="Index" class="btn btn-secondary">Back to List</a> *@
+@* </div> *@
+@* @model App.Domain.Department *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Department Details"; *@
+@* } *@
+@* *@
+@* <h1>Details</h1> *@
+@* *@
+@* <div> *@
+@*     <h4>Department</h4> *@
+@*     <hr /> *@
+@*     <dl class="row"> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.DepartmentName) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.DepartmentName) *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             Manager *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @if (Model.Manager != null) *@
+@*             { *@
+@*                 <span class="badge bg-success">@Model.Manager.PersonName</span> *@
+@*             } *@
+@*             else *@
+@*             { *@
+@*                 <span class="text-muted">No manager assigned</span> *@
+@*             } *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             Department Workers *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @if (Model.Persons != null && Model.Persons.Any()) *@
+@*             { *@
+@*                 <div> *@
+@*                     @foreach (var person in Model.Persons) *@
+@*                     { *@
+@*                         <span class="badge bg-info me-1 mb-1">@person.PersonName</span> *@
+@*                     } *@
+@*                 </div> *@
+@*             } *@
+@*             else *@
+@*             { *@
+@*                 <span class="text-muted">No workers assigned</span> *@
+@*             } *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.CreatedBy) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.CreatedBy) *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.CreatedAt) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.CreatedAt) *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.ChangedBy) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.ChangedBy) *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             @Html.DisplayNameFor(model => model.ChangedAt) *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Html.DisplayFor(model => model.ChangedAt) *@
+@*         </dd> *@
+@*         @if (!string.IsNullOrEmpty(Model.SysNotes)) *@
+@*         { *@
+@*             <dt class="col-sm-2"> *@
+@*                 @Html.DisplayNameFor(model => model.SysNotes) *@
+@*             </dt> *@
+@*             <dd class="col-sm-10"> *@
+@*                 @Html.DisplayFor(model => model.SysNotes) *@
+@*             </dd> *@
+@*         } *@
+@*     </dl> *@
+@* </div> *@
+@* <div> *@
+@*     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a> | *@
+@*     <a asp-action="Index" class="btn btn-secondary">Back to List</a> *@
+@* </div> *@
+
 @model App.Domain.Department
 
 @{
     ViewData["Title"] = "Department Details";
 }
 
+<style>
+    .card-body {
+        padding: 1rem;
+    }
+
+    .badge {
+        font-size: 0.875em;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .card-title {
+        margin-bottom: 0.5rem;
+        color: #495057;
+    }
+
+    .card-text {
+        margin-bottom: 0.75rem;
+        color: #6c757d;
+    }
+
+    .posts-scroll {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+</style>
+
 <h1>Details</h1>
 
-<div>
-    <h4>Department</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DepartmentName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DepartmentName)
-        </dd>
-        <dt class="col-sm-2">
-            Manager
-        </dt>
-        <dd class="col-sm-10">
-            @(Model.Manager?.PersonName ?? "No Manager Assigned")
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedBy)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ChangedBy)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ChangedAt)
-        </dd>
-        @if (!string.IsNullOrEmpty(Model.SysNotes))
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.SysNotes)
+<div class="row">
+    <!-- Left Column - Department Information -->
+    <div class="col-md-6">
+        <h4>Department Information</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.DepartmentName)
             </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.SysNotes)
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.DepartmentName)
             </dd>
+            <dt class="col-sm-4">
+                Manager
+            </dt>
+            <dd class="col-sm-8">
+                @if (Model.Manager != null)
+                {
+                    <span class="badge bg-success">@Model.Manager.PersonName</span>
+                }
+                else
+                {
+                    <span class="text-muted">No manager assigned</span>
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Workers
+            </dt>
+            <dd class="col-sm-8">
+                @if (Model.Persons != null && Model.Persons.Any())
+                {
+                    @foreach (var person in Model.Persons)
+                    {
+                        <span class="badge bg-info me-1 mb-1">@person.PersonName</span>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">No workers assigned</span>
+                }
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.CreatedBy)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.CreatedAt)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ChangedBy)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ChangedBy)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ChangedAt)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ChangedAt)
+            </dd>
+            @if (!string.IsNullOrEmpty(Model.SysNotes))
+            {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.SysNotes)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.SysNotes)
+                </dd>
+            }
+        </dl>
+    </div>
+
+    <!-- Right Column - Related Posts -->
+    <div class="col-md-6">
+        <h4>Department Posts</h4>
+        <hr />
+        
+        @if (Model.Posts != null && Model.Posts.Any())
+        {
+            <div class="card">
+                <div class="card-header">
+                    <strong>Posts targeted to this department (@Model.Posts.Count())</strong>
+                </div>
+                <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                    @foreach (var post in Model.Posts)
+                    {
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title">@post.Title</h6>
+                                <p class="card-text">
+                                    @{
+                                        var shortDescription = post.Description.Length > 150 
+                                            ? post.Description.Substring(0, 150) + "..." 
+                                            : post.Description;
+                                    }
+                                    @shortDescription
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        Created: @post.CreatedAt.ToString("yyyy-MM-dd")
+                                    </small>
+                                    <div>
+                                        <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" 
+                                           class="btn btn-sm btn-info me-1">
+                                            <i class="fas fa-eye"></i> Details
+                                        </a>
+                                        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id" 
+                                           class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         }
-    </dl>
+        else
+        {
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No posts are currently targeted to this department.
+            </div>
+        }
+        
+        <!-- Quick action to create new post for this department -->
+        <div class="mt-3">
+            <a asp-controller="Posts" asp-action="Create" class="btn btn-success">
+                <i class="fas fa-plus"></i> Create New Post
+            </a>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a> |
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
+<!-- Action Buttons -->
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Edit Department
+    </a>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-list"></i> Back to List
+    </a>
 </div>

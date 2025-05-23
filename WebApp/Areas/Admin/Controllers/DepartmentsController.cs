@@ -27,8 +27,12 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Departments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Departments.Include(d => d.Manager);
-            return View(await appDbContext.ToListAsync());
+            var departments = await _context.Departments
+                .Include(d => d.Manager)
+                .Include(d => d.DepartmentPersons!)
+                .ThenInclude(dp => dp.Person)
+                .ToListAsync();
+            return View(departments);
         }
 
         // GET: Admin/Departments/Details/5
@@ -41,6 +45,10 @@ namespace WebApp.Areas.Admin.Controllers
 
             var department = await _context.Departments
                 .Include(d => d.Manager)
+                .Include(d => d.DepartmentPersons!)
+                .ThenInclude(dp => dp.Person)
+                .Include(d => d.PostDepartments!)
+                .ThenInclude(pd => pd.Post)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (department == null)
             {
@@ -54,15 +62,15 @@ namespace WebApp.Areas.Admin.Controllers
         public IActionResult Create()
         {
             ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName");
+            ViewBag.Persons = new MultiSelectList(_context.Persons, "Id", "PersonName");
             return View();
         }
 
         // POST: Admin/Departments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DepartmentName,ManagerId")] Department department)
+        public async Task<IActionResult> Create([Bind("DepartmentName,ManagerId")] Department department, Guid[] selectedPersons)
         {
-            
             ModelState.Remove("CreatedBy");
             ModelState.Remove("CreatedAt");
             ModelState.Remove("ChangedBy");
@@ -72,15 +80,33 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 department.Id = Guid.NewGuid();
                 _context.Add(department);
+                
+                // Add selected persons to department
+                if (selectedPersons != null && selectedPersons.Length > 0)
+                {
+                    foreach (var personId in selectedPersons)
+                    {
+                        var departmentPerson = new DepartmentPerson
+                        {
+                            Id = Guid.NewGuid(),
+                            DepartmentId = department.Id,
+                            PersonId = personId
+                        };
+                        _context.DepartmentPersons.Add(departmentPerson);
+                    }
+                }
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            
             foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
             {
                 Console.WriteLine($"ModelState Error: {modelError.ErrorMessage}");
             }
     
-            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
+            ViewBag.ManagerId = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
+            ViewBag.Persons = new MultiSelectList(_context.Persons, "Id", "PersonName", selectedPersons);
             return View(department);
         }
 
@@ -92,19 +118,26 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Departments.FindAsync(id);
+            var department = await _context.Departments
+                .Include(d => d.DepartmentPersons!)
+                .FirstOrDefaultAsync(d => d.Id == id);
+            
             if (department == null)
             {
                 return NotFound();
             }
-            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
+            
+            var selectedPersonIds = department.DepartmentPersons?.Select(dp => dp.PersonId).ToArray() ?? new Guid[0];
+            
+            ViewBag.ManagerId = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
+            ViewBag.Persons = new MultiSelectList(_context.Persons, "Id", "PersonName", selectedPersonIds);
             return View(department);
         }
 
         // POST: Admin/Departments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,DepartmentName,ManagerId")] Department department) // EEMALDATUD automaatsed väljad
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,DepartmentName,ManagerId")] Department department, Guid[] selectedPersons)
         {
             if (id != department.Id)
             {
@@ -120,7 +153,10 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                    var existingDepartment = await _context.Departments.FindAsync(id);
+                    var existingDepartment = await _context.Departments
+                        .Include(d => d.DepartmentPersons!)
+                        .FirstOrDefaultAsync(d => d.Id == id);
+                    
                     if (existingDepartment == null)
                     {
                         return NotFound();
@@ -128,6 +164,29 @@ namespace WebApp.Areas.Admin.Controllers
                     
                     existingDepartment.DepartmentName = department.DepartmentName;
                     existingDepartment.ManagerId = department.ManagerId;
+                    
+                    // ADDED: Explicitly mark ManagerId as modified to ensure EF tracks the change
+                    _context.Entry(existingDepartment).Property(d => d.ManagerId).IsModified = true;
+                    
+                    // Update department persons - remove existing and add new ones
+                    if (existingDepartment.DepartmentPersons != null)
+                    {
+                        _context.DepartmentPersons.RemoveRange(existingDepartment.DepartmentPersons);
+                    }
+                    
+                    if (selectedPersons != null && selectedPersons.Length > 0)
+                    {
+                        foreach (var personId in selectedPersons)
+                        {
+                            var departmentPerson = new DepartmentPerson
+                            {
+                                Id = Guid.NewGuid(),
+                                DepartmentId = existingDepartment.Id,
+                                PersonId = personId
+                            };
+                            _context.DepartmentPersons.Add(departmentPerson);
+                        }
+                    }
             
                     await _context.SaveChangesAsync();
                 }
@@ -145,7 +204,8 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
     
-            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
+            ViewBag.ManagerId = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
+            ViewBag.Persons = new MultiSelectList(_context.Persons, "Id", "PersonName", selectedPersons);
             return View(department);
         }
 
@@ -159,6 +219,8 @@ namespace WebApp.Areas.Admin.Controllers
 
             var department = await _context.Departments
                 .Include(d => d.Manager)
+                .Include(d => d.DepartmentPersons!)
+                .ThenInclude(dp => dp.Person)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (department == null)
             {
