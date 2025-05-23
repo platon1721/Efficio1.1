@@ -14,6 +14,7 @@ using Base.Contracts;
 using Base.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
@@ -21,6 +22,7 @@ using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WebApp;
+using WebApp.Filters;
 using WebApp.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -171,6 +173,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Configure<MvcOptions>(options =>
+{
+    // Keela automaatne required validation
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    
+    // Keela computed properties validation
+    options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(field => 
+        $"The field {field} is required but was not provided.");
+});
+
+builder.Services.AddScoped<InitializeCollectionsFilter>();
+
+
 
 // ========================================================================
 var app = builder.Build();
@@ -285,11 +300,6 @@ static void SetupAppData(IApplicationBuilder app, IWebHostEnvironment env, IConf
 
 static void WaitDbConnection(AppDbContext ctx, ILogger<IApplicationBuilder> logger)
 {
-    // TODO: Login failed for user 'sa'. Reason: Failed to open the explicitly specified database 'nutikas'. [CLIENT: 172.18.0.3]
-    // could actually log in, but db was not there - migrations where not applied yet
-
-    // maybe Database.OpenConnection
-
     while (true)
     {
         try

@@ -7,10 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain;
+using Microsoft.AspNetCore.Authorization;
+using WebApp.Filters;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "admin")]
+    [ServiceFilter(typeof(InitializeCollectionsFilter))]
     public class DepartmentsController : Controller
     {
         private readonly AppDbContext _context;
@@ -49,17 +53,21 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Departments/Create
         public IActionResult Create()
         {
-            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "CreatedBy");
+            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName");
             return View();
         }
 
         // POST: Admin/Departments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DepartmentName,ManagerId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Department department)
+        public async Task<IActionResult> Create([Bind("DepartmentName,ManagerId")] Department department)
         {
+            
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("ChangedBy");
+            ModelState.Remove("ChangedAt");
+            
             if (ModelState.IsValid)
             {
                 department.Id = Guid.NewGuid();
@@ -67,7 +75,12 @@ namespace WebApp.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "CreatedBy", department.ManagerId);
+            foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"ModelState Error: {modelError.ErrorMessage}");
+            }
+    
+            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
             return View(department);
         }
 
@@ -84,27 +97,38 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "CreatedBy", department.ManagerId);
+            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
             return View(department);
         }
 
         // POST: Admin/Departments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("DepartmentName,ManagerId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Department department)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,DepartmentName,ManagerId")] Department department) // EEMALDATUD automaatsed väljad
         {
             if (id != department.Id)
             {
                 return NotFound();
             }
 
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("ChangedBy");
+            ModelState.Remove("ChangedAt");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(department);
+                    var existingDepartment = await _context.Departments.FindAsync(id);
+                    if (existingDepartment == null)
+                    {
+                        return NotFound();
+                    }
+                    
+                    existingDepartment.DepartmentName = department.DepartmentName;
+                    existingDepartment.ManagerId = department.ManagerId;
+            
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -120,7 +144,8 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "CreatedBy", department.ManagerId);
+    
+            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
             return View(department);
         }
 

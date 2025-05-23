@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class TagssController : Controller
+    [Authorize(Roles = "admin")]
+    public class TagsController : Controller
     {
         private readonly AppDbContext _context;
 
-        public TagssController(AppDbContext context)
+        public TagsController(AppDbContext context)
         {
             _context = context;
         }
@@ -26,7 +28,7 @@ namespace WebApp.Areas.Admin.Controllers
             return View(await _context.Tags.ToListAsync());
         }
 
-        // GET: Admin/Tagss/Details/5
+        // GET: Admin/Tags/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -50,13 +52,16 @@ namespace WebApp.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: Admin/Tagss/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Admin/Tags/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Tag tag)
+        public async Task<IActionResult> Create([Bind("Title,Description")] Tag tag)
         {
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("ChangedBy");
+            ModelState.Remove("ChangedAt");
+            
             if (ModelState.IsValid)
             {
                 tag.Id = Guid.NewGuid();
@@ -64,10 +69,16 @@ namespace WebApp.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"ModelState Error: {modelError.ErrorMessage}");
+            }
+    
             return View(tag);
         }
-
-        // GET: Admin/Tagss/Edit/5
+        
+        
+        // GET: Admin/Tags/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -83,23 +94,32 @@ namespace WebApp.Areas.Admin.Controllers
             return View(tag);
         }
 
-        // POST: Admin/Tagss/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Description,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Tag tag)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description")] Tag tag)
         {
             if (id != tag.Id)
             {
                 return NotFound();
             }
 
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("ChangedBy");
+            ModelState.Remove("ChangedAt");
+            
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(tag);
+                    var existingTag = await _context.Tags.FindAsync(id);
+                    if (existingTag == null)
+                    {
+                        return NotFound();
+                    }
+                    existingTag.Title = tag.Title;
+                    existingTag.Description = tag.Description;
+            
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -117,7 +137,8 @@ namespace WebApp.Areas.Admin.Controllers
             }
             return View(tag);
         }
-
+        
+        
         // GET: Admin/Tagss/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {

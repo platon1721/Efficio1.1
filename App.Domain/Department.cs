@@ -23,13 +23,13 @@ public class Department : BaseEntity
     public ICollection<DepartmentPerson>? DepartmentPersons { get; set; }
 
     [NotMapped]
-    public IEnumerable<Person>? Persons => DepartmentPersons.Select(p => p.Person).OfType<Person>();
+    public IEnumerable<Person>? Persons => DepartmentPersons?.Select(p => p.Person).OfType<Person>();
     
     
     // Department Post
     public ICollection<PostDepartment>? PostDepartments { get; set; }
     [NotMapped]
-    public IEnumerable<Post>? Posts => PostDepartments.Select(p => p.Post).OfType<Post>();
+    public IEnumerable<Post>? Posts => PostDepartments?.Select(p => p.Post).OfType<Post>();
     
     // [Required]
     // public Guid HeadId { get; set; }

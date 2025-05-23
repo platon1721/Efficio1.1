@@ -26,5 +26,5 @@ public class Post : BaseEntity
     // Department connection
     public ICollection<PostDepartment>? PostDepartments { get; set; } = new List<PostDepartment>();
     [NotMapped]
-    public IEnumerable<Department>? Departments => PostDepartments.Select(pt => pt.Department).OfType<Department>();
+    public IEnumerable<Department>? Departments => PostDepartments?.Select(pt => pt.Department).OfType<Department>();
 }

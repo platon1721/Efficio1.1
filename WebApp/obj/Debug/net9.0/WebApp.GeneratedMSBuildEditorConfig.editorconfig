@@ -172,24 +172,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvUm9sZXMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tagss/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFnc3MvQ3JlYXRlLmNzaHRtbA==
+[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tags/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFncy9DcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tagss/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFnc3MvRGVsZXRlLmNzaHRtbA==
+[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tags/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFncy9EZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tagss/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFnc3MvRGV0YWlscy5jc2h0bWw=
+[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tags/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFncy9EZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tagss/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFnc3MvRWRpdC5jc2h0bWw=
+[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tags/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFncy9FZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tagss/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFnc3MvSW5kZXguY3NodG1s
+[/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/Tags/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVGFncy9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/platonmatsinski/RiderProjects/Efficio/Efficio1.1/WebApp/Areas/Admin/Views/UserManagement/Index.cshtml]

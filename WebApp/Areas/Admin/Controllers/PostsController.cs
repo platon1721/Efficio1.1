@@ -7,10 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain;
+using Microsoft.AspNetCore.Authorization;
+using WebApp.Filters;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "admin")]
+    [ServiceFilter(typeof(InitializeCollectionsFilter))]
     public class PostsController : Controller
     {
         private readonly AppDbContext _context;
@@ -51,18 +55,26 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         // POST: Admin/Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Post post)
+        public async Task<IActionResult> Create([Bind("Title,Description")] Post post)
         {
+            
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("ChangedBy");
+            ModelState.Remove("ChangedAt");
+            
             if (ModelState.IsValid)
             {
                 post.Id = Guid.NewGuid();
                 _context.Add(post);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // CreatedBy, CreatedAt
                 return RedirectToAction(nameof(Index));
+            }
+            foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"ModelState Error: {modelError.ErrorMessage}");
             }
             return View(post);
         }
@@ -83,24 +95,34 @@ namespace WebApp.Areas.Admin.Controllers
             return View(post);
         }
 
-        // POST: Admin/Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Description,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Post post)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description")] Post post)
         {
             if (id != post.Id)
             {
                 return NotFound();
             }
 
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("ChangedBy");
+            ModelState.Remove("ChangedAt");
+            
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
+                    var existingPost = await _context.Posts.FindAsync(id);
+                    if (existingPost == null)
+                    {
+                        return NotFound();
+                    }
+            
+                    existingPost.Title = post.Title;
+                    existingPost.Description = post.Description;
+            
+                    await _context.SaveChangesAsync(); // ChangedBy, ChangedAt
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain;
 using Microsoft.AspNetCore.Authorization;
+using WebApp.Filters;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "admin")]
+    [ServiceFilter(typeof(InitializeCollectionsFilter))]
     public class PersonsController : Controller
     {
         private readonly AppDbContext _context;
@@ -51,16 +53,14 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Persons/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
         // POST: Admin/Persons/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PersonName,UserId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Person person)
+        public async Task<IActionResult> Create([Bind("PersonName,UserId")] Person person)
         {
             if (ModelState.IsValid)
             {
@@ -69,9 +69,10 @@ namespace WebApp.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", person.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", person.UserId);
             return View(person);
         }
+
 
         // GET: Admin/Persons/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
@@ -86,16 +87,14 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", person.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", person.UserId);
             return View(person);
         }
 
         // POST: Admin/Persons/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("PersonName,UserId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Person person)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,PersonName,UserId")] Person person)
         {
             if (id != person.Id)
             {
@@ -122,7 +121,7 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", person.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", person.UserId);
             return View(person);
         }
 
@@ -144,7 +143,7 @@ namespace WebApp.Areas.Admin.Controllers
 
             return View(person);
         }
-
+        
         // POST: Admin/Persons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
