@@ -1,3 +1,140 @@
+@* @model IEnumerable<App.Domain.Department> *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Departments"; *@
+@* } *@
+@* *@
+@* <h1>Departments</h1> *@
+@* *@
+@* <p> *@
+@*     <a asp-action="Create" class="btn btn-primary">Create New</a> *@
+@* </p> *@
+@* <table class="table table-striped"> *@
+@*     <thead> *@
+@*     <tr> *@
+@*         <th> *@
+@*             @Html.DisplayNameFor(model => model.DepartmentName) *@
+@*         </th> *@
+@*         <th> *@
+@*             Manager *@
+@*         </th> *@
+@*         <th> *@
+@*             @Html.DisplayNameFor(model => model.CreatedBy) *@
+@*         </th> *@
+@*         <th> *@
+@*             @Html.DisplayNameFor(model => model.CreatedAt) *@
+@*         </th> *@
+@*         <th> *@
+@*             @Html.DisplayNameFor(model => model.ChangedBy) *@
+@*         </th> *@
+@*         <th> *@
+@*             @Html.DisplayNameFor(model => model.ChangedAt) *@
+@*         </th> *@
+@*         <th></th> *@
+@*     </tr> *@
+@*     </thead> *@
+@*     <tbody> *@
+@*     @foreach (var item in Model) { *@
+@*         <tr> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.DepartmentName) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @(item.Manager?.PersonName ?? "No Manager") <!-- PARANDATUD --> *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.CreatedBy) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.CreatedAt) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.ChangedBy) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.ChangedAt) *@
+@*             </td> *@
+@*             <td> *@
+@*                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a> | *@
+@*                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a> | *@
+@*                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a> *@
+@*             </td> *@
+@*         </tr> *@
+@*     } *@
+@*     </tbody> *@
+@* </table> *@
+
+@* @model IEnumerable<App.Domain.Department> *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Departments"; *@
+@* } *@
+@* *@
+@* <h1>Departments</h1> *@
+@* *@
+@* <p> *@
+@*     <a asp-action="Create" class="btn btn-success">Create New Department</a> *@
+@* </p> *@
+@* *@
+@* <table class="table table-striped"> *@
+@*     <thead> *@
+@*         <tr> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.DepartmentName) *@
+@*             </th> *@
+@*             <th> *@
+@*                 Manager *@
+@*             </th> *@
+@*             <th> *@
+@*                 Workers *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.CreatedAt) *@
+@*             </th> *@
+@*             <th></th> *@
+@*         </tr> *@
+@*     </thead> *@
+@*     <tbody> *@
+@* @foreach (var item in Model) { *@
+@*         <tr> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.DepartmentName) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @if (item.Manager != null) *@
+@*                 { *@
+@*                     <span class="badge bg-success">@item.Manager.PersonName</span> *@
+@*                 } *@
+@*                 else *@
+@*                 { *@
+@*                     <span class="text-muted">No manager assigned</span> *@
+@*                 } *@
+@*             </td> *@
+@*             <td> *@
+@*                 @if (item.Persons != null && item.Persons.Any()) *@
+@*                 { *@
+@*                     @foreach (var person in item.Persons) *@
+@*                     { *@
+@*                         <span class="badge bg-info me-1">@person.PersonName</span> *@
+@*                     } *@
+@*                 } *@
+@*                 else *@
+@*                 { *@
+@*                     <span class="text-muted">No workers assigned</span> *@
+@*                 } *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.CreatedAt) *@
+@*             </td> *@
+@*             <td> *@
+@*                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a> *@
+@*                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a> *@
+@*                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a> *@
+@*             </td> *@
+@*         </tr> *@
+@* } *@
+@*     </tbody> *@
+@* </table> *@
 @model IEnumerable<App.Domain.Department>
 
 @{
@@ -7,59 +144,65 @@
 <h1>Departments</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Create New Department</a>
 </p>
+
 <table class="table table-striped">
     <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.DepartmentName)
-        </th>
-        <th>
-            Manager
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ChangedBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ChangedAt)
-        </th>
-        <th></th>
-    </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DepartmentName)
+            </th>
+            <th>
+                Manager
+            </th>
+            <th>
+                Workers
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model) {
+@foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.DepartmentName)
             </td>
             <td>
-                @(item.Manager?.PersonName ?? "No Manager") <!-- PARANDATUD -->
+                @if (item.Manager != null)
+                {
+                    <span class="badge bg-success">@item.Manager.PersonName</span>
+                }
+                else
+                {
+                    <span class="text-muted">No manager assigned</span>
+                }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
+                @if (item.Persons != null && item.Persons.Any())
+                {
+                    @foreach (var person in item.Persons)
+                    {
+                        <span class="badge bg-info me-1">@person.PersonName</span>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">No workers assigned</span>
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ChangedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangedAt)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
             </td>
         </tr>
-    }
+}
     </tbody>
 </table>

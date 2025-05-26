@@ -1,63 +1,235 @@
+@* @model App.Domain.Post *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Edit"; *@
+@* } *@
+@* *@
+@* <h1>Edit</h1> *@
+@* *@
+@* <h4>Post</h4> *@
+@* <hr /> *@
+@* <div class="row"> *@
+@*     <div class="col-md-8"> *@
+@*         <form asp-action="Edit"> *@
+@*             <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+@*             <input type="hidden" asp-for="Id" /> *@
+@*          *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="Title" class="control-label"></label> *@
+@*                 <input asp-for="Title" class="form-control" /> *@
+@*                 <span asp-validation-for="Title" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="Description" class="control-label"></label> *@
+@*                 <textarea asp-for="Description" class="form-control" rows="4"></textarea> *@
+@*                 <span asp-validation-for="Description" class="text-danger"></span> *@
+@*             </div> *@
+@*          *@
+@* *@
+@*             <!-- READ-ONLY metadata info --> *@
+@*             <div class="row mt-3"> *@
+@*                 <div class="col-md-6"> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Created By</label> *@
+@*                         <input value="@Model.CreatedBy" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Created At</label> *@
+@*                         <input value="@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                 </div> *@
+@*                 <div class="col-md-6"> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Changed By</label> *@
+@*                         <input value="@Model.ChangedBy" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Changed At</label> *@
+@*                         <input value="@Model.ChangedAt?.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                 </div> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <input type="submit" value="Save" class="btn btn-primary" /> *@
+@*             </div> *@
+@*         </form> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     <a asp-action="Index">Back to List</a> *@
+@* </div> *@
+@* *@
+@* @section Scripts { *@
+@*     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} *@
+@* } *@
+
+@* @model App.Domain.Post *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Edit Post"; *@
+@* } *@
+@* *@
+@* <h1>Edit</h1> *@
+@* *@
+@* <h4>Post</h4> *@
+@* <hr /> *@
+@* *@
+@* @if (!ViewData.ModelState.IsValid) *@
+@* { *@
+@*     <div class="alert alert-danger"> *@
+@*         <h5>Validation Errors:</h5> *@
+@*         <ul> *@
+@*             @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors)) *@
+@*             { *@
+@*                 <li>@error.ErrorMessage</li> *@
+@*             } *@
+@*         </ul> *@
+@*     </div> *@
+@* } *@
+@* *@
+@* <div class="row"> *@
+@*     <div class="col-md-8"> *@
+@*         <form asp-action="Edit" method="post"> *@
+@*             <div asp-validation-summary="All" class="text-danger"></div> *@
+@*             <input type="hidden" asp-for="Id" /> *@
+@*              *@
+@*             <div class="form-group mb-3"> *@
+@*                 <label asp-for="Title" class="control-label"></label> *@
+@*                 <input asp-for="Title" class="form-control" /> *@
+@*                 <span asp-validation-for="Title" class="text-danger"></span> *@
+@*             </div> *@
+@*              *@
+@*             <div class="form-group mb-3"> *@
+@*                 <label asp-for="Description" class="control-label"></label> *@
+@*                 <textarea asp-for="Description" class="form-control" rows="4"></textarea> *@
+@*                 <span asp-validation-for="Description" class="text-danger"></span> *@
+@*             </div> *@
+@*              *@
+@*             <div class="form-group mb-3"> *@
+@*                 <label class="control-label">Tags</label> *@
+@*                 <select name="selectedTags" class="form-control" asp-items="ViewBag.Tags" multiple="multiple"> *@
+@*                 </select> *@
+@*                 <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple tags</small> *@
+@*             </div> *@
+@*              *@
+@*             <div class="form-group mb-3"> *@
+@*                 <label class="control-label">Target Departments</label> *@
+@*                 <select name="selectedDepartments" class="form-control" asp-items="ViewBag.Departments" multiple="multiple"> *@
+@*                 </select> *@
+@*                 <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple departments</small> *@
+@*             </div> *@
+@* *@
+@*             <!-- READ-ONLY metadata info --> *@
+@*             <div class="row mt-3"> *@
+@*                 <div class="col-md-6"> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Created By</label> *@
+@*                         <input value="@Model.CreatedBy" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Created At</label> *@
+@*                         <input value="@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                 </div> *@
+@*                 <div class="col-md-6"> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Changed By</label> *@
+@*                         <input value="@Model.ChangedBy" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                     <div class="form-group"> *@
+@*                         <label class="control-label">Changed At</label> *@
+@*                         <input value="@Model.ChangedAt?.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly /> *@
+@*                     </div> *@
+@*                 </div> *@
+@*             </div> *@
+@*              *@
+@*             <div class="form-group"> *@
+@*                 <input type="submit" value="Save" class="btn btn-primary" /> *@
+@*                 <a asp-action="Index" class="btn btn-secondary">Cancel</a> *@
+@*             </div> *@
+@*         </form> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* @section Scripts { *@
+@*     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} *@
+@* } *@
+
 @model App.Domain.Post
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Post";
 }
 
 <h1>Edit</h1>
 
 <h4>Post</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-8">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mb-3">
                 <label asp-for="Description" class="control-label"></label>
                 <textarea asp-for="Description" class="form-control" rows="4"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
+            <div class="form-group mb-3">
+                <label class="control-label">Tags</label>
+                <select name="selectedTags" class="form-control" asp-items="ViewBag.Tags" multiple="multiple">
+                </select>
+                <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple tags</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="control-label">Target Departments</label>
+                <select name="selectedDepartments" class="form-control" asp-items="ViewBag.Departments" multiple="multiple">
+                </select>
+                <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple departments</small>
+            </div>
+
             <!-- READ-ONLY metadata info -->
             <div class="row mt-3">
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Created By</label>
                         <input value="@Model.CreatedBy" class="form-control" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Created At</label>
                         <input value="@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Changed By</label>
                         <input value="@Model.ChangedBy" class="form-control" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label class="control-label">Changed At</label>
                         <input value="@Model.ChangedAt?.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly />
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
