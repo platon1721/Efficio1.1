@@ -22,6 +22,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
     public DbSet<PostTag> PostTags { get; set; } = default!;
     public DbSet<PostDepartment> PostDepartments { get; set; } = default!;
     
+    public DbSet<App.Domain.Task> Tasks { get; set; } = default!;
 
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = default!;
 
@@ -119,9 +120,21 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
 
         builder.Entity<PostDepartment>()
             .HasOne(pd => pd.Department)
-            .WithMany()
+            .WithMany(d => d.PostDepartments)
             .HasForeignKey(pd => pd.DepartmentId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Entity<App.Domain.Task>()
+            .HasOne(t => t.TaskKeeper)
+            .WithMany(p => p.AssignedTasks)
+            .HasForeignKey(t => t.TaskKeeperId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<App.Domain.Task>()
+            .HasOne(t => t.Department)
+            .WithMany(d => d.Tasks)
+            .HasForeignKey(t => t.DepartmentId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 
 

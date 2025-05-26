@@ -51,4 +51,8 @@ public class AppUOW : BaseUOW<AppDbContext>, IAppUOW
     private IPostDepartmentRepository? _postDepartmentRepository;
     public IPostDepartmentRepository PostDepartmentRepository =>
         _postDepartmentRepository ??= new PostDepartmentRepository(UOWDbContext);
+
+    private ITaskRepository? _taskRepository; 
+    public ITaskRepository TaskRepository =>
+    _taskRepository ??= new TaskRepository(UOWDbContext);
 }

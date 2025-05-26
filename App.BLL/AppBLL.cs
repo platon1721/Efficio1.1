@@ -73,4 +73,10 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
         _postDepartmentService ??= new PostDepartmentService(
             BLLUOW,
             new PostDepartmentBLLMapper());
+    
+    private ITaskService? _taskService;
+    public ITaskService TaskService =>
+        _taskService ??= new TaskService(
+            BLLUOW,
+            new TaskBLLMapper());
 }

@@ -22,9 +22,9 @@ public class PostRepository : BaseRepository<App.DAL.DTO.Post, App.Domain.Post>,
         
         var domainPosts = await query
             .Include(p => p.PostTags!)
-                .ThenInclude(pt => pt.Tag)
+            .ThenInclude(pt => pt.Tag)
             .Include(p => p.PostDepartments!)
-                .ThenInclude(pd => pd.Department)
+            .ThenInclude(pd => pd.Department)
             .ToListAsync();
             
         return domainPosts.Select(p => Mapper.Map(p)).OfType<App.DAL.DTO.Post>();

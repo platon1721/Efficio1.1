@@ -1,5 +1,4 @@
 using App.BLL.Contracts;
-using App.BLL.Mappers;
 using App.DAL.Contracts;
 using Base.BLL;
 using Base.Contracts;
@@ -14,44 +13,34 @@ public class DepartmentService : BaseService<App.BLL.DTO.Department, App.DAL.DTO
         : base(serviceUOW, serviceUOW.DepartmentRepository, mapper)
     {
     }
-    
+
     public async Task<IEnumerable<App.BLL.DTO.Department>> GetAllWithManagerAsync(bool noTracking = true)
     {
-        var domainDepartments = await ServiceRepository.GetAllWithManagerAsync(noTracking);
-        
-        return domainDepartments.Select(d => new App.BLL.DTO.Department
-        {
-            Id = d.Id,
-            DepartmentName = d.DepartmentName,
-            ManagerId = d.ManagerId,
-            Manager = d.Manager != null ? new App.BLL.DTO.Person
-            {
-                Id = d.Manager.Id,
-                PersonName = d.Manager.PersonName
-            } : null
-        });
+        var dalItems = await ServiceRepository.GetAllWithManagerAsync(noTracking);
+        return dalItems.Select(item => Mapper.Map(item)!);
     }
-    
+
     public async Task<App.BLL.DTO.Department?> GetWithPersonsAsync(Guid id, bool noTracking = true)
     {
-        var domainDepartment = await ServiceRepository.GetWithPersonsAsync(id, noTracking);
-        if (domainDepartment == null) return null;
-        
-        return new App.BLL.DTO.Department
-        {
-            Id = domainDepartment.Id,
-            DepartmentName = domainDepartment.DepartmentName,
-            ManagerId = domainDepartment.ManagerId,
-            Manager = domainDepartment.Manager != null ? new App.BLL.DTO.Person
-            {
-                Id = domainDepartment.Manager.Id,
-                PersonName = domainDepartment.Manager.PersonName
-            } : null,
-            Persons = domainDepartment.DepartmentPersons?.Select(dp => new App.BLL.DTO.Person
-            {
-                Id = dp.Person!.Id,
-                PersonName = dp.Person.PersonName
-            }).ToList()
-        };
+        var dalItem = await ServiceRepository.GetWithPersonsAsync(id, noTracking);
+        return Mapper.Map(dalItem);
+    }
+
+    public async Task<App.BLL.DTO.Department?> GetWithTasksAsync(Guid id, bool noTracking = true)
+    {
+        var dalItem = await ServiceRepository.GetWithTasksAsync(id, noTracking);
+        return Mapper.Map(dalItem);
+    }
+
+    public async Task<App.BLL.DTO.Department?> GetWithAllRelationsAsync(Guid id, bool noTracking = true)
+    {
+        var dalItem = await ServiceRepository.GetWithAllRelationsAsync(id, noTracking);
+        return Mapper.Map(dalItem);
+    }
+
+    public async Task<IEnumerable<App.BLL.DTO.Department>> GetAllWithTasksAsync(bool noTracking = true)
+    {
+        var dalItems = await ServiceRepository.GetAllWithTasksAsync(noTracking);
+        return dalItems.Select(item => Mapper.Map(item)!);
     }
 }

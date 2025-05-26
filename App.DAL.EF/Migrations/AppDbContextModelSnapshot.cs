@@ -471,9 +471,6 @@ namespace App.DAL.EF.Migrations
                     b.Property<Guid>("DepartmentId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DepartmentId1")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("PostId")
                         .HasColumnType("uuid");
 
@@ -485,8 +482,6 @@ namespace App.DAL.EF.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("DepartmentId1");
 
                     b.HasIndex("PostId", "DepartmentId")
                         .IsUnique();
@@ -584,6 +579,73 @@ namespace App.DAL.EF.Migrations
                         .IsUnique();
 
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("App.Domain.Task", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ChangedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CompletionNotes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("DeadLine")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("TaskKeeperId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("TaskKeeperId");
+
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -800,14 +862,10 @@ namespace App.DAL.EF.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Domain.Department", "Department")
-                        .WithMany()
+                        .WithMany("PostDepartments")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("App.Domain.Department", null)
-                        .WithMany("PostDepartments")
-                        .HasForeignKey("DepartmentId1");
 
                     b.HasOne("App.Domain.Post", "Post")
                         .WithMany("PostDepartments")
@@ -850,6 +908,28 @@ namespace App.DAL.EF.Migrations
                         .WithMany("Tags")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("App.Domain.Task", b =>
+                {
+                    b.HasOne("App.Domain.Identity.AppUser", null)
+                        .WithMany("Tasks")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Domain.Department", "Department")
+                        .WithMany("Tasks")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("App.Domain.Person", "TaskKeeper")
+                        .WithMany("AssignedTasks")
+                        .HasForeignKey("TaskKeeperId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Department");
+
+                    b.Navigation("TaskKeeper");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -898,6 +978,8 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("DepartmentPersons");
 
                     b.Navigation("PostDepartments");
+
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("App.Domain.Identity.AppRole", b =>
@@ -925,11 +1007,15 @@ namespace App.DAL.EF.Migrations
 
                     b.Navigation("Tags");
 
+                    b.Navigation("Tasks");
+
                     b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("App.Domain.Person", b =>
                 {
+                    b.Navigation("AssignedTasks");
+
                     b.Navigation("Contacts");
 
                     b.Navigation("DepartmentPersons");

@@ -11,7 +11,8 @@ public class TagService : BaseService<App.BLL.DTO.Tag, App.DAL.DTO.Tag, App.DAL.
 {
     public TagService(
         IAppUOW serviceUOW, 
-        IMapper<App.BLL.DTO.Tag, App.DAL.DTO.Tag> mapper) : base(serviceUOW, serviceUOW.TagRepository, mapper)
+        IMapper<App.BLL.DTO.Tag, App.DAL.DTO.Tag> mapper)
+        : base(serviceUOW, serviceUOW.TagRepository, mapper)
     {
     }
 

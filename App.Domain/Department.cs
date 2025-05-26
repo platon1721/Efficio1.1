@@ -31,19 +31,47 @@ public class Department : BaseEntity
     [NotMapped]
     public IEnumerable<Post>? Posts => PostDepartments?.Select(p => p.Post).OfType<Post>();
     
-    // [Required]
-    // public Guid HeadId { get; set; }
-    // public User Head { get; set; } = default!;
     
+    // Department Tasks
+    public ICollection<Task>? Tasks { get; set; }
     
-    // public Guid? HeadDepartmentId { get; set; }
-    // public Department? HeadDepartment { get; set; }
-    // public ICollection<UserDepartment> UserDepartments { get; set; } = new List<UserDepartment>();
-    // public ICollection<Department> SubDepartments { get; set; } = new List<Department>();
-    // public ICollection<PostDepartment> PostDepartments{ get; set; } = new List<PostDepartment>();
-    //
-    // [NotMapped]
-    // public ICollection<Post> Posts => PostDepartments.Select(x => x.Post).ToList();
-    // [NotMapped]
-    // public ICollection<User> Users => UserDepartments.Select(x => x.User).ToList();
+    // Task-related computed properties
+    [NotMapped]
+    public IEnumerable<Task>? OpenTasks => Tasks?.Where(t => t.TaskStatus == TaskStatus.Open);
+    
+    [NotMapped]
+    public IEnumerable<Task>? InProgressTasks => Tasks?.Where(t => t.TaskStatus == TaskStatus.InProgress);
+    
+    [NotMapped]
+    public IEnumerable<Task>? CompletedTasks => Tasks?.Where(t => t.TaskStatus == TaskStatus.Completed);
+    
+    [NotMapped]
+    public IEnumerable<Task>? OverdueTasks => Tasks?.Where(t => 
+        t.DeadLine < DateTime.UtcNow && t.TaskStatus != TaskStatus.Completed);
+    
+    [NotMapped]
+    public IEnumerable<Task>? HighPriorityTasks => Tasks?.Where(t => 
+        t.Priority >= 4 && t.TaskStatus != TaskStatus.Completed);
+    
+    [NotMapped]
+    public IEnumerable<Task>? TasksDueSoon => Tasks?.Where(t => 
+        t.DeadLine <= DateTime.UtcNow.AddDays(7) && 
+        t.DeadLine >= DateTime.UtcNow && 
+        t.TaskStatus != TaskStatus.Completed);
+    
+    // Task statistics
+    [NotMapped]
+    public int TaskCount => Tasks?.Count() ?? 0;
+    
+    [NotMapped]
+    public int CompletedTaskCount => CompletedTasks?.Count() ?? 0;
+    
+    [NotMapped]
+    public int OpenTaskCount => OpenTasks?.Count() ?? 0;
+    
+    [NotMapped]
+    public int OverdueTaskCount => OverdueTasks?.Count() ?? 0;
+    
+    [NotMapped]
+    public double TaskCompletionRate => TaskCount > 0 ? (double)CompletedTaskCount / TaskCount * 100 : 0;
 }

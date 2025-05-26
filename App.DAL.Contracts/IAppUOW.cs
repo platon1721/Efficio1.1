@@ -13,4 +13,5 @@ public interface IAppUOW : IBaseUOW
     IPostRepository PostRepository { get; }
     IPostTagRepository PostTagRepository { get; }
     IPostDepartmentRepository PostDepartmentRepository { get; }
+    ITaskRepository TaskRepository { get; }
 }

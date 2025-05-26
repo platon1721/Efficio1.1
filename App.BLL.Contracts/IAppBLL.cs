@@ -13,5 +13,5 @@ public interface IAppBLL : IBaseBLL
     IPostService PostService { get; }
     IPostTagService PostTagService { get; }
     IPostDepartmentService PostDepartmentService { get; }
-    
+    ITaskService TaskService { get; }
 }
