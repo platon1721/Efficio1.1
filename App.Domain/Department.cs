@@ -31,6 +31,9 @@ public class Department : BaseEntity
     [NotMapped]
     public IEnumerable<Post>? Posts => PostDepartments?.Select(p => p.Post).OfType<Post>();
     
+    // Feedbacks added to the department
+    public ICollection<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
+    
     
     // Department Tasks
     public ICollection<Task>? Tasks { get; set; }

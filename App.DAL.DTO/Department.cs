@@ -14,4 +14,10 @@ public class Department : IDomainId
     public Person? Manager { get; set; }
     
     public ICollection<Person>? Persons { get; set; }
+    
+    // Department Feedbacks (direct relationship)
+    public ICollection<Feedback>? Feedbacks { get; set; }
+    
+    // Department Tasks (direct relationship)
+    public ICollection<Task>? Tasks { get; set; }
 }

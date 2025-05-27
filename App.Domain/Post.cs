@@ -21,7 +21,10 @@ public class Post : BaseEntity
     public ICollection<PostTag>? PostTags { get; set; } = new List<PostTag>();
     
     [NotMapped]
-    public IEnumerable<Tag>? Tags => PostTags.Select(pt => pt.Tag).OfType<Tag>();
+    public IEnumerable<Tag>? Tags => PostTags?.Select(pt => pt.Tag).OfType<Tag>();
+    
+    // Comments added to the post
+    public ICollection<Comment>? Comments { get; set; } = new List<Comment>();
     
     // Department connection
     public ICollection<PostDepartment>? PostDepartments { get; set; } = new List<PostDepartment>();

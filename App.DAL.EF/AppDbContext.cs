@@ -21,6 +21,9 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
     public DbSet<Post> Posts { get; set; } = default!;
     public DbSet<PostTag> PostTags { get; set; } = default!;
     public DbSet<PostDepartment> PostDepartments { get; set; } = default!;
+    public DbSet<Feedback> Feedbacks { get; set; } = default!;
+    public DbSet<FeedbackTag> FeedbackTags { get; set; } = default!;
+    public DbSet<Comment> Comments { get; set; } = default!;
     
     public DbSet<App.Domain.Task> Tasks { get; set; } = default!;
 
@@ -123,6 +126,49 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
             .WithMany(d => d.PostDepartments)
             .HasForeignKey(pd => pd.DepartmentId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        // Configure Feedback entity
+        builder.Entity<Feedback>()
+            .HasOne(f => f.Department)
+            .WithMany(d => d.Feedbacks)
+            .HasForeignKey(f => f.DepartmentId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // Configure FeedbackTag entity
+        builder.Entity<FeedbackTag>()
+            .HasIndex(ft => new { ft.FeedbackId, ft.TagId })
+            .IsUnique();
+        
+        builder.Entity<FeedbackTag>()
+            .HasOne(ft => ft.Feedback)
+            .WithMany(f => f.FeedbackTags)
+            .HasForeignKey(ft => ft.FeedbackId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<FeedbackTag>()
+            .HasOne(ft => ft.Tag)
+            .WithMany()
+            .HasForeignKey(ft => ft.TagId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure Comment entity
+        builder.Entity<Comment>()
+            .HasOne(c => c.Post)
+            .WithMany(p => p.Comments)
+            .HasForeignKey(c => c.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Comment>()
+            .HasOne(c => c.Feedback)
+            .WithMany(f => f.Comments)
+            .HasForeignKey(c => c.FeedbackId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Ensure a comment belongs to either a Post OR Feedback, but not both
+        builder.Entity<Comment>()
+            .HasCheckConstraint("CK_Comment_PostOrFeedback", 
+                "(\"PostId\" IS NOT NULL AND \"FeedbackId\" IS NULL) OR (\"PostId\" IS NULL AND \"FeedbackId\" IS NOT NULL)");
+
         
         builder.Entity<App.Domain.Task>()
             .HasOne(t => t.TaskKeeper)

@@ -16,4 +16,6 @@ public class Post : IDomainId
     // Navigation properties
     public ICollection<PostTag>? PostTags { get; set; }
     public ICollection<PostDepartment>? PostDepartments { get; set; }
+    // Comments on this post
+    public ICollection<Comment>? Comments { get; set; }
 }

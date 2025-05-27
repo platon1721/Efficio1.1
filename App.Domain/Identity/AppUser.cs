@@ -27,6 +27,9 @@ public class AppUser : BaseUser<AppUserRole>
     public ICollection<PostTag>? PostTags { get; set; }
     public ICollection<PostDepartment>? PostDepartments { get; set; }
     public ICollection<Task>? Tasks { get; set; }
+    public ICollection<Comment>? Comments { get; set; }
+    public ICollection<Feedback>? Feedbacks { get; set; }
+    public ICollection<FeedbackTag>? FeedbackTags { get; set; }
 
     public ICollection<AppRefreshToken>? RefreshTokens { get; set; }
 }

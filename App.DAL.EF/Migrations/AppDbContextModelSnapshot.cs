@@ -23,6 +23,58 @@ namespace App.DAL.EF.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("App.Domain.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ChangedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<Guid?>("FeedbackId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("FeedbackId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Comments", t =>
+                        {
+                            t.HasCheckConstraint("CK_Comment_PostOrFeedback", "(\"PostId\" IS NOT NULL AND \"FeedbackId\" IS NULL) OR (\"PostId\" IS NULL AND \"FeedbackId\" IS NOT NULL)");
+                        });
+                });
+
             modelBuilder.Entity("App.Domain.Contact", b =>
                 {
                     b.Property<Guid>("Id")
@@ -195,6 +247,100 @@ namespace App.DAL.EF.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("DepartmentPersons");
+                });
+
+            modelBuilder.Entity("App.Domain.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ChangedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("Feedbacks");
+                });
+
+            modelBuilder.Entity("App.Domain.FeedbackTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ChangedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<Guid>("FeedbackId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("TagId");
+
+                    b.HasIndex("FeedbackId", "TagId")
+                        .IsUnique();
+
+                    b.ToTable("FeedbackTags");
                 });
 
             modelBuilder.Entity("App.Domain.Identity.AppRefreshToken", b =>
@@ -739,6 +885,28 @@ namespace App.DAL.EF.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("App.Domain.Comment", b =>
+                {
+                    b.HasOne("App.Domain.Identity.AppUser", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Domain.Feedback", "Feedback")
+                        .WithMany("Comments")
+                        .HasForeignKey("FeedbackId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("App.Domain.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Feedback");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("App.Domain.Contact", b =>
                 {
                     b.HasOne("App.Domain.ContactType", "ContactType")
@@ -806,6 +974,45 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("App.Domain.Feedback", b =>
+                {
+                    b.HasOne("App.Domain.Identity.AppUser", null)
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Domain.Department", "Department")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("App.Domain.FeedbackTag", b =>
+                {
+                    b.HasOne("App.Domain.Identity.AppUser", null)
+                        .WithMany("FeedbackTags")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Domain.Feedback", "Feedback")
+                        .WithMany("FeedbackTags")
+                        .HasForeignKey("FeedbackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("App.Domain.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Feedback");
+
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("App.Domain.Identity.AppRefreshToken", b =>
@@ -980,9 +1187,18 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Navigation("DepartmentPersons");
 
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("PostDepartments");
 
                     b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("App.Domain.Feedback", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("FeedbackTags");
                 });
 
             modelBuilder.Entity("App.Domain.Identity.AppRole", b =>
@@ -992,11 +1208,17 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.Identity.AppUser", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("ContactTypes");
 
                     b.Navigation("DepartmentPersons");
 
                     b.Navigation("Departments");
+
+                    b.Navigation("FeedbackTags");
+
+                    b.Navigation("Feedbacks");
 
                     b.Navigation("Persons");
 
@@ -1026,6 +1248,8 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.Post", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("PostDepartments");
 
                     b.Navigation("PostTags");
