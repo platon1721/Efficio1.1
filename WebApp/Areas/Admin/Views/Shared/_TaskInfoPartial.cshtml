@@ -1,0 +1,203 @@
+@model IEnumerable<App.Domain.Task>
+
+@{
+    var taskStats = ViewBag.TaskStats;
+    var entityType = ViewBag.EntityType ?? "Entity"; // "Department" or "Person"
+    var entityName = ViewBag.EntityName ?? "Unknown";
+}
+
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-tasks"></i> Task Information
+        </h5>
+        <a asp-area="Admin" asp-controller="Tasks" asp-action="Create" 
+           asp-route-departmentId="@(entityType == "Department" ? ViewBag.EntityId : null)"
+           asp-route-taskKeeperId="@(entityType == "Person" ? ViewBag.EntityId : null)"
+           class="btn btn-sm btn-primary">
+            <i class="fas fa-plus"></i> Assign New Task
+        </a>
+    </div>
+    <div class="card-body">
+        @if (taskStats != null)
+        {
+            <!-- Task Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <div class="h4 mb-0 text-primary">@taskStats.TotalTasks</div>
+                        <small class="text-muted">Total Tasks</small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <div class="h4 mb-0 text-secondary">@taskStats.OpenTasks</div>
+                        <small class="text-muted">Open</small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <div class="h4 mb-0 text-info">@taskStats.InProgressTasks</div>
+                        <small class="text-muted">In Progress</small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <div class="h4 mb-0 text-success">@taskStats.CompletedTasks</div>
+                        <small class="text-muted">Completed</small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <div class="h4 mb-0 text-danger">@taskStats.OverdueTasks</div>
+                        <small class="text-muted">Overdue</small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <div class="h4 mb-0 text-warning">@taskStats.HighPriorityTasks</div>
+                        <small class="text-muted">High Priority</small>
+                    </div>
+                </div>
+            </div>
+
+            @if (entityType == "Person" && taskStats.CompletionRate != null)
+            {
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Task Completion Rate</span>
+                            <span class="fw-bold">@taskStats.CompletionRate%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: @(taskStats.CompletionRate)%" 
+                                 aria-valuenow="@taskStats.CompletionRate" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        <!-- Task List -->
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Deadline</th>
+                            @if (entityType == "Department")
+                            {
+                                <th>Assigned To</th>
+                            }
+                            else
+                            {
+                                <th>Department</th>
+                            }
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var task in Model.OrderBy(t => t.TaskStatus).ThenBy(t => t.DeadLine))
+                        {
+                            <tr class="@(task.TaskStatus == App.Domain.TaskStatus.Completed ? "table-success" : 
+                                        task.DeadLine < DateTime.Now && task.TaskStatus != App.Domain.TaskStatus.Completed ? "table-danger" : "")">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if (task.Priority >= 4)
+                                        {
+                                            <i class="fas fa-exclamation-triangle text-danger me-1" title="High Priority"></i>
+                                        }
+                                        <span>@task.Title</span>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(task.Description) && task.Description.Length > 50)
+                                    {
+                                        <small class="text-muted d-block">@(task.Description.Substring(0, 50))...</small>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge bg-@(task.Priority >= 4 ? "danger" : task.Priority >= 3 ? "warning" : "secondary")">
+                                        @task.Priority
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (task.DeadLine < DateTime.Now && task.TaskStatus != App.Domain.TaskStatus.Completed)
+                                    {
+                                        <span class="text-danger">
+                                            <i class="fas fa-clock"></i>
+                                            @task.DeadLine.ToString("MMM dd")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>@task.DeadLine.ToString("MMM dd, yyyy")</span>
+                                    }
+                                </td>
+                                @if (entityType == "Department")
+                                {
+                                    <td>@(task.TaskKeeper?.PersonName ?? "Unassigned")</td>
+                                }
+                                else
+                                {
+                                    <td>@(task.Department?.DepartmentName ?? "No Department")</td>
+                                }
+                                <td>
+                                    <span class="badge bg-@(task.TaskStatus switch {
+                                        App.Domain.TaskStatus.Open => "secondary",
+                                        App.Domain.TaskStatus.InProgress => "primary",
+                                        App.Domain.TaskStatus.Completed => "success",
+                                        App.Domain.TaskStatus.Canceled => "dark",
+                                        App.Domain.TaskStatus.OnHold => "warning",
+                                        _ => "secondary"
+                                    })">
+                                        @task.TaskStatus
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-area="Admin" asp-controller="Tasks" asp-action="Details" asp-route-id="@task.Id" 
+                                           class="btn btn-sm btn-outline-info" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-area="Admin" asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id" 
+                                           class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        @if (task.TaskStatus != App.Domain.TaskStatus.Completed)
+                                        {
+                                            <form asp-area="Admin" asp-controller="Tasks" asp-action="MarkCompleted" asp-route-id="@task.Id" 
+                                                  method="post" style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-outline-success" title="Mark as Completed" 
+                                                        onclick="return confirm('Mark this task as completed?')">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <i class="fas fa-tasks fa-2x text-muted mb-2"></i>
+                <p class="text-muted">No tasks assigned to this @entityType.ToLower().</p>
+                <a asp-area="Admin" asp-controller="Tasks" asp-action="Create" 
+                   asp-route-departmentId="@(entityType == "Department" ? ViewBag.EntityId : null)"
+                   asp-route-taskKeeperId="@(entityType == "Person" ? ViewBag.EntityId : null)"
+                   class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Assign First Task
+                </a>
+            </div>
+        }
+    </div>
+</div>

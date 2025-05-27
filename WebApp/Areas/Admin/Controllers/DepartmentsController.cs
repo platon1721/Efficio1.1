@@ -31,6 +31,8 @@ namespace WebApp.Areas.Admin.Controllers
                 .Include(d => d.Manager)
                 .Include(d => d.DepartmentPersons!)
                 .ThenInclude(dp => dp.Person)
+                .Include(d => d.Tasks!) // Include tasks
+                .ThenInclude(t => t.TaskKeeper)
                 .ToListAsync();
             return View(departments);
         }
@@ -49,15 +51,33 @@ namespace WebApp.Areas.Admin.Controllers
                 .ThenInclude(dp => dp.Person)
                 .Include(d => d.PostDepartments!)
                 .ThenInclude(pd => pd.Post)
+                .Include(d => d.Tasks!) // Include tasks with full details
+                .ThenInclude(t => t.TaskKeeper)
                 .FirstOrDefaultAsync(m => m.Id == id);
+    
             if (department == null)
             {
                 return NotFound();
             }
 
+            // Add task statistics to ViewBag for easy access in view
+            ViewBag.TaskStats = new
+            {
+                TotalTasks = department.Tasks?.Count ?? 0,
+                OpenTasks = department.Tasks?.Count(t => t.TaskStatus == App.Domain.TaskStatus.Open) ?? 0,
+                InProgressTasks = department.Tasks?.Count(t => t.TaskStatus == App.Domain.TaskStatus.InProgress) ?? 0,
+                CompletedTasks = department.Tasks?.Count(t => t.TaskStatus == App.Domain.TaskStatus.Completed) ?? 0,
+                OverdueTasks = department.Tasks?.Count(t => t.DeadLine < DateTime.UtcNow && t.TaskStatus != App.Domain.TaskStatus.Completed) ?? 0,
+                HighPriorityTasks = department.Tasks?.Count(t => t.Priority >= 4 && t.TaskStatus != App.Domain.TaskStatus.Completed) ?? 0
+            };
+
+            // Add ViewBag data for the task partial view
+            ViewBag.EntityType = "Department";
+            ViewBag.EntityName = department.DepartmentName;
+            ViewBag.EntityId = department.Id;
+
             return View(department);
         }
-
         // GET: Admin/Departments/Create
         public IActionResult Create()
         {
@@ -71,16 +91,18 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DepartmentName,ManagerId")] Department department, Guid[] selectedPersons)
         {
+            // Remove auto-managed fields from validation
             ModelState.Remove("CreatedBy");
             ModelState.Remove("CreatedAt");
             ModelState.Remove("ChangedBy");
             ModelState.Remove("ChangedAt");
-            
+
             if (ModelState.IsValid)
             {
                 department.Id = Guid.NewGuid();
                 _context.Add(department);
-                
+                await _context.SaveChangesAsync();
+
                 // Add selected persons to department
                 if (selectedPersons != null && selectedPersons.Length > 0)
                 {
@@ -88,24 +110,18 @@ namespace WebApp.Areas.Admin.Controllers
                     {
                         var departmentPerson = new DepartmentPerson
                         {
-                            Id = Guid.NewGuid(),
                             DepartmentId = department.Id,
                             PersonId = personId
                         };
                         _context.DepartmentPersons.Add(departmentPerson);
                     }
+                    await _context.SaveChangesAsync();
                 }
-                
-                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            
-            foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
-            {
-                Console.WriteLine($"ModelState Error: {modelError.ErrorMessage}");
-            }
-    
-            ViewBag.ManagerId = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
+
+            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
             ViewBag.Persons = new MultiSelectList(_context.Persons, "Id", "PersonName", selectedPersons);
             return View(department);
         }
@@ -120,17 +136,21 @@ namespace WebApp.Areas.Admin.Controllers
 
             var department = await _context.Departments
                 .Include(d => d.DepartmentPersons!)
+                .ThenInclude(dp => dp.Person)
+                .Include(d => d.Tasks!) // Include tasks for edit view
+                .ThenInclude(t => t.TaskKeeper)
                 .FirstOrDefaultAsync(d => d.Id == id);
-            
+
             if (department == null)
             {
                 return NotFound();
             }
+
+            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
             
             var selectedPersonIds = department.DepartmentPersons?.Select(dp => dp.PersonId).ToArray() ?? new Guid[0];
-            
-            ViewBag.ManagerId = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
             ViewBag.Persons = new MultiSelectList(_context.Persons, "Id", "PersonName", selectedPersonIds);
+
             return View(department);
         }
 
@@ -144,6 +164,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            // Remove auto-managed fields from validation
             ModelState.Remove("CreatedBy");
             ModelState.Remove("CreatedAt");
             ModelState.Remove("ChangedBy");
@@ -154,40 +175,36 @@ namespace WebApp.Areas.Admin.Controllers
                 try
                 {
                     var existingDepartment = await _context.Departments
-                        .Include(d => d.DepartmentPersons!)
+                        .Include(d => d.DepartmentPersons)
                         .FirstOrDefaultAsync(d => d.Id == id);
-                    
+
                     if (existingDepartment == null)
                     {
                         return NotFound();
                     }
-                    
+
+                    // Update basic properties
                     existingDepartment.DepartmentName = department.DepartmentName;
                     existingDepartment.ManagerId = department.ManagerId;
-                    
-                    // ADDED: Explicitly mark ManagerId as modified to ensure EF tracks the change
-                    _context.Entry(existingDepartment).Property(d => d.ManagerId).IsModified = true;
-                    
-                    // Update department persons - remove existing and add new ones
-                    if (existingDepartment.DepartmentPersons != null)
-                    {
-                        _context.DepartmentPersons.RemoveRange(existingDepartment.DepartmentPersons);
-                    }
-                    
+
+                    // Update department-person relationships
+                    // Remove existing relationships
+                    _context.DepartmentPersons.RemoveRange(existingDepartment.DepartmentPersons!);
+
+                    // Add new relationships
                     if (selectedPersons != null && selectedPersons.Length > 0)
                     {
                         foreach (var personId in selectedPersons)
                         {
                             var departmentPerson = new DepartmentPerson
                             {
-                                Id = Guid.NewGuid(),
-                                DepartmentId = existingDepartment.Id,
+                                DepartmentId = department.Id,
                                 PersonId = personId
                             };
                             _context.DepartmentPersons.Add(departmentPerson);
                         }
                     }
-            
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -203,8 +220,8 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-    
-            ViewBag.ManagerId = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
+
+            ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
             ViewBag.Persons = new MultiSelectList(_context.Persons, "Id", "PersonName", selectedPersons);
             return View(department);
         }
@@ -221,7 +238,10 @@ namespace WebApp.Areas.Admin.Controllers
                 .Include(d => d.Manager)
                 .Include(d => d.DepartmentPersons!)
                 .ThenInclude(dp => dp.Person)
+                .Include(d => d.Tasks!) // Include tasks for delete confirmation
+                .ThenInclude(t => t.TaskKeeper)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (department == null)
             {
                 return NotFound();
@@ -235,13 +255,42 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var department = await _context.Departments.FindAsync(id);
+            var department = await _context.Departments
+                .Include(d => d.DepartmentPersons)
+                .Include(d => d.Tasks)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
             if (department != null)
             {
+                // Check if department has active tasks
+                var activeTasks = department.Tasks?.Where(t => t.TaskStatus != App.Domain.TaskStatus.Completed && 
+                                                               t.TaskStatus != App.Domain.TaskStatus.Canceled).ToList(); // Fixed: Cancelled not Canceled
+        
+                if (activeTasks?.Any() == true)
+                {
+                    TempData["Error"] = $"Cannot delete department. It has {activeTasks.Count} active task(s). Please complete or reassign these tasks first.";
+                    return RedirectToAction(nameof(Delete), new { id });
+                }
+
+                // Remove department-person relationships
+                if (department.DepartmentPersons?.Any() == true)
+                {
+                    _context.DepartmentPersons.RemoveRange(department.DepartmentPersons);
+                }
+
+                // Update tasks to remove department assignment
+                if (department.Tasks?.Any() == true)
+                {
+                    foreach (var task in department.Tasks)
+                    {
+                        task.DepartmentId = null;
+                    }
+                }
+
                 _context.Departments.Remove(department);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
