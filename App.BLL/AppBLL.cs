@@ -79,4 +79,23 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
         _taskService ??= new TaskService(
             BLLUOW,
             new TaskBLLMapper());
+    
+    private IFeedbackService? _feedbackService;
+    public IFeedbackService FeedbackService =>
+        _feedbackService ??= new FeedbackService(
+            BLLUOW,
+            new FeedbackBLLMapper(),
+            FeedbackTagService);
+    
+    private IFeedbackTagService? _feedbackTagService;
+    public IFeedbackTagService FeedbackTagService =>
+        _feedbackTagService ??= new FeedbackTagService(
+            BLLUOW,
+            new FeedbackTagBLLMapper());
+    
+    private ICommentService? _commentService;
+    public ICommentService CommentService =>
+        _commentService ??= new CommentService(
+            BLLUOW,
+            new CommentBLLMapper());
 }
