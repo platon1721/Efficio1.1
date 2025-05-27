@@ -20,4 +20,7 @@ public class Department : IDomainId
     
     // Department Tasks (direct relationship)
     public ICollection<Task>? Tasks { get; set; }
+    
+    public ICollection<PostDepartment>? PostDepartments { get; set; }
+
 }

@@ -55,4 +55,16 @@ public class AppUOW : BaseUOW<AppDbContext>, IAppUOW
     private ITaskRepository? _taskRepository; 
     public ITaskRepository TaskRepository =>
     _taskRepository ??= new TaskRepository(UOWDbContext);
+    
+    private IFeedbackRepository? _feedbackRepository;
+    public IFeedbackRepository FeedbackRepository =>
+        _feedbackRepository ??= new FeedbackRepository(UOWDbContext);
+
+    private IFeedbackTagRepository? _feedbackTagRepository;
+    public IFeedbackTagRepository FeedbackTagRepository =>
+        _feedbackTagRepository ??= new FeedbackTagRepository(UOWDbContext);
+
+    private ICommentRepository? _commentRepository;
+    public ICommentRepository CommentRepository =>
+        _commentRepository ??= new CommentRepository(UOWDbContext);
 }

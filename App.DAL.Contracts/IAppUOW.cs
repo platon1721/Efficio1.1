@@ -14,4 +14,7 @@ public interface IAppUOW : IBaseUOW
     IPostTagRepository PostTagRepository { get; }
     IPostDepartmentRepository PostDepartmentRepository { get; }
     ITaskRepository TaskRepository { get; }
+    IFeedbackRepository FeedbackRepository { get; }
+    IFeedbackTagRepository FeedbackTagRepository { get; }
+    ICommentRepository CommentRepository { get; }
 }
