@@ -25,20 +25,6 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         // GET: Admin/Posts
-        // public async Task<IActionResult> Index()
-        // {
-        //     return View(await _context.Posts.ToListAsync());
-        // }
-        // public async Task<IActionResult> Index()
-        // {
-        //     var posts = await _context.Posts
-        //         .Include(p => p.PostTags)
-        //         .ThenInclude(pt => pt.Tag)
-        //         .Include(p => p.PostDepartments)
-        //         .ThenInclude(pd => pd.Department)
-        //         .ToListAsync();
-        //     return View(posts);
-        // }
         public async Task<IActionResult> Index()
         {
             var posts = await _context.Posts
@@ -46,6 +32,8 @@ namespace WebApp.Areas.Admin.Controllers
                 .ThenInclude(pt => pt.Tag)
                 .Include(p => p.PostDepartments!)
                 .ThenInclude(pd => pd.Department)
+                .Include(p => p.Comments!) // Include comments
+                .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
             return View(posts);
         }
@@ -58,20 +46,25 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            
-            // var post = await _context.Posts
-            //     .FirstOrDefaultAsync(m => m.Id == id);
             var post = await _context.Posts
                 .Include(p => p.PostTags!)
                 .ThenInclude(pt => pt.Tag)
                 .Include(p => p.PostDepartments!)
                 .ThenInclude(pd => pd.Department)
+                .Include(p => p.Comments!) // Include comments with full details
                 .FirstOrDefaultAsync(m => m.Id == id);
             
             if (post == null)
             {
                 return NotFound();
             }
+
+            // Add comment statistics
+            ViewBag.CommentStats = new
+            {
+                TotalComments = post.Comments?.Count ?? 0,
+                RecentComments = post.Comments?.Count(c => c.CreatedAt >= DateTime.UtcNow.AddDays(-7)) ?? 0
+            };
 
             return View(post);
         }
@@ -87,29 +80,6 @@ namespace WebApp.Areas.Admin.Controllers
         // POST: Admin/Posts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> Create([Bind("Title,Description")] Post post)
-        // {
-        //     
-        //     ModelState.Remove("CreatedBy");
-        //     ModelState.Remove("CreatedAt");
-        //     ModelState.Remove("ChangedBy");
-        //     ModelState.Remove("ChangedAt");
-        //     
-        //     if (ModelState.IsValid)
-        //     {
-        //         post.Id = Guid.NewGuid();
-        //         _context.Add(post);
-        //         await _context.SaveChangesAsync(); // CreatedBy, CreatedAt
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
-        //     {
-        //         Console.WriteLine($"ModelState Error: {modelError.ErrorMessage}");
-        //     }
-        //     return View(post);
-        // }
-        //
-        
         public async Task<IActionResult> Create([Bind("Title,Description")] Post post, Guid[] selectedTags, Guid[] selectedDepartments)
         {
             ModelState.Remove("CreatedBy");
@@ -166,21 +136,6 @@ namespace WebApp.Areas.Admin.Controllers
             return View(post);
         }
         
-        // // GET: Admin/Posts/Edit/5
-        // public async Task<IActionResult> Edit(Guid? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     var post = await _context.Posts.FindAsync(id);
-        //     if (post == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     return View(post);
-        // }
         // GET: Admin/Posts/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -192,6 +147,7 @@ namespace WebApp.Areas.Admin.Controllers
             var post = await _context.Posts
                 .Include(p => p.PostTags!)
                 .Include(p => p.PostDepartments!)
+                .Include(p => p.Comments!) // Include comments for edit view
                 .FirstOrDefaultAsync(p => p.Id == id);
             
             if (post == null)
@@ -208,51 +164,8 @@ namespace WebApp.Areas.Admin.Controllers
             return View(post);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description")] Post post)
-        // {
-        //     if (id != post.Id)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     ModelState.Remove("CreatedBy");
-        //     ModelState.Remove("CreatedAt");
-        //     ModelState.Remove("ChangedBy");
-        //     ModelState.Remove("ChangedAt");
-        //     
-        //     if (ModelState.IsValid)
-        //     {
-        //         try
-        //         {
-        //             var existingPost = await _context.Posts.FindAsync(id);
-        //             if (existingPost == null)
-        //             {
-        //                 return NotFound();
-        //             }
-        //     
-        //             existingPost.Title = post.Title;
-        //             existingPost.Description = post.Description;
-        //     
-        //             await _context.SaveChangesAsync(); // ChangedBy, ChangedAt
-        //         }
-        //         catch (DbUpdateConcurrencyException)
-        //         {
-        //             if (!PostExists(post.Id))
-        //             {
-        //                 return NotFound();
-        //             }
-        //             else
-        //             {
-        //                 throw;
-        //             }
-        //         }
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     return View(post);
-        // }
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description")] Post post, Guid[] selectedTags, Guid[] selectedDepartments)
         {
             if (id != post.Id)
@@ -342,25 +255,8 @@ namespace WebApp.Areas.Admin.Controllers
             ViewBag.Departments = new MultiSelectList(_context.Departments, "Id", "DepartmentName", selectedDepartments);
             return View(post);
         }
-        
 
         // GET: Admin/Posts/Delete/5
-        // public async Task<IActionResult> Delete(Guid? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     var post = await _context.Posts
-        //         .FirstOrDefaultAsync(m => m.Id == id);
-        //     if (post == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     return View(post);
-        // }
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -373,6 +269,7 @@ namespace WebApp.Areas.Admin.Controllers
                 .ThenInclude(pt => pt.Tag)
                 .Include(p => p.PostDepartments!)
                 .ThenInclude(pd => pd.Department)
+                .Include(p => p.Comments!) // Include comments for delete confirmation
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
@@ -387,14 +284,56 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _context.Posts
+                .Include(p => p.Comments)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (post != null)
             {
+                // Check if post has comments
+                if (post.Comments?.Any() == true)
+                {
+                    TempData["Error"] = $"Cannot delete post '{post.Title}' because it has {post.Comments.Count} comment(s). Please delete the comments first.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 _context.Posts.Remove(post);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = $"Post '{post.Title}' has been deleted successfully.";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Admin/Posts/AddComment/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(Guid postId, string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                TempData["Error"] = "Comment content cannot be empty.";
+                return RedirectToAction(nameof(Details), new { id = postId });
+            }
+
+            if (content.Length > 1000)
+            {
+                TempData["Error"] = "Comment content cannot exceed 1000 characters.";
+                return RedirectToAction(nameof(Details), new { id = postId });
+            }
+
+            var comment = new Comment
+            {
+                Id = Guid.NewGuid(),
+                Content = content.Trim(),
+                PostId = postId
+            };
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Comment added successfully.";
+            return RedirectToAction(nameof(Details), new { id = postId });
         }
 
         private bool PostExists(Guid id)

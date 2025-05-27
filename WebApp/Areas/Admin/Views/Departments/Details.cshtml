@@ -1,342 +1,3 @@
-@* @model App.Domain.Department *@
-@* *@
-@* @{ *@
-@*     ViewData["Title"] = "Department Details"; *@
-@* } *@
-@* *@
-@* <h1>Details</h1> *@
-@* *@
-@* <div> *@
-@*     <h4>Department</h4> *@
-@*     <hr /> *@
-@*     <dl class="row"> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.DepartmentName) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.DepartmentName) *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             Manager *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @(Model.Manager?.PersonName ?? "No Manager Assigned") *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.CreatedBy) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.CreatedBy) *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.CreatedAt) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.CreatedAt) *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.ChangedBy) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.ChangedBy) *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.ChangedAt) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.ChangedAt) *@
-@*         </dd> *@
-@*         @if (!string.IsNullOrEmpty(Model.SysNotes)) *@
-@*         { *@
-@*             <dt class="col-sm-2"> *@
-@*                 @Html.DisplayNameFor(model => model.SysNotes) *@
-@*             </dt> *@
-@*             <dd class="col-sm-10"> *@
-@*                 @Html.DisplayFor(model => model.SysNotes) *@
-@*             </dd> *@
-@*         } *@
-@*     </dl> *@
-@* </div> *@
-@* <div> *@
-@*     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a> | *@
-@*     <a asp-action="Index" class="btn btn-secondary">Back to List</a> *@
-@* </div> *@
-@* @model App.Domain.Department *@
-@* *@
-@* @{ *@
-@*     ViewData["Title"] = "Department Details"; *@
-@* } *@
-@* *@
-@* <h1>Details</h1> *@
-@* *@
-@* <div> *@
-@*     <h4>Department</h4> *@
-@*     <hr /> *@
-@*     <dl class="row"> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.DepartmentName) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.DepartmentName) *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             Manager *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @if (Model.Manager != null) *@
-@*             { *@
-@*                 <span class="badge bg-success">@Model.Manager.PersonName</span> *@
-@*             } *@
-@*             else *@
-@*             { *@
-@*                 <span class="text-muted">No manager assigned</span> *@
-@*             } *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             Department Workers *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @if (Model.Persons != null && Model.Persons.Any()) *@
-@*             { *@
-@*                 <div> *@
-@*                     @foreach (var person in Model.Persons) *@
-@*                     { *@
-@*                         <span class="badge bg-info me-1 mb-1">@person.PersonName</span> *@
-@*                     } *@
-@*                 </div> *@
-@*             } *@
-@*             else *@
-@*             { *@
-@*                 <span class="text-muted">No workers assigned</span> *@
-@*             } *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.CreatedBy) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.CreatedBy) *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.CreatedAt) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.CreatedAt) *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.ChangedBy) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.ChangedBy) *@
-@*         </dd> *@
-@*         <dt class="col-sm-2"> *@
-@*             @Html.DisplayNameFor(model => model.ChangedAt) *@
-@*         </dt> *@
-@*         <dd class="col-sm-10"> *@
-@*             @Html.DisplayFor(model => model.ChangedAt) *@
-@*         </dd> *@
-@*         @if (!string.IsNullOrEmpty(Model.SysNotes)) *@
-@*         { *@
-@*             <dt class="col-sm-2"> *@
-@*                 @Html.DisplayNameFor(model => model.SysNotes) *@
-@*             </dt> *@
-@*             <dd class="col-sm-10"> *@
-@*                 @Html.DisplayFor(model => model.SysNotes) *@
-@*             </dd> *@
-@*         } *@
-@*     </dl> *@
-@* </div> *@
-@* <div> *@
-@*     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a> | *@
-@*     <a asp-action="Index" class="btn btn-secondary">Back to List</a> *@
-@* </div> *@
-
-@* @model App.Domain.Department *@
-@* *@
-@* @{ *@
-@*     ViewData["Title"] = "Department Details"; *@
-@* } *@
-@* *@
-@* <style> *@
-@*     .card-body { *@
-@*         padding: 1rem; *@
-@*     } *@
-@* *@
-@*     .badge { *@
-@*         font-size: 0.875em; *@
-@*     } *@
-@* *@
-@*     .btn-sm { *@
-@*         padding: 0.25rem 0.5rem; *@
-@*         font-size: 0.875rem; *@
-@*     } *@
-@* *@
-@*     .card-title { *@
-@*         margin-bottom: 0.5rem; *@
-@*         color: #495057; *@
-@*     } *@
-@* *@
-@*     .card-text { *@
-@*         margin-bottom: 0.75rem; *@
-@*         color: #6c757d; *@
-@*     } *@
-@* *@
-@*     .posts-scroll { *@
-@*         max-height: 500px; *@
-@*         overflow-y: auto; *@
-@*     } *@
-@* </style> *@
-@* *@
-@* <h1>Details</h1> *@
-@* *@
-@* <div class="row"> *@
-@*     <!-- Left Column - Department Information --> *@
-@*     <div class="col-md-6"> *@
-@*         <h4>Department Information</h4> *@
-@*         <hr /> *@
-@*         <dl class="row"> *@
-@*             <dt class="col-sm-4"> *@
-@*                 @Html.DisplayNameFor(model => model.DepartmentName) *@
-@*             </dt> *@
-@*             <dd class="col-sm-8"> *@
-@*                 @Html.DisplayFor(model => model.DepartmentName) *@
-@*             </dd> *@
-@*             <dt class="col-sm-4"> *@
-@*                 Manager *@
-@*             </dt> *@
-@*             <dd class="col-sm-8"> *@
-@*                 @if (Model.Manager != null) *@
-@*                 { *@
-@*                     <span class="badge bg-success">@Model.Manager.PersonName</span> *@
-@*                 } *@
-@*                 else *@
-@*                 { *@
-@*                     <span class="text-muted">No manager assigned</span> *@
-@*                 } *@
-@*             </dd> *@
-@*             <dt class="col-sm-4"> *@
-@*                 Workers *@
-@*             </dt> *@
-@*             <dd class="col-sm-8"> *@
-@*                 @if (Model.Persons != null && Model.Persons.Any()) *@
-@*                 { *@
-@*                     @foreach (var person in Model.Persons) *@
-@*                     { *@
-@*                         <span class="badge bg-info me-1 mb-1">@person.PersonName</span> *@
-@*                     } *@
-@*                 } *@
-@*                 else *@
-@*                 { *@
-@*                     <span class="text-muted">No workers assigned</span> *@
-@*                 } *@
-@*             </dd> *@
-@*             <dt class="col-sm-4"> *@
-@*                 @Html.DisplayNameFor(model => model.CreatedBy) *@
-@*             </dt> *@
-@*             <dd class="col-sm-8"> *@
-@*                 @Html.DisplayFor(model => model.CreatedBy) *@
-@*             </dd> *@
-@*             <dt class="col-sm-4"> *@
-@*                 @Html.DisplayNameFor(model => model.CreatedAt) *@
-@*             </dt> *@
-@*             <dd class="col-sm-8"> *@
-@*                 @Html.DisplayFor(model => model.CreatedAt) *@
-@*             </dd> *@
-@*             <dt class="col-sm-4"> *@
-@*                 @Html.DisplayNameFor(model => model.ChangedBy) *@
-@*             </dt> *@
-@*             <dd class="col-sm-8"> *@
-@*                 @Html.DisplayFor(model => model.ChangedBy) *@
-@*             </dd> *@
-@*             <dt class="col-sm-4"> *@
-@*                 @Html.DisplayNameFor(model => model.ChangedAt) *@
-@*             </dt> *@
-@*             <dd class="col-sm-8"> *@
-@*                 @Html.DisplayFor(model => model.ChangedAt) *@
-@*             </dd> *@
-@*             @if (!string.IsNullOrEmpty(Model.SysNotes)) *@
-@*             { *@
-@*                 <dt class="col-sm-4"> *@
-@*                     @Html.DisplayNameFor(model => model.SysNotes) *@
-@*                 </dt> *@
-@*                 <dd class="col-sm-8"> *@
-@*                     @Html.DisplayFor(model => model.SysNotes) *@
-@*                 </dd> *@
-@*             } *@
-@*         </dl> *@
-@*     </div> *@
-@* *@
-@*     <!-- Right Column - Related Posts --> *@
-@*     <div class="col-md-6"> *@
-@*         <h4>Department Posts</h4> *@
-@*         <hr /> *@
-@*          *@
-@*         @if (Model.Posts != null && Model.Posts.Any()) *@
-@*         { *@
-@*             <div class="card"> *@
-@*                 <div class="card-header"> *@
-@*                     <strong>Posts targeted to this department (@Model.Posts.Count())</strong> *@
-@*                 </div> *@
-@*                 <div class="card-body" style="max-height: 500px; overflow-y: auto;"> *@
-@*                     @foreach (var post in Model.Posts) *@
-@*                     { *@
-@*                         <div class="card mb-3"> *@
-@*                             <div class="card-body"> *@
-@*                                 <h6 class="card-title">@post.Title</h6> *@
-@*                                 <p class="card-text"> *@
-@*                                     @{ *@
-@*                                         var shortDescription = post.Description.Length > 150  *@
-@*                                             ? post.Description.Substring(0, 150) + "..."  *@
-@*                                             : post.Description; *@
-@*                                     } *@
-@*                                     @shortDescription *@
-@*                                 </p> *@
-@*                                 <div class="d-flex justify-content-between align-items-center"> *@
-@*                                     <small class="text-muted"> *@
-@*                                         Created: @post.CreatedAt.ToString("yyyy-MM-dd") *@
-@*                                     </small> *@
-@*                                     <div> *@
-@*                                         <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id"  *@
-@*                                            class="btn btn-sm btn-info me-1"> *@
-@*                                             <i class="fas fa-eye"></i> Details *@
-@*                                         </a> *@
-@*                                         <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id"  *@
-@*                                            class="btn btn-sm btn-warning"> *@
-@*                                             <i class="fas fa-edit"></i> Edit *@
-@*                                         </a> *@
-@*                                     </div> *@
-@*                                 </div> *@
-@*                             </div> *@
-@*                         </div> *@
-@*                     } *@
-@*                 </div> *@
-@*             </div> *@
-@*         } *@
-@*         else *@
-@*         { *@
-@*             <div class="alert alert-info"> *@
-@*                 <i class="fas fa-info-circle"></i> No posts are currently targeted to this department. *@
-@*             </div> *@
-@*         } *@
-@*          *@
-@*         <!-- Quick action to create new post for this department --> *@
-@*         <div class="mt-3"> *@
-@*             <a asp-controller="Posts" asp-action="Create" class="btn btn-success"> *@
-@*                 <i class="fas fa-plus"></i> Create New Post *@
-@*             </a> *@
-@*         </div> *@
-@*     </div> *@
-@* </div> *@
-@* *@
-@* <!-- Action Buttons --> *@
-@* <div class="mt-4"> *@
-@*     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning"> *@
-@*         <i class="fas fa-edit"></i> Edit Department *@
-@*     </a> *@
-@*     <a asp-action="Index" class="btn btn-secondary"> *@
-@*         <i class="fas fa-list"></i> Back to List *@
-@*     </a> *@
-@* </div> *@
-
 @model App.Domain.Department
 
 @{
@@ -441,6 +102,134 @@
                 }
             </div>
         </div>
+
+        <!-- Department Feedbacks -->
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-comments"></i> Department Feedbacks
+                </h5>
+                <a asp-controller="Feedbacks" asp-action="Create" asp-route-departmentId="@Model.Id" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Add Feedback
+                </a>
+            </div>
+            <div class="card-body">
+                @if (Model.Feedbacks?.Any() == true)
+                {
+                    <!-- Feedback Statistics -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="h5 mb-0 text-info">@ViewBag.FeedbackStats.TotalFeedbacks</div>
+                                <small class="text-muted">Total Feedbacks</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="h5 mb-0 text-success">@ViewBag.FeedbackStats.RecentFeedbacks</div>
+                                <small class="text-muted">Recent (30 days)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="h5 mb-0 text-primary">@ViewBag.FeedbackStats.FeedbacksWithComments</div>
+                                <small class="text-muted">With Comments</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feedback List -->
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Tags</th>
+                                <th>Comments</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var feedback in Model.Feedbacks.OrderByDescending(f => f.CreatedAt))
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@feedback.Title</strong>
+                                    </td>
+                                    <td>
+                                        @if (feedback.Description.Length > 50)
+                                        {
+                                            @(feedback.Description.Substring(0, 50))<text>...</text>
+                                        }
+                                        else
+                                        {
+                                            @feedback.Description
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (feedback.Tags?.Any() == true)
+                                        {
+                                            @foreach (var tag in feedback.Tags.Take(3))
+                                            {
+                                                <span class="badge bg-secondary me-1">@tag.Title</span>
+                                            }
+                                            @if (feedback.Tags.Count() > 3)
+                                            {
+                                                <span class="text-muted">+@(feedback.Tags.Count() - 3) more</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No tags</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (feedback.Comments?.Any() == true)
+                                        {
+                                            <span class="badge bg-info">@feedback.Comments.Count</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">0</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @feedback.CreatedAt.ToString("MMM dd, yyyy")
+                                        <br />
+                                        <small class="text-muted">by @feedback.CreatedBy</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@feedback.Id"
+                                               class="btn btn-sm btn-outline-info" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-controller="Feedbacks" asp-action="Edit" asp-route-id="@feedback.Id"
+                                               class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-comments fa-2x text-muted mb-2"></i>
+                        <p class="text-muted">No feedbacks for this department yet.</p>
+                        <a asp-controller="Feedbacks" asp-action="Create" asp-route-departmentId="@Model.Id" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Add First Feedback
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 
     <div class="col-lg-4">
@@ -460,6 +249,19 @@
                     <div class="col-6">
                         <div class="h4 mb-0 text-info">@(ViewBag.TaskStats?.TotalTasks ?? 0)</div>
                         <small class="text-muted">Tasks</small>
+                    </div>
+                </div>
+                <hr />
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <div class="h4 mb-0 text-success">@(ViewBag.FeedbackStats?.TotalFeedbacks ?? 0)</div>
+                            <small class="text-muted">Feedbacks</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="h4 mb-0 text-warning">@(Model.PostDepartments?.Count ?? 0)</div>
+                        <small class="text-muted">Posts</small>
                     </div>
                 </div>
             </div>

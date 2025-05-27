@@ -1,65 +1,129 @@
 @model App.Domain.Feedback
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Feedback";
 }
 
-<h1>Create</h1>
-
-<h4>Feedback</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartmentId" class="control-label"></label>
-                <select asp-for="DepartmentId" class ="form-control" asp-items="ViewBag.DepartmentId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedBy" class="control-label"></label>
-                <input asp-for="ChangedBy" class="form-control" />
-                <span asp-validation-for="ChangedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedAt" class="control-label"></label>
-                <input asp-for="ChangedAt" class="form-control" />
-                <span asp-validation-for="ChangedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SysNotes" class="control-label"></label>
-                <input asp-for="SysNotes" class="form-control" />
-                <span asp-validation-for="SysNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Create New Feedback</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Feedback Information</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Title" class="form-label">Title <span class="text-danger">*</span></label>
+                        <input asp-for="Title" class="form-control" placeholder="Enter feedback title..." />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea asp-for="Description" class="form-control" rows="6" placeholder="Describe your feedback in detail..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="DepartmentId" class="form-label">Department</label>
+                        <select asp-for="DepartmentId" class="form-select" asp-items="ViewBag.DepartmentId">
+                            <option value="">-- General Feedback (No specific department) --</option>
+                        </select>
+                        <div class="form-text">Select a department if this feedback is specific to one department</div>
+                        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label">Tags</label>
+                        <div class="tags-container border rounded p-3 bg-light">
+                            @if (ViewBag.AllTags != null)
+                            {
+                                @foreach (var tag in (IEnumerable<App.Domain.Tag>)ViewBag.AllTags)
+                                {
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="selectedTags" value="@tag.Id" id="tag_@tag.Id"
+                                               @(ViewBag.SelectedTags != null && ((string[])ViewBag.SelectedTags).Contains(tag.Id.ToString()) ? "checked" : "")>
+                                        <label class="form-check-label" for="tag_@tag.Id">
+                                            @tag.Title
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">No tags available. <a asp-controller="Tags" asp-action="Create">Create some tags first</a>.</p>
+                            }
+                        </div>
+                        <div class="form-text">Select relevant tags to categorize this feedback</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Tips</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="fas fa-lightbulb text-warning"></i>
+                        Be specific and clear in your feedback
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-tags text-info"></i>
+                        Use relevant tags to help categorize
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-building text-success"></i>
+                        Select a department if applicable
+                    </li>
+                    <li>
+                        <i class="fas fa-edit text-primary"></i>
+                        You can edit feedback after creation
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        @if (ViewBag.AllTags != null && ((IEnumerable<App.Domain.Tag>)ViewBag.AllTags).Any())
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Available Tags</h6>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted">Click on tags above to select them for your feedback:</small>
+                    <div class="mt-2">
+                        @foreach (var tag in (IEnumerable<App.Domain.Tag>)ViewBag.AllTags)
+                        {
+                            <span class="badge bg-secondary me-1 mb-1">@tag.Title</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
 @section Scripts {

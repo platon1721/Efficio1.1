@@ -1,66 +1,136 @@
 @model App.Domain.Comment
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Comment";
 }
 
-<h1>Create</h1>
-
-<h4>Comment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PostId" class="control-label"></label>
-                <select asp-for="PostId" class ="form-control" asp-items="ViewBag.PostId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FeedbackId" class="control-label"></label>
-                <select asp-for="FeedbackId" class ="form-control" asp-items="ViewBag.FeedbackId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedBy" class="control-label"></label>
-                <input asp-for="ChangedBy" class="form-control" />
-                <span asp-validation-for="ChangedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedAt" class="control-label"></label>
-                <input asp-for="ChangedAt" class="form-control" />
-                <span asp-validation-for="ChangedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SysNotes" class="control-label"></label>
-                <input asp-for="SysNotes" class="form-control" />
-                <span asp-validation-for="SysNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Create New Comment</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+@if (!string.IsNullOrEmpty(ViewBag.ParentType?.ToString()))
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        Creating comment for <strong>@ViewBag.ParentType</strong>: @ViewBag.ParentTitle
+    </div>
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Comment Information</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Content" class="form-label">Comment Content <span class="text-danger">*</span></label>
+                        <textarea asp-for="Content" class="form-control" rows="5" placeholder="Write your comment here..." maxlength="1000"></textarea>
+                        <div class="form-text">Maximum 1000 characters</div>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+
+                    @if (string.IsNullOrEmpty(ViewBag.ParentType?.ToString()))
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="PostId" class="form-label">Post</label>
+                                    <select asp-for="PostId" class="form-select" asp-items="ViewBag.PostId">
+                                        <option value="">-- Select Post --</option>
+                                    </select>
+                                    <span asp-validation-for="PostId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="FeedbackId" class="form-label">Feedback</label>
+                                    <select asp-for="FeedbackId" class="form-select" asp-items="ViewBag.FeedbackId">
+                                        <option value="">-- Select Feedback --</option>
+                                    </select>
+                                    <span asp-validation-for="FeedbackId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Please select either a Post OR a Feedback, but not both.
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="PostId" />
+                        <input type="hidden" asp-for="FeedbackId" />
+                    }
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Comment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Guidelines</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i>
+                        Be respectful and constructive
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i>
+                        Stay on topic
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i>
+                        Keep comments under 1000 characters
+                    </li>
+                    <li>
+                        <i class="fas fa-info text-info"></i>
+                        Comments can be edited after creation
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Ensure only one parent is selected (only if both dropdowns exist)
+        const postSelect = document.getElementById('PostId');
+        const feedbackSelect = document.getElementById('FeedbackId');
+
+        if (postSelect && feedbackSelect) {
+            postSelect.addEventListener('change', function() {
+                if (this.value) {
+                    feedbackSelect.value = '';
+                }
+            });
+
+            feedbackSelect.addEventListener('change', function() {
+                if (this.value) {
+                    postSelect.value = '';
+                }
+            });
+        }
+    </script>
 }

@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Task = System.Threading.Tasks.Task;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "admin")]
     public class FeedbacksController : Controller
     {
         private readonly AppDbContext _context;
@@ -55,10 +57,17 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         // GET: Admin/Feedbacks/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(Guid? departmentId = null)
         {
-            await PopulateDropdowns();
-            return View();
+            await PopulateDropdowns(departmentId);
+            
+            var feedback = new Feedback();
+            if (departmentId.HasValue)
+            {
+                feedback.DepartmentId = departmentId.Value;
+            }
+            
+            return View(feedback);
         }
 
         // POST: Admin/Feedbacks/Create
@@ -67,6 +76,12 @@ namespace WebApp.Areas.Admin.Controllers
         public async Task<IActionResult> Create([Bind("Title,Description,DepartmentId")] Feedback feedback,
             string[]? selectedTags)
         {
+            // Remove auto-managed fields from validation
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("ChangedBy");
+            ModelState.Remove("ChangedAt");
+
             if (ModelState.IsValid)
             {
                 feedback.Id = Guid.NewGuid();
@@ -75,15 +90,15 @@ namespace WebApp.Areas.Admin.Controllers
                 if (selectedTags != null && selectedTags.Length > 0)
                 {
                     feedback.FeedbackTags = new List<FeedbackTag>();
-                    foreach (var tagId in selectedTags)
+                    foreach (var tagIdString in selectedTags)
                     {
-                        if (Guid.TryParse(tagId, out var parsedTagId))
+                        if (Guid.TryParse(tagIdString, out var tagId))
                         {
                             feedback.FeedbackTags.Add(new FeedbackTag
                             {
                                 Id = Guid.NewGuid(),
                                 FeedbackId = feedback.Id,
-                                TagId = parsedTagId
+                                TagId = tagId
                             });
                         }
                     }
@@ -91,6 +106,8 @@ namespace WebApp.Areas.Admin.Controllers
 
                 _context.Add(feedback);
                 await _context.SaveChangesAsync();
+                
+                TempData["Success"] = "Feedback created successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -116,6 +133,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            // Get currently selected tag IDs
             var selectedTags = feedback.FeedbackTags?.Select(ft => ft.TagId.ToString()).ToArray();
             await PopulateDropdowns(feedback.DepartmentId, selectedTags);
 
@@ -133,11 +151,17 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            // Remove auto-managed fields from validation
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("ChangedBy");
+            ModelState.Remove("ChangedAt");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Get existing feedback with tags
+                    // Get existing feedback with all related data
                     var existingFeedback = await _context.Feedbacks
                         .Include(f => f.FeedbackTags)
                         .FirstOrDefaultAsync(f => f.Id == id);
@@ -152,30 +176,42 @@ namespace WebApp.Areas.Admin.Controllers
                     existingFeedback.Description = feedback.Description;
                     existingFeedback.DepartmentId = feedback.DepartmentId;
 
-                    // Update tags
-                    if (existingFeedback.FeedbackTags != null)
+                    // Handle tags - remove all existing tags first
+                    if (existingFeedback.FeedbackTags != null && existingFeedback.FeedbackTags.Any())
                     {
                         _context.FeedbackTags.RemoveRange(existingFeedback.FeedbackTags);
                     }
 
+                    // Add new tags
                     if (selectedTags != null && selectedTags.Length > 0)
                     {
-                        existingFeedback.FeedbackTags = new List<FeedbackTag>();
-                        foreach (var tagId in selectedTags)
+                        var newFeedbackTags = new List<FeedbackTag>();
+                        foreach (var tagIdString in selectedTags)
                         {
-                            if (Guid.TryParse(tagId, out var parsedTagId))
+                            if (Guid.TryParse(tagIdString, out var tagId))
                             {
-                                existingFeedback.FeedbackTags.Add(new FeedbackTag
+                                // Verify the tag exists
+                                var tagExists = await _context.Tags.AnyAsync(t => t.Id == tagId);
+                                if (tagExists)
                                 {
-                                    Id = Guid.NewGuid(),
-                                    FeedbackId = existingFeedback.Id,
-                                    TagId = parsedTagId
-                                });
+                                    newFeedbackTags.Add(new FeedbackTag
+                                    {
+                                        Id = Guid.NewGuid(),
+                                        FeedbackId = existingFeedback.Id,
+                                        TagId = tagId
+                                    });
+                                }
                             }
+                        }
+                        
+                        if (newFeedbackTags.Any())
+                        {
+                            _context.FeedbackTags.AddRange(newFeedbackTags);
                         }
                     }
 
                     await _context.SaveChangesAsync();
+                    TempData["Success"] = "Feedback updated successfully.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -240,7 +276,7 @@ namespace WebApp.Areas.Admin.Controllers
                 }
 
                 // Remove associated tags first
-                if (feedback.FeedbackTags != null)
+                if (feedback.FeedbackTags != null && feedback.FeedbackTags.Any())
                 {
                     _context.FeedbackTags.RemoveRange(feedback.FeedbackTags);
                 }
@@ -265,6 +301,12 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Details), new { id = feedbackId });
             }
 
+            if (content.Length > 1000)
+            {
+                TempData["Error"] = "Comment content cannot exceed 1000 characters.";
+                return RedirectToAction(nameof(Details), new { id = feedbackId });
+            }
+
             var comment = new Comment
             {
                 Id = Guid.NewGuid(),
@@ -286,7 +328,7 @@ namespace WebApp.Areas.Admin.Controllers
 
         private async Task PopulateDropdowns(Guid? selectedDepartmentId = null, string[]? selectedTags = null)
         {
-            // Department dropdown with proper display
+            // Department dropdown
             var departments = await _context.Departments
                 .OrderBy(d => d.DepartmentName)
                 .Select(d => new { d.Id, d.DepartmentName })
@@ -294,7 +336,7 @@ namespace WebApp.Areas.Admin.Controllers
 
             ViewData["DepartmentId"] = new SelectList(departments, "Id", "DepartmentName", selectedDepartmentId);
 
-            // Tags for multi-select
+            // Tags for checkbox selection
             var allTags = await _context.Tags
                 .OrderBy(t => t.Title)
                 .ToListAsync();

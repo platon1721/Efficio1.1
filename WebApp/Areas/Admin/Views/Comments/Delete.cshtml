@@ -1,69 +1,127 @@
 @model App.Domain.Comment
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Comment";
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Comment</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Post)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Post!.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Feedback)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Feedback!.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SysNotes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SysNotes)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Delete Comment</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
 </div>
+
+<div class="alert alert-danger">
+    <h3><i class="fas fa-exclamation-triangle"></i> Are you sure you want to delete this comment?</h3>
+    <p>This action cannot be undone.</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0 text-danger">
+                    <i class="fas fa-trash"></i> Comment to be deleted
+                </h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Content:</dt>
+                    <dd class="col-sm-9">
+                        <div class="comment-content border rounded p-3 bg-light">
+                            @Html.DisplayFor(model => model.Content)
+                        </div>
+                    </dd>
+
+                    <dt class="col-sm-3">Type:</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.PostId.HasValue)
+                        {
+                            <span class="badge bg-primary">Post Comment</span>
+                        }
+                        else if (Model.FeedbackId.HasValue)
+                        {
+                            <span class="badge bg-info">Feedback Comment</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Unassigned</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Parent:</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Post != null)
+                        {
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.Post.Id" class="text-decoration-none">
+                                <i class="fas fa-newspaper"></i> @Model.Post.Title
+                            </a>
+                        }
+                        else if (Model.Feedback != null)
+                        {
+                            <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@Model.Feedback.Id" class="text-decoration-none">
+                                <i class="fas fa-comment-alt"></i> @Model.Feedback.Title
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No parent assigned</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Created:</dt>
+                    <dd class="col-sm-9">
+                        @Model.CreatedAt.ToString("MMM dd, yyyy HH:mm") by @Model.CreatedBy
+                    </dd>
+
+                    @if (Model.ChangedAt.HasValue)
+                    {
+                        <dt class="col-sm-3">Last Modified:</dt>
+                        <dd class="col-sm-9">
+                            @Model.ChangedAt.Value.ToString("MMM dd, yyyy HH:mm") by @Model.ChangedBy
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h6 class="card-title mb-0">Confirm Deletion</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    This will permanently delete the comment. This action cannot be undone.
+                </p>
+
+                <form asp-action="Delete" method="post" class="d-grid gap-2">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Yes, Delete Comment
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .comment-content {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        line-height: 1.6;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .comment-preview {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+</style>

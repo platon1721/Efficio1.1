@@ -31,8 +31,9 @@ namespace WebApp.Areas.Admin.Controllers
                 .Include(d => d.Manager)
                 .Include(d => d.DepartmentPersons!)
                 .ThenInclude(dp => dp.Person)
-                .Include(d => d.Tasks!) // Include tasks
+                .Include(d => d.Tasks!)
                 .ThenInclude(t => t.TaskKeeper)
+                .Include(d => d.Feedbacks!)
                 .ToListAsync();
             return View(departments);
         }
@@ -53,8 +54,13 @@ namespace WebApp.Areas.Admin.Controllers
                 .ThenInclude(pd => pd.Post)
                 .Include(d => d.Tasks!) // Include tasks with full details
                 .ThenInclude(t => t.TaskKeeper)
+                .Include(d => d.Feedbacks!) // Include feedbacks with tags and comments
+                .ThenInclude(f => f.FeedbackTags!)
+                .ThenInclude(ft => ft.Tag)
+                .Include(d => d.Feedbacks!)
+                .ThenInclude(f => f.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
-    
+
             if (department == null)
             {
                 return NotFound();
@@ -67,8 +73,18 @@ namespace WebApp.Areas.Admin.Controllers
                 OpenTasks = department.Tasks?.Count(t => t.TaskStatus == App.Domain.TaskStatus.Open) ?? 0,
                 InProgressTasks = department.Tasks?.Count(t => t.TaskStatus == App.Domain.TaskStatus.InProgress) ?? 0,
                 CompletedTasks = department.Tasks?.Count(t => t.TaskStatus == App.Domain.TaskStatus.Completed) ?? 0,
-                OverdueTasks = department.Tasks?.Count(t => t.DeadLine < DateTime.UtcNow && t.TaskStatus != App.Domain.TaskStatus.Completed) ?? 0,
-                HighPriorityTasks = department.Tasks?.Count(t => t.Priority >= 4 && t.TaskStatus != App.Domain.TaskStatus.Completed) ?? 0
+                OverdueTasks = department.Tasks?.Count(t =>
+                    t.DeadLine < DateTime.UtcNow && t.TaskStatus != App.Domain.TaskStatus.Completed) ?? 0,
+                HighPriorityTasks =
+                    department.Tasks?.Count(t => t.Priority >= 4 && t.TaskStatus != App.Domain.TaskStatus.Completed) ??
+                    0
+            };
+
+            ViewBag.FeedbackStats = new
+            {
+                TotalFeedbacks = department.Feedbacks?.Count ?? 0,
+                RecentFeedbacks = department.Feedbacks?.Count(f => f.CreatedAt >= DateTime.UtcNow.AddDays(-30)) ?? 0,
+                FeedbacksWithComments = department.Feedbacks?.Count(f => f.Comments != null && f.Comments.Any()) ?? 0
             };
 
             // Add ViewBag data for the task partial view
@@ -78,6 +94,7 @@ namespace WebApp.Areas.Admin.Controllers
 
             return View(department);
         }
+
         // GET: Admin/Departments/Create
         public IActionResult Create()
         {
@@ -89,7 +106,8 @@ namespace WebApp.Areas.Admin.Controllers
         // POST: Admin/Departments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DepartmentName,ManagerId")] Department department, Guid[] selectedPersons)
+        public async Task<IActionResult> Create([Bind("DepartmentName,ManagerId")] Department department,
+            Guid[] selectedPersons)
         {
             // Remove auto-managed fields from validation
             ModelState.Remove("CreatedBy");
@@ -115,6 +133,7 @@ namespace WebApp.Areas.Admin.Controllers
                         };
                         _context.DepartmentPersons.Add(departmentPerson);
                     }
+
                     await _context.SaveChangesAsync();
                 }
 
@@ -139,6 +158,7 @@ namespace WebApp.Areas.Admin.Controllers
                 .ThenInclude(dp => dp.Person)
                 .Include(d => d.Tasks!) // Include tasks for edit view
                 .ThenInclude(t => t.TaskKeeper)
+                .Include(d => d.Feedbacks!) // Include feedbacks for edit view
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             if (department == null)
@@ -147,7 +167,7 @@ namespace WebApp.Areas.Admin.Controllers
             }
 
             ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "PersonName", department.ManagerId);
-            
+
             var selectedPersonIds = department.DepartmentPersons?.Select(dp => dp.PersonId).ToArray() ?? new Guid[0];
             ViewBag.Persons = new MultiSelectList(_context.Persons, "Id", "PersonName", selectedPersonIds);
 
@@ -157,7 +177,8 @@ namespace WebApp.Areas.Admin.Controllers
         // POST: Admin/Departments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,DepartmentName,ManagerId")] Department department, Guid[] selectedPersons)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,DepartmentName,ManagerId")] Department department,
+            Guid[] selectedPersons)
         {
             if (id != department.Id)
             {
@@ -218,6 +239,7 @@ namespace WebApp.Areas.Admin.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -240,6 +262,8 @@ namespace WebApp.Areas.Admin.Controllers
                 .ThenInclude(dp => dp.Person)
                 .Include(d => d.Tasks!) // Include tasks for delete confirmation
                 .ThenInclude(t => t.TaskKeeper)
+                .Include(d => d.Feedbacks!) // Include feedbacks for delete confirmation
+                .ThenInclude(f => f.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (department == null)
@@ -258,17 +282,30 @@ namespace WebApp.Areas.Admin.Controllers
             var department = await _context.Departments
                 .Include(d => d.DepartmentPersons)
                 .Include(d => d.Tasks)
+                .Include(d => d.Feedbacks)
+                .ThenInclude(f => f.Comments)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             if (department != null)
             {
                 // Check if department has active tasks
-                var activeTasks = department.Tasks?.Where(t => t.TaskStatus != App.Domain.TaskStatus.Completed && 
-                                                               t.TaskStatus != App.Domain.TaskStatus.Canceled).ToList(); // Fixed: Cancelled not Canceled
-        
+                var activeTasks = department.Tasks?.Where(t => t.TaskStatus != App.Domain.TaskStatus.Completed &&
+                                                               t.TaskStatus != App.Domain.TaskStatus.Canceled).ToList();
+
                 if (activeTasks?.Any() == true)
                 {
-                    TempData["Error"] = $"Cannot delete department. It has {activeTasks.Count} active task(s). Please complete or reassign these tasks first.";
+                    TempData["Error"] =
+                        $"Cannot delete department. It has {activeTasks.Count} active task(s). Please complete or reassign these tasks first.";
+                    return RedirectToAction(nameof(Delete), new { id });
+                }
+
+                // Check if department has feedbacks with comments
+                var feedbacksWithComments =
+                    department.Feedbacks?.Where(f => f.Comments != null && f.Comments.Any()).ToList();
+                if (feedbacksWithComments?.Any() == true)
+                {
+                    TempData["Error"] =
+                        $"Cannot delete department. It has {feedbacksWithComments.Count} feedback(s) with comments. Please handle the feedbacks first.";
                     return RedirectToAction(nameof(Delete), new { id });
                 }
 
@@ -284,6 +321,15 @@ namespace WebApp.Areas.Admin.Controllers
                     foreach (var task in department.Tasks)
                     {
                         task.DepartmentId = null;
+                    }
+                }
+
+                // Update feedbacks to remove department assignment
+                if (department.Feedbacks?.Any() == true)
+                {
+                    foreach (var feedback in department.Feedbacks)
+                    {
+                        feedback.DepartmentId = null;
                     }
                 }
 
