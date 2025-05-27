@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain;
+using Task = System.Threading.Tasks.Task;
 
 namespace WebApp.Areas.Admin.Controllers
 {
@@ -23,8 +20,15 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Feedbacks
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Feedbacks.Include(f => f.Department);
-            return View(await appDbContext.ToListAsync());
+            var feedbacks = await _context.Feedbacks
+                .Include(f => f.Department)
+                .Include(f => f.FeedbackTags!)
+                .ThenInclude(ft => ft.Tag)
+                .Include(f => f.Comments)
+                .OrderByDescending(f => f.CreatedAt)
+                .ToListAsync();
+
+            return View(feedbacks);
         }
 
         // GET: Admin/Feedbacks/Details/5
@@ -37,7 +41,11 @@ namespace WebApp.Areas.Admin.Controllers
 
             var feedback = await _context.Feedbacks
                 .Include(f => f.Department)
+                .Include(f => f.FeedbackTags!)
+                .ThenInclude(ft => ft.Tag)
+                .Include(f => f.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (feedback == null)
             {
                 return NotFound();
@@ -47,27 +55,46 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         // GET: Admin/Feedbacks/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "CreatedBy");
+            await PopulateDropdowns();
             return View();
         }
 
         // POST: Admin/Feedbacks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,DepartmentId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Feedback feedback)
+        public async Task<IActionResult> Create([Bind("Title,Description,DepartmentId")] Feedback feedback,
+            string[]? selectedTags)
         {
             if (ModelState.IsValid)
             {
                 feedback.Id = Guid.NewGuid();
+
+                // Handle tags
+                if (selectedTags != null && selectedTags.Length > 0)
+                {
+                    feedback.FeedbackTags = new List<FeedbackTag>();
+                    foreach (var tagId in selectedTags)
+                    {
+                        if (Guid.TryParse(tagId, out var parsedTagId))
+                        {
+                            feedback.FeedbackTags.Add(new FeedbackTag
+                            {
+                                Id = Guid.NewGuid(),
+                                FeedbackId = feedback.Id,
+                                TagId = parsedTagId
+                            });
+                        }
+                    }
+                }
+
                 _context.Add(feedback);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "CreatedBy", feedback.DepartmentId);
+
+            await PopulateDropdowns(feedback.DepartmentId, selectedTags);
             return View(feedback);
         }
 
@@ -79,21 +106,27 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var feedback = await _context.Feedbacks.FindAsync(id);
+            var feedback = await _context.Feedbacks
+                .Include(f => f.FeedbackTags!)
+                .ThenInclude(ft => ft.Tag)
+                .FirstOrDefaultAsync(f => f.Id == id);
+
             if (feedback == null)
             {
                 return NotFound();
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "CreatedBy", feedback.DepartmentId);
+
+            var selectedTags = feedback.FeedbackTags?.Select(ft => ft.TagId.ToString()).ToArray();
+            await PopulateDropdowns(feedback.DepartmentId, selectedTags);
+
             return View(feedback);
         }
 
         // POST: Admin/Feedbacks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Description,DepartmentId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Feedback feedback)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description,DepartmentId")] Feedback feedback,
+            string[]? selectedTags)
         {
             if (id != feedback.Id)
             {
@@ -104,7 +137,44 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(feedback);
+                    // Get existing feedback with tags
+                    var existingFeedback = await _context.Feedbacks
+                        .Include(f => f.FeedbackTags)
+                        .FirstOrDefaultAsync(f => f.Id == id);
+
+                    if (existingFeedback == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update basic properties
+                    existingFeedback.Title = feedback.Title;
+                    existingFeedback.Description = feedback.Description;
+                    existingFeedback.DepartmentId = feedback.DepartmentId;
+
+                    // Update tags
+                    if (existingFeedback.FeedbackTags != null)
+                    {
+                        _context.FeedbackTags.RemoveRange(existingFeedback.FeedbackTags);
+                    }
+
+                    if (selectedTags != null && selectedTags.Length > 0)
+                    {
+                        existingFeedback.FeedbackTags = new List<FeedbackTag>();
+                        foreach (var tagId in selectedTags)
+                        {
+                            if (Guid.TryParse(tagId, out var parsedTagId))
+                            {
+                                existingFeedback.FeedbackTags.Add(new FeedbackTag
+                                {
+                                    Id = Guid.NewGuid(),
+                                    FeedbackId = existingFeedback.Id,
+                                    TagId = parsedTagId
+                                });
+                            }
+                        }
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -118,9 +188,11 @@ namespace WebApp.Areas.Admin.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "CreatedBy", feedback.DepartmentId);
+
+            await PopulateDropdowns(feedback.DepartmentId, selectedTags);
             return View(feedback);
         }
 
@@ -134,7 +206,11 @@ namespace WebApp.Areas.Admin.Controllers
 
             var feedback = await _context.Feedbacks
                 .Include(f => f.Department)
+                .Include(f => f.FeedbackTags!)
+                .ThenInclude(ft => ft.Tag)
+                .Include(f => f.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (feedback == null)
             {
                 return NotFound();
@@ -148,19 +224,83 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var feedback = await _context.Feedbacks.FindAsync(id);
+            var feedback = await _context.Feedbacks
+                .Include(f => f.FeedbackTags)
+                .Include(f => f.Comments)
+                .FirstOrDefaultAsync(f => f.Id == id);
+
             if (feedback != null)
             {
+                // Check if there are comments
+                if (feedback.Comments?.Any() == true)
+                {
+                    TempData["Error"] =
+                        $"Cannot delete feedback '{feedback.Title}' because it has {feedback.Comments.Count()} comment(s). Please delete the comments first.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Remove associated tags first
+                if (feedback.FeedbackTags != null)
+                {
+                    _context.FeedbackTags.RemoveRange(feedback.FeedbackTags);
+                }
+
                 _context.Feedbacks.Remove(feedback);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = $"Feedback '{feedback.Title}' has been deleted successfully.";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Admin/Feedbacks/AddComment/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(Guid feedbackId, string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                TempData["Error"] = "Comment content cannot be empty.";
+                return RedirectToAction(nameof(Details), new { id = feedbackId });
+            }
+
+            var comment = new Comment
+            {
+                Id = Guid.NewGuid(),
+                Content = content.Trim(),
+                FeedbackId = feedbackId
+            };
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Comment added successfully.";
+            return RedirectToAction(nameof(Details), new { id = feedbackId });
         }
 
         private bool FeedbackExists(Guid id)
         {
             return _context.Feedbacks.Any(e => e.Id == id);
+        }
+
+        private async Task PopulateDropdowns(Guid? selectedDepartmentId = null, string[]? selectedTags = null)
+        {
+            // Department dropdown with proper display
+            var departments = await _context.Departments
+                .OrderBy(d => d.DepartmentName)
+                .Select(d => new { d.Id, d.DepartmentName })
+                .ToListAsync();
+
+            ViewData["DepartmentId"] = new SelectList(departments, "Id", "DepartmentName", selectedDepartmentId);
+
+            // Tags for multi-select
+            var allTags = await _context.Tags
+                .OrderBy(t => t.Title)
+                .ToListAsync();
+
+            ViewBag.AllTags = allTags;
+            ViewBag.SelectedTags = selectedTags ?? new string[0];
         }
     }
 }
