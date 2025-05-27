@@ -23,14 +23,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/Tasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Task>>> GetTasks()
+        public async Task<ActionResult<IEnumerable<App.Domain.Task>>> GetTasks()
         {
             return await _context.Tasks.ToListAsync();
         }
 
         // GET: api/Tasks/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Task>> GetTask(Guid id)
+        public async Task<ActionResult<App.Domain.Task>> GetTask(Guid id)
         {
             var task = await _context.Tasks.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace WebApp.ApiControllers
         // PUT: api/Tasks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTask(Guid id, Task task)
+        public async Task<IActionResult> PutTask(Guid id, App.Domain.Task task)
         {
             if (id != task.Id)
             {
@@ -76,7 +76,7 @@ namespace WebApp.ApiControllers
         // POST: api/Tasks
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Task>> PostTask(Task task)
+        public async Task<ActionResult<App.Domain.Task>> PostTask(App.Domain.Task task)
         {
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();

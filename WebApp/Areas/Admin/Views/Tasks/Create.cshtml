@@ -1,91 +1,176 @@
 @model App.Domain.Task
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Task";
 }
 
-<h1>Create</h1>
-
-<h4>Task</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <input asp-for="Priority" class="form-control" />
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeadLine" class="control-label"></label>
-                <input asp-for="DeadLine" class="form-control" />
-                <span asp-validation-for="DeadLine" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TaskKeeperId" class="control-label"></label>
-                <select asp-for="TaskKeeperId" class ="form-control" asp-items="ViewBag.TaskKeeperId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartmentId" class="control-label"></label>
-                <select asp-for="DepartmentId" class ="form-control" asp-items="ViewBag.DepartmentId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompletedAt" class="control-label"></label>
-                <input asp-for="CompletedAt" class="form-control" />
-                <span asp-validation-for="CompletedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompletionNotes" class="control-label"></label>
-                <input asp-for="CompletionNotes" class="form-control" />
-                <span asp-validation-for="CompletionNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedBy" class="control-label"></label>
-                <input asp-for="ChangedBy" class="form-control" />
-                <span asp-validation-for="ChangedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedAt" class="control-label"></label>
-                <input asp-for="ChangedAt" class="form-control" />
-                <span asp-validation-for="ChangedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SysNotes" class="control-label"></label>
-                <input asp-for="SysNotes" class="form-control" />
-                <span asp-validation-for="SysNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Create New Task</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Task Information</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label asp-for="Title" class="form-label">Task Title <span class="text-danger">*</span></label>
+                            <input asp-for="Title" class="form-control" placeholder="Enter task title..." />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Priority" class="form-label">Priority <span class="text-danger">*</span></label>
+                            <select asp-for="Priority" class="form-select" asp-items="ViewBag.PriorityOptions">
+                                <option value="">Select Priority</option>
+                            </select>
+                            <span asp-validation-for="Priority" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe the task in detail..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="DeadLine" class="form-label">Deadline <span class="text-danger">*</span></label>
+                            <input asp-for="DeadLine" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="DeadLine" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="TaskStatus" class="form-label">Status</label>
+                            <select asp-for="TaskStatus" class="form-select" asp-items="ViewBag.TaskStatus">
+                                <option value="">Select Status</option>
+                            </select>
+                            <span asp-validation-for="TaskStatus" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="TaskKeeperId" class="form-label">Assign To</label>
+                            <select asp-for="TaskKeeperId" class="form-select" asp-items="ViewBag.TaskKeeperId">
+                                <option value="">Select Person</option>
+                            </select>
+                            <span asp-validation-for="TaskKeeperId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DepartmentId" class="form-label">Department</label>
+                            <select asp-for="DepartmentId" class="form-select" asp-items="ViewBag.DepartmentId">
+                                <option value="">Select Department</option>
+                            </select>
+                            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Task
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Priority Guide</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <span class="badge bg-danger">Priority 5</span> - Critical/Urgent
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-warning">Priority 4</span> - High
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-info">Priority 3</span> - Medium
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-secondary">Priority 2</span> - Low
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-light text-dark">Priority 1</span> - Very Low
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Tips</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="fas fa-lightbulb text-warning"></i>
+                        Use clear, descriptive titles
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-clock text-info"></i>
+                        Set realistic deadlines
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-users text-success"></i>
+                        Assign to appropriate team members
+                    </li>
+                    <li>
+                        <i class="fas fa-flag text-danger"></i>
+                        Use priority levels wisely
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Set default deadline to tomorrow
+        document.addEventListener('DOMContentLoaded', function() {
+            const deadlineInput = document.querySelector('input[name="DeadLine"]');
+            if (deadlineInput && !deadlineInput.value) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(17, 0, 0, 0); // Set to 5 PM
+                deadlineInput.value = tomorrow.toISOString().slice(0, 16);
+            }
+        });
+
+        // Priority change handler
+        document.querySelector('select[name="Priority"]').addEventListener('change', function() {
+            const priority = parseInt(this.value);
+            const card = document.querySelector('.card');
+
+            // Remove existing priority classes
+            card.classList.remove('border-danger', 'border-warning', 'border-info');
+
+            // Add appropriate border color based on priority
+            if (priority >= 4) {
+                card.classList.add('border-danger');
+            } else if (priority === 3) {
+                card.classList.add('border-warning');
+            } else if (priority >= 1) {
+                card.classList.add('border-info');
+            }
+        });
+    </script>
 }
+
