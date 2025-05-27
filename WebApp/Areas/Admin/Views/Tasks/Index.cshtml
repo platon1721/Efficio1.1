@@ -130,12 +130,12 @@
                             <td>@(item.Department?.DepartmentName ?? "No Department")</td>
                             <td>
                                     <span class="badge bg-@(item.TaskStatus switch {
-                                                              App.Domain.TaskStatus.Open => "secondary",
-                                                              App.Domain.TaskStatus.InProgress => "primary",
-                                                              App.Domain.TaskStatus.Completed => "success",
-                                                              App.Domain.TaskStatus.Canceled => "dark",
-                                                              App.Domain.TaskStatus.OnHold => "warning",
-                                                              _ => "secondary"
+                                                                  App.Domain.TaskStatus.Open => "secondary",
+                                                                  App.Domain.TaskStatus.InProgress => "primary",
+                                                                  App.Domain.TaskStatus.Completed => "success",
+                                                                  App.Domain.TaskStatus.Canceled => "dark",
+                                                                  App.Domain.TaskStatus.OnHold => "warning",
+                                                                  _ => "secondary"
                                                           })">
                                         @item.TaskStatus
                                     </span>

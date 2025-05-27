@@ -135,6 +135,10 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
             .WithMany(d => d.Tasks)
             .HasForeignKey(t => t.DepartmentId)
             .OnDelete(DeleteBehavior.SetNull);
+        
+        builder.Entity<App.Domain.Task>()
+            .Property(t => t.TaskStatus)
+            .HasConversion<int>();
     }
 
 

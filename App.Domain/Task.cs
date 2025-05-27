@@ -15,7 +15,17 @@ public class Task: BaseEntity
     [Range(1, 5, ErrorMessage = "Priority must be between 1 (Low) and 5 (Critical)")]
     public int Priority { get; set; } = 1;
     
-    public DateTime DeadLine { get; set; }
+    private DateTime _deadLine;
+    public DateTime DeadLine 
+    { 
+        get => _deadLine;
+        set => _deadLine = value.Kind switch
+        {
+            DateTimeKind.Unspecified => DateTime.SpecifyKind(value, DateTimeKind.Utc),
+            DateTimeKind.Local => value.ToUniversalTime(),
+            _ => value
+        };
+    }
     
     public TaskStatus TaskStatus = TaskStatus.Open;
     
