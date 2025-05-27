@@ -36,6 +36,13 @@ public class PostUOWMapper : IMapper<App.DAL.DTO.Post, App.Domain.Post>
                     DepartmentName = pd.Department.DepartmentName,
                     ManagerId = pd.Department.ManagerId
                 } : null
+            }).ToList(),
+            Comments = entity.Comments?.Select(c => new App.DAL.DTO.Comment
+            {
+                Id = c.Id,
+                Content = c.Content,
+                PostId = c.PostId,
+                FeedbackId = c.FeedbackId
             }).ToList()
         };
     }

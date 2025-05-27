@@ -1,4 +1,5 @@
-﻿using App.BLL.Contracts;
+﻿// App.BLL/AppBLL.cs - Updated with Comment Service dependency in PostService
+using App.BLL.Contracts;
 using App.BLL.Mappers;
 using App.BLL.Services;
 using App.DAL.Contracts;
@@ -13,7 +14,6 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
     {
     }
 
-
     private IContactService? _contactService;
     public IContactService ContactService =>
         _contactService ??= new ContactService(
@@ -21,7 +21,6 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
             new ContactBLLMapper()
         );
 
-    
     private IContactTypeService? _contactTypeService;
     public IContactTypeService ContactTypeService =>
         _contactTypeService ??= new ContactTypeService(
@@ -54,13 +53,20 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
             BLLUOW,
             new TagBLLMapper());
     
+    private ICommentService? _commentService;
+    public ICommentService CommentService =>
+        _commentService ??= new CommentService(
+            BLLUOW,
+            new CommentBLLMapper());
+    
     private IPostService? _postService;
     public IPostService PostService =>
         _postService ??= new PostService(
             BLLUOW,
             new PostBLLMapper(),
             PostTagService,
-            PostDepartmentService);
+            PostDepartmentService,
+            CommentService); 
     
     private IPostTagService? _postTagService;
     public IPostTagService PostTagService =>
@@ -79,23 +85,17 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
         _taskService ??= new TaskService(
             BLLUOW,
             new TaskBLLMapper());
-    
-    private IFeedbackService? _feedbackService;
-    public IFeedbackService FeedbackService =>
-        _feedbackService ??= new FeedbackService(
-            BLLUOW,
-            new FeedbackBLLMapper(),
-            FeedbackTagService);
-    
+
     private IFeedbackTagService? _feedbackTagService;
     public IFeedbackTagService FeedbackTagService =>
         _feedbackTagService ??= new FeedbackTagService(
             BLLUOW,
             new FeedbackTagBLLMapper());
     
-    private ICommentService? _commentService;
-    public ICommentService CommentService =>
-        _commentService ??= new CommentService(
+    private IFeedbackService? _feedbackService;
+    public IFeedbackService FeedbackService =>
+        _feedbackService ??= new FeedbackService(
             BLLUOW,
-            new CommentBLLMapper());
+            new FeedbackBLLMapper(),
+            FeedbackTagService); 
 }

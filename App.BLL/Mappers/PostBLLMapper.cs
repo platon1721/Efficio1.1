@@ -36,6 +36,13 @@ public class PostBLLMapper : IMapper<App.BLL.DTO.Post, App.DAL.DTO.Post>
                     DepartmentName = pd.Department.DepartmentName,
                     ManagerId = pd.Department.ManagerId
                 } : null
+            }).ToList(),
+            Comments = entity.Comments?.Select(c => new App.BLL.DTO.Comment
+            {
+                Id = c.Id,
+                Content = c.Content,
+                PostId = c.PostId,
+                FeedbackId = c.FeedbackId
             }).ToList()
         };
     }
@@ -60,6 +67,13 @@ public class PostBLLMapper : IMapper<App.BLL.DTO.Post, App.DAL.DTO.Post>
                 Id = pd.Id,
                 PostId = pd.PostId,
                 DepartmentId = pd.DepartmentId
+            }).ToList(),
+            Comments = entity.Comments?.Select(c => new App.DAL.DTO.Comment
+            {
+                Id = c.Id,
+                Content = c.Content,
+                PostId = c.PostId,
+                FeedbackId = c.FeedbackId
             }).ToList()
         };
     }

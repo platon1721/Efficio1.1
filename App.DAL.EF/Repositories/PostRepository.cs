@@ -88,4 +88,91 @@ public class PostRepository : BaseRepository<App.DAL.DTO.Post, App.Domain.Post>,
             
         return domainPosts.Select(p => Mapper.Map(p)).OfType<App.DAL.DTO.Post>();
     }
+    
+    public async Task<IEnumerable<App.DAL.DTO.Post>> GetAllWithTagsDepartmentsAndCommentsAsync(bool noTracking = true)
+    {
+        var query = RepositoryDbSet.AsQueryable();
+        
+        if (noTracking)
+        {
+            query = query.AsNoTracking();
+        }
+        
+        var domainPosts = await query
+            .Include(p => p.PostTags!)
+                .ThenInclude(pt => pt.Tag)
+            .Include(p => p.PostDepartments!)
+                .ThenInclude(pd => pd.Department)
+            .Include(p => p.Comments!)
+            .OrderByDescending(p => p.CreatedAt)
+            .ToListAsync();
+            
+        return domainPosts.Select(p => Mapper.Map(p)).OfType<App.DAL.DTO.Post>();
+    }
+    
+    public async Task<App.DAL.DTO.Post?> GetWithTagsDepartmentsAndCommentsAsync(Guid id, bool noTracking = true)
+    {
+        var query = RepositoryDbSet.AsQueryable();
+        
+        if (noTracking)
+        {
+            query = query.AsNoTracking();
+        }
+        
+        var domainPost = await query
+            .Include(p => p.PostTags!)
+                .ThenInclude(pt => pt.Tag)
+            .Include(p => p.PostDepartments!)
+                .ThenInclude(pd => pd.Department)
+            .Include(p => p.Comments!)
+            .FirstOrDefaultAsync(p => p.Id.Equals(id));
+            
+        return Mapper.Map(domainPost);
+    }
+    
+    public async Task<IEnumerable<App.DAL.DTO.Post>> GetWithCommentsAsync(bool noTracking = true)
+    {
+        var query = RepositoryDbSet.AsQueryable();
+        
+        if (noTracking)
+        {
+            query = query.AsNoTracking();
+        }
+        
+        var domainPosts = await query
+            .Include(p => p.Comments!)
+            .OrderByDescending(p => p.CreatedAt)
+            .ToListAsync();
+            
+        return domainPosts.Select(p => Mapper.Map(p)).OfType<App.DAL.DTO.Post>();
+    }
+    
+    public async Task<App.DAL.DTO.Post?> GetPostWithCommentsAsync(Guid id, bool noTracking = true)
+    {
+        var query = RepositoryDbSet.AsQueryable();
+        
+        if (noTracking)
+        {
+            query = query.AsNoTracking();
+        }
+        
+        var domainPost = await query
+            .Include(p => p.Comments!)
+            .FirstOrDefaultAsync(p => p.Id.Equals(id));
+            
+        return Mapper.Map(domainPost);
+    }
+    
+    public override async Task<App.DAL.DTO.Post?> FindAsync(Guid id, Guid userId = default)
+    {
+        var domainPost = await RepositoryDbSet
+            .Include(p => p.PostTags!)
+            .ThenInclude(pt => pt.Tag)
+            .Include(p => p.PostDepartments!)
+            .ThenInclude(pd => pd.Department)
+            .Include(p => p.Comments!)
+            .FirstOrDefaultAsync(p => p.Id == id);
+            
+        return Mapper.Map(domainPost);
+    }
 }

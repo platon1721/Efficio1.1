@@ -10,18 +10,22 @@ public class PostService : BaseService<App.BLL.DTO.Post, App.DAL.DTO.Post, App.D
 {
     private readonly IPostTagService _postTagService;
     private readonly IPostDepartmentService _postDepartmentService;
+    private readonly ICommentService _commentService;
 
     public PostService(
         IAppUOW serviceUOW,
         IMapper<App.BLL.DTO.Post, App.DAL.DTO.Post> mapper,
         IPostTagService postTagService,
-        IPostDepartmentService postDepartmentService) 
+        IPostDepartmentService postDepartmentService,
+        ICommentService commentService) 
         : base(serviceUOW, serviceUOW.PostRepository, mapper)
     {
         _postTagService = postTagService;
         _postDepartmentService = postDepartmentService;
+        _commentService = commentService;
     }
 
+    // EXISTING METHODS
     public async Task<IEnumerable<App.BLL.DTO.Post>> GetAllWithTagsAndDepartmentsAsync(bool noTracking = true)
     {
         var dalPosts = await ServiceRepository.GetAllWithTagsAndDepartmentsAsync(noTracking);
@@ -46,6 +50,32 @@ public class PostService : BaseService<App.BLL.DTO.Post, App.DAL.DTO.Post, App.D
         return dalPosts.Select(p => Mapper.Map(p)!);
     }
 
+    // NEW METHODS WITH COMMENTS SUPPORT
+    public async Task<IEnumerable<App.BLL.DTO.Post>> GetAllWithTagsDepartmentsAndCommentsAsync(bool noTracking = true)
+    {
+        var dalPosts = await ServiceRepository.GetAllWithTagsDepartmentsAndCommentsAsync(noTracking);
+        return dalPosts.Select(p => Mapper.Map(p)!);
+    }
+
+    public async Task<App.BLL.DTO.Post?> GetWithTagsDepartmentsAndCommentsAsync(Guid id, bool noTracking = true)
+    {
+        var dalPost = await ServiceRepository.GetWithTagsDepartmentsAndCommentsAsync(id, noTracking);
+        return Mapper.Map(dalPost);
+    }
+
+    public async Task<IEnumerable<App.BLL.DTO.Post>> GetWithCommentsAsync(bool noTracking = true)
+    {
+        var dalPosts = await ServiceRepository.GetWithCommentsAsync(noTracking);
+        return dalPosts.Select(p => Mapper.Map(p)!);
+    }
+
+    public async Task<App.BLL.DTO.Post?> GetPostWithCommentsAsync(Guid id, bool noTracking = true)
+    {
+        var dalPost = await ServiceRepository.GetPostWithCommentsAsync(id, noTracking);
+        return Mapper.Map(dalPost);
+    }
+
+    // EXISTING TAG AND DEPARTMENT METHODS
     public async Task<App.BLL.DTO.Post?> CreatePostWithTagsAndDepartmentsAsync(
         App.BLL.DTO.Post post, 
         IEnumerable<Guid> tagIds, 
@@ -70,7 +100,7 @@ public class PostService : BaseService<App.BLL.DTO.Post, App.DAL.DTO.Post, App.D
         await ServiceUOW.SaveChangesAsync();
         
         // Return the post with all relationships
-        return await GetWithTagsAndDepartmentsAsync(post.Id);
+        return await GetWithTagsDepartmentsAndCommentsAsync(post.Id);
     }
 
     public async Task<bool> UpdatePostTagsAsync(Guid postId, IEnumerable<Guid> tagIds)
@@ -191,5 +221,43 @@ public class PostService : BaseService<App.BLL.DTO.Post, App.DAL.DTO.Post, App.D
         }
         
         return false;
+    }
+
+    // NEW COMMENT-RELATED METHODS
+    public async Task<IEnumerable<App.BLL.DTO.Comment>> GetPostCommentsAsync(Guid postId, bool noTracking = true)
+    {
+        return await _commentService.GetByPostIdAsync(postId, noTracking);
+    }
+
+    public async Task<App.BLL.DTO.Comment?> AddCommentToPostAsync(Guid postId, string content)
+    {
+        // Validate that the post exists
+        var post = await FindAsync(postId);
+        if (post == null)
+        {
+            throw new ArgumentException($"Post with ID {postId} does not exist");
+        }
+
+        return await _commentService.AddCommentToPostAsync(postId, content);
+    }
+
+    public async Task<bool> RemoveCommentFromPostAsync(Guid postId, Guid commentId)
+    {
+        // Validate that the comment belongs to this post
+        var comment = await _commentService.FindAsync(commentId);
+        if (comment == null || comment.PostId != postId)
+        {
+            return false;
+        }
+
+        _commentService.Remove(commentId);
+        await ServiceUOW.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<int> GetPostCommentCountAsync(Guid postId)
+    {
+        var comments = await GetPostCommentsAsync(postId, true);
+        return comments.Count();
     }
 }
