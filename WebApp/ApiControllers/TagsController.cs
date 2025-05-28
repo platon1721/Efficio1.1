@@ -2,107 +2,167 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.BLL.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using App.DAL.EF;
-using App.Domain;
+using Asp.Versioning;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.ApiControllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// Tag management controller
+    /// </summary>
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TagsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ILogger<TagsController> _logger;
+        private readonly IAppBLL _bll;
 
-        public TagsController(AppDbContext context)
+        private readonly App.DTO.v1.Mappers.TagMapper _mapper =
+            new App.DTO.v1.Mappers.TagMapper();
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TagsController(IAppBLL bll, ILogger<TagsController> logger)
         {
-            _context = context;
+            _bll = bll;
+            _logger = logger;
         }
 
-        // GET: api/Tags
+        /// <summary>
+        /// Get all tags
+        /// </summary>
+        /// <returns>List of tags</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Tag>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Tag>>> GetTags()
         {
-            return await _context.Tags.ToListAsync();
+            var data = await _bll.TagService.AllAsync();
+            var res = data.Select(x => _mapper.Map(x)!).OrderBy(x => x.Title).ToList();
+            return res;
         }
 
-        // GET: api/Tags/5
+        /// <summary>
+        /// Get tag by id
+        /// </summary>
+        /// <param name="id">Tag ID</param>
+        /// <returns>Tag</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tag>> GetTag(Guid id)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Tag), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<App.DTO.v1.Tag>> GetTag(Guid id)
         {
-            var tag = await _context.Tags.FindAsync(id);
+            var tag = await _bll.TagService.FindAsync(id);
 
             if (tag == null)
             {
                 return NotFound();
             }
 
-            return tag;
+            return _mapper.Map(tag)!;
         }
 
-        // PUT: api/Tags/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update tag
+        /// </summary>
+        /// <param name="id">Tag ID</param>
+        /// <param name="tag">Tag data</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTag(Guid id, Tag tag)
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PutTag(Guid id, App.DTO.v1.Tag tag)
         {
             if (id != tag.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(tag).State = EntityState.Modified;
-
-            try
+            var result = await _bll.TagService.UpdateAsync(_mapper.Map(tag)!);
+            
+            if (result == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TagExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            
+            await _bll.SaveChangesAsync();
             return NoContent();
         }
 
-        // POST: api/Tags
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Create new tag
+        /// </summary>
+        /// <param name="tag">Tag creation data</param>
+        /// <returns>Created tag</returns>
         [HttpPost]
-        public async Task<ActionResult<Tag>> PostTag(Tag tag)
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Tag), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<App.DTO.v1.Tag>> PostTag(App.DTO.v1.CreateTag tag)
         {
-            _context.Tags.Add(tag);
-            await _context.SaveChangesAsync();
+            var bllEntity = _mapper.Map(tag);
+            _bll.TagService.Add(bllEntity);
+            await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetTag", new { id = tag.Id }, tag);
+            return CreatedAtAction("GetTag", new
+            {
+                id = bllEntity.Id,
+                version = HttpContext.GetRequestedApiVersion()!.ToString()
+            }, _mapper.Map(bllEntity)!);
         }
 
-        // DELETE: api/Tags/5
+        /// <summary>
+        /// Delete tag by id
+        /// </summary>
+        /// <param name="id">Tag ID</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteTag(Guid id)
         {
-            var tag = await _context.Tags.FindAsync(id);
+            var tag = await _bll.TagService.FindAsync(id);
             if (tag == null)
             {
                 return NotFound();
             }
 
-            _context.Tags.Remove(tag);
-            await _context.SaveChangesAsync();
-
+            _bll.TagService.Remove(id);
+            await _bll.SaveChangesAsync();
             return NoContent();
         }
 
-        private bool TagExists(Guid id)
+        /// <summary>
+        /// Search tags by title
+        /// </summary>
+        /// <param name="title">Title to search for</param>
+        /// <returns>List of matching tags</returns>
+        [HttpGet("search")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Tag>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Tag>>> SearchTags([FromQuery] string title)
         {
-            return _context.Tags.Any(e => e.Id == id);
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                return BadRequest("Title parameter is required");
+            }
+
+            var data = await _bll.TagService.GetTagsByTitleContainsAsync(title.Trim());
+            var res = data.Select(x => _mapper.Map(x)!).OrderBy(x => x.Title).ToList();
+            return res;
         }
     }
 }

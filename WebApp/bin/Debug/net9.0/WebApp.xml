@@ -4,6 +4,65 @@
         <name>WebApp</name>
     </assembly>
     <members>
+        <member name="T:WebApp.ApiControllers.CommentsController">
+            <summary>
+            Comment management controller
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.CommentsController.#ctor(App.BLL.Contracts.IAppBLL,Microsoft.Extensions.Logging.ILogger{WebApp.ApiControllers.CommentsController})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.CommentsController.GetComments">
+            <summary>
+            Get all comments
+            </summary>
+            <returns>List of comments</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.CommentsController.GetComment(System.Guid)">
+            <summary>
+            Get comment by id
+            </summary>
+            <param name="id">Comment ID</param>
+            <returns>Comment</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.CommentsController.PutComment(System.Guid,App.DTO.v1.Comment)">
+            <summary>
+            Update comment
+            </summary>
+            <param name="id">Comment ID</param>
+            <param name="comment">Comment data</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.CommentsController.PostComment(App.DTO.v1.CreateComment)">
+            <summary>
+            Create new comment
+            </summary>
+            <param name="comment">Comment creation data</param>
+            <returns>Created comment</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.CommentsController.DeleteComment(System.Guid)">
+            <summary>
+            Delete comment by id
+            </summary>
+            <param name="id">Comment ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.CommentsController.GetCommentsByPost(System.Guid)">
+            <summary>
+            Get comments by post
+            </summary>
+            <param name="postId">Post ID</param>
+            <returns>List of post comments</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.CommentsController.GetCommentsByFeedback(System.Guid)">
+            <summary>
+            Get comments by feedback
+            </summary>
+            <param name="feedbackId">Feedback ID</param>
+            <returns>List of feedback comments</returns>
+        </member>
         <member name="T:WebApp.ApiControllers.ContactsController">
             <inheritdoc />
         </member>
@@ -86,6 +145,193 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:WebApp.ApiControllers.DepartmentsController">
+            <summary>
+            Department management controller
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.#ctor(App.BLL.Contracts.IAppBLL,Microsoft.Extensions.Logging.ILogger{WebApp.ApiControllers.DepartmentsController})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.GetDepartments">
+            <summary>
+            Get all departments with managers
+            </summary>
+            <returns>List of departments</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.GetDepartment(System.Guid)">
+            <summary>
+            Get department by id with full relations
+            </summary>
+            <param name="id">Department ID</param>
+            <returns>Department with relations</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.PutDepartment(System.Guid,App.DTO.v1.Department)">
+            <summary>
+            Update department
+            </summary>
+            <param name="id">Department ID</param>
+            <param name="department">Department data</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.PostDepartment(App.DTO.v1.CreateDepartment)">
+            <summary>
+            Create new department
+            </summary>
+            <param name="department">Department creation data</param>
+            <returns>Created department</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.DeleteDepartment(System.Guid)">
+            <summary>
+            Delete department by id
+            </summary>
+            <param name="id">Department ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.GetDepartmentWithPersons(System.Guid)">
+            <summary>
+            Get department with persons
+            </summary>
+            <param name="id">Department ID</param>
+            <returns>Department with persons</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.GetDepartmentTasks(System.Guid)">
+            <summary>
+            Get department with tasks
+            </summary>
+            <param name="id">Department ID</param>
+            <returns>Department with tasks</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.GetDepartmentFeedbacks(System.Guid)">
+            <summary>
+            Get department with feedbacks
+            </summary>
+            <param name="id">Department ID</param>
+            <returns>Department feedbacks</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.GetDepartmentStatistics(System.Guid)">
+            <summary>
+            Get department statistics
+            </summary>
+            <param name="id">Department ID</param>
+            <returns>Department statistics</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.AddPersonToDepartment(System.Guid,App.DTO.v1.CreateDepartmentPerson)">
+            <summary>
+            Add person to department
+            </summary>
+            <param name="id">Department ID</param>
+            <param name="departmentPerson">Department person data</param>
+            <returns>Created department person relationship</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.DepartmentsController.RemovePersonFromDepartment(System.Guid,System.Guid)">
+            <summary>
+            Remove person from department
+            </summary>
+            <param name="id">Department ID</param>
+            <param name="personId">Person ID</param>
+            <returns></returns>
+        </member>
+        <member name="T:WebApp.ApiControllers.FeedbacksController">
+            <summary>
+            Feedback management controller
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.#ctor(App.BLL.Contracts.IAppBLL,Microsoft.Extensions.Logging.ILogger{WebApp.ApiControllers.FeedbacksController})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.GetFeedbacks">
+            <summary>
+            Get all feedbacks with tags and comments
+            </summary>
+            <returns>List of feedbacks</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.GetFeedback(System.Guid)">
+            <summary>
+            Get feedback by id with full relations
+            </summary>
+            <param name="id">Feedback ID</param>
+            <returns>Feedback with relations</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.PutFeedback(System.Guid,App.DTO.v1.Feedback)">
+            <summary>
+            Update feedback
+            </summary>
+            <param name="id">Feedback ID</param>
+            <param name="feedback">Feedback data</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.PostFeedback(App.DTO.v1.CreateFeedback)">
+            <summary>
+            Create new feedback
+            </summary>
+            <param name="feedback">Feedback creation data</param>
+            <returns>Created feedback</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.DeleteFeedback(System.Guid)">
+            <summary>
+            Delete feedback by id
+            </summary>
+            <param name="id">Feedback ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.GetFeedbacksByDepartment(System.Guid)">
+            <summary>
+            Get feedbacks by department
+            </summary>
+            <param name="departmentId">Department ID</param>
+            <returns>List of department feedbacks</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.GetFeedbacksByTag(System.Guid)">
+            <summary>
+            Get feedbacks by tag
+            </summary>
+            <param name="tagId">Tag ID</param>
+            <returns>List of feedbacks with this tag</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.AddTagToFeedback(System.Guid,System.Guid)">
+            <summary>
+            Add tag to feedback
+            </summary>
+            <param name="id">Feedback ID</param>
+            <param name="tagId">Tag ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.RemoveTagFromFeedback(System.Guid,System.Guid)">
+            <summary>
+            Remove tag from feedback
+            </summary>
+            <param name="id">Feedback ID</param>
+            <param name="tagId">Tag ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.UpdateFeedbackTags(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Update feedback tags in bulk
+            </summary>
+            <param name="id">Feedback ID</param>
+            <param name="tagIds">List of tag IDs</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.GetFeedbackComments(System.Guid)">
+            <summary>
+            Get feedback comments
+            </summary>
+            <param name="id">Feedback ID</param>
+            <returns>List of comments</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.FeedbacksController.AddCommentToFeedback(System.Guid,App.DTO.v1.CreateComment)">
+            <summary>
+            Add comment to feedback
+            </summary>
+            <param name="id">Feedback ID</param>
+            <param name="comment">Comment creation data</param>
+            <returns>Created comment</returns>
+        </member>
         <member name="T:WebApp.ApiControllers.Identity.AccountController">
             <summary>
             User account controller - login, register, etc.
@@ -163,6 +409,298 @@
             </summary>
             <param name="id"></param>
             <returns></returns>
+        </member>
+        <member name="T:WebApp.ApiControllers.PostsController">
+            <summary>
+            Post management controller
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.#ctor(App.BLL.Contracts.IAppBLL,Microsoft.Extensions.Logging.ILogger{WebApp.ApiControllers.PostsController})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.GetPosts">
+            <summary>
+            Get all posts with tags, departments and comments
+            </summary>
+            <returns>List of posts</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.GetPost(System.Guid)">
+            <summary>
+            Get post by id with full relations
+            </summary>
+            <param name="id">Post ID</param>
+            <returns>Post with relations</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.PutPost(System.Guid,App.DTO.v1.Post)">
+            <summary>
+            Update post
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="post">Post data</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.PostPost(App.DTO.v1.CreatePost)">
+            <summary>
+            Create new post
+            </summary>
+            <param name="post">Post creation data</param>
+            <returns>Created post</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.DeletePost(System.Guid)">
+            <summary>
+            Delete post by id
+            </summary>
+            <param name="id">Post ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.GetPostsByTag(System.Guid)">
+            <summary>
+            Get posts by tag
+            </summary>
+            <param name="tagId">Tag ID</param>
+            <returns>List of posts with this tag</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.GetPostsByDepartment(System.Guid)">
+            <summary>
+            Get posts by department
+            </summary>
+            <param name="departmentId">Department ID</param>
+            <returns>List of posts for this department</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.AddTagToPost(System.Guid,System.Guid)">
+            <summary>
+            Add tag to post
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="tagId">Tag ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.RemoveTagFromPost(System.Guid,System.Guid)">
+            <summary>
+            Remove tag from post
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="tagId">Tag ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.AddDepartmentToPost(System.Guid,System.Guid)">
+            <summary>
+            Add department to post
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="departmentId">Department ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.RemoveDepartmentFromPost(System.Guid,System.Guid)">
+            <summary>
+            Remove department from post
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="departmentId">Department ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.GetPostComments(System.Guid)">
+            <summary>
+            Get post comments
+            </summary>
+            <param name="id">Post ID</param>
+            <returns>List of comments</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.AddCommentToPost(System.Guid,App.DTO.v1.CreateComment)">
+            <summary>
+            Add comment to post
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="comment">Comment creation data</param>
+            <returns>Created comment</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.RemoveCommentFromPost(System.Guid,System.Guid)">
+            <summary>
+            Remove comment from post  
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="commentId">Comment ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.GetPostCommentCount(System.Guid)">
+            <summary>
+            Get comment count for post
+            </summary>
+            <param name="id">Post ID</param>
+            <returns>Comment count</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.UpdatePostTags(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Update post tags in bulk
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="tagIds">List of tag IDs</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.PostsController.UpdatePostDepartments(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Update post departments in bulk
+            </summary>
+            <param name="id">Post ID</param>
+            <param name="departmentIds">List of department IDs</param>
+            <returns></returns>
+        </member>
+        <member name="T:WebApp.ApiControllers.TagsController">
+            <summary>
+            Tag management controller
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.TagsController.#ctor(App.BLL.Contracts.IAppBLL,Microsoft.Extensions.Logging.ILogger{WebApp.ApiControllers.TagsController})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.TagsController.GetTags">
+            <summary>
+            Get all tags
+            </summary>
+            <returns>List of tags</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TagsController.GetTag(System.Guid)">
+            <summary>
+            Get tag by id
+            </summary>
+            <param name="id">Tag ID</param>
+            <returns>Tag</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TagsController.PutTag(System.Guid,App.DTO.v1.Tag)">
+            <summary>
+            Update tag
+            </summary>
+            <param name="id">Tag ID</param>
+            <param name="tag">Tag data</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TagsController.PostTag(App.DTO.v1.CreateTag)">
+            <summary>
+            Create new tag
+            </summary>
+            <param name="tag">Tag creation data</param>
+            <returns>Created tag</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TagsController.DeleteTag(System.Guid)">
+            <summary>
+            Delete tag by id
+            </summary>
+            <param name="id">Tag ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TagsController.SearchTags(System.String)">
+            <summary>
+            Search tags by title
+            </summary>
+            <param name="title">Title to search for</param>
+            <returns>List of matching tags</returns>
+        </member>
+        <member name="T:WebApp.ApiControllers.TasksController">
+            <summary>
+            Task management controller
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.#ctor(App.BLL.Contracts.IAppBLL,Microsoft.Extensions.Logging.ILogger{WebApp.ApiControllers.TasksController})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.GetTasks">
+            <summary>
+            Get all tasks with relations
+            </summary>
+            <returns>List of tasks</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.GetTask(System.Guid)">
+            <summary>
+            Get task by id with relations
+            </summary>
+            <param name="id">Task ID</param>
+            <returns>Task with relations</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.PutTask(System.Guid,App.DTO.v1.UpdateTask)">
+            <summary>
+            Update task
+            </summary>
+            <param name="id">Task ID</param>
+            <param name="task">Task update data</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.PostTask(App.DTO.v1.CreateTask)">
+            <summary>
+            Create new task
+            </summary>
+            <param name="task">Task creation data</param>
+            <returns>Created task</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.DeleteTask(System.Guid)">
+            <summary>
+            Delete task by id
+            </summary>
+            <param name="id">Task ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.CompleteTask(System.Guid,System.String)">
+            <summary>
+            Complete a task
+            </summary>
+            <param name="id">Task ID</param>
+            <param name="completionNotes">Optional completion notes</param>
+            <returns>Updated task</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.AssignTask(System.Guid,System.Guid)">
+            <summary>
+            Assign task to a person
+            </summary>
+            <param name="id">Task ID</param>
+            <param name="personId">Person ID to assign to</param>
+            <returns>Updated task</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.GetOverdueTasks">
+            <summary>
+            Get overdue tasks
+            </summary>
+            <returns>List of overdue tasks</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.GetTasksByDepartment(System.Guid)">
+            <summary>
+            Get tasks by department
+            </summary>
+            <param name="departmentId">Department ID</param>
+            <returns>List of department tasks</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.GetTasksByPerson(System.Guid)">
+            <summary>
+            Get tasks by assigned person
+            </summary>
+            <param name="personId">Person ID</param>
+            <returns>List of assigned tasks</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.GetTaskStatistics">
+            <summary>
+            Get task statistics
+            </summary>
+            <returns>Task statistics</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.ChangeTaskStatus(System.Guid,App.DTO.v1.TaskStatus)">
+            <summary>
+            Change task status
+            </summary>
+            <param name="id">Task ID</param>
+            <param name="status">New status</param>
+            <returns>Updated task</returns>
+        </member>
+        <member name="M:WebApp.ApiControllers.TasksController.UpdateTaskPriority(System.Guid,System.Int32)">
+            <summary>
+            Update task priority
+            </summary>
+            <param name="id">Task ID</param>
+            <param name="priority">New priority (1-5)</param>
+            <returns>Updated task</returns>
         </member>
         <member name="T:WebApp.Areas.Identity.Pages.Account.AccessDeniedModel">
             <summary>

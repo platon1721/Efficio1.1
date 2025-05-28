@@ -2,107 +2,191 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.BLL.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using App.DAL.EF;
-using App.Domain;
+using Asp.Versioning;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.ApiControllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// Comment management controller
+    /// </summary>
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CommentsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ILogger<CommentsController> _logger;
+        private readonly IAppBLL _bll;
 
-        public CommentsController(AppDbContext context)
+        private readonly App.DTO.v1.Mappers.CommentMapper _mapper =
+            new App.DTO.v1.Mappers.CommentMapper();
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public CommentsController(IAppBLL bll, ILogger<CommentsController> logger)
         {
-            _context = context;
+            _bll = bll;
+            _logger = logger;
         }
 
-        // GET: api/Comments
+        /// <summary>
+        /// Get all comments
+        /// </summary>
+        /// <returns>List of comments</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Comment>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Comment>>> GetComments()
         {
-            return await _context.Comments.ToListAsync();
+            var data = await _bll.CommentService.AllAsync();
+            var res = data.Select(x => _mapper.Map(x)!).OrderByDescending(x => x.Id).ToList();
+            return res;
         }
 
-        // GET: api/Comments/5
+        /// <summary>
+        /// Get comment by id
+        /// </summary>
+        /// <param name="id">Comment ID</param>
+        /// <returns>Comment</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetComment(Guid id)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Comment), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<App.DTO.v1.Comment>> GetComment(Guid id)
         {
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _bll.CommentService.FindAsync(id);
 
             if (comment == null)
             {
                 return NotFound();
             }
 
-            return comment;
+            return _mapper.Map(comment)!;
         }
 
-        // PUT: api/Comments/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update comment
+        /// </summary>
+        /// <param name="id">Comment ID</param>
+        /// <param name="comment">Comment data</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(Guid id, Comment comment)
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PutComment(Guid id, App.DTO.v1.Comment comment)
         {
             if (id != comment.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(comment).State = EntityState.Modified;
-
-            try
+            var result = await _bll.CommentService.UpdateAsync(_mapper.Map(comment)!);
+            
+            if (result == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            
+            await _bll.SaveChangesAsync();
             return NoContent();
         }
 
-        // POST: api/Comments
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Create new comment
+        /// </summary>
+        /// <param name="comment">Comment creation data</param>
+        /// <returns>Created comment</returns>
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Comment), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<App.DTO.v1.Comment>> PostComment(App.DTO.v1.CreateComment comment)
         {
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var bllEntity = _mapper.Map(comment);
+                
+                // Validate business rules
+                if (!await _bll.CommentService.ValidateCommentAsync(bllEntity))
+                {
+                    return BadRequest("Comment must belong to either a post or feedback, but not both");
+                }
 
-            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
+                _bll.CommentService.Add(bllEntity);
+                await _bll.SaveChangesAsync();
+
+                return CreatedAtAction("GetComment", new
+                {
+                    id = bllEntity.Id,
+                    version = HttpContext.GetRequestedApiVersion()!.ToString()
+                }, _mapper.Map(bllEntity)!);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // DELETE: api/Comments/5
+        /// <summary>
+        /// Delete comment by id
+        /// </summary>
+        /// <param name="id">Comment ID</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteComment(Guid id)
         {
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _bll.CommentService.FindAsync(id);
             if (comment == null)
             {
                 return NotFound();
             }
 
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
-
+            _bll.CommentService.Remove(id);
+            await _bll.SaveChangesAsync();
             return NoContent();
         }
 
-        private bool CommentExists(Guid id)
+        /// <summary>
+        /// Get comments by post
+        /// </summary>
+        /// <param name="postId">Post ID</param>
+        /// <returns>List of post comments</returns>
+        [HttpGet("post/{postId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Comment>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Comment>>> GetCommentsByPost(Guid postId)
         {
-            return _context.Comments.Any(e => e.Id == id);
+            var data = await _bll.CommentService.GetByPostIdAsync(postId);
+            var res = data.Select(x => _mapper.Map(x)!).OrderBy(x => x.CreatedAt).ToList();
+            return res;
+        }
+
+        /// <summary>
+        /// Get comments by feedback
+        /// </summary>
+        /// <param name="feedbackId">Feedback ID</param>
+        /// <returns>List of feedback comments</returns>
+        [HttpGet("feedback/{feedbackId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Comment>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Comment>>> GetCommentsByFeedback(Guid feedbackId)
+        {
+            var data = await _bll.CommentService.GetByFeedbackIdAsync(feedbackId);
+            var res = data.Select(x => _mapper.Map(x)!).OrderBy(x => x.CreatedAt).ToList();
+            return res;
         }
     }
 }

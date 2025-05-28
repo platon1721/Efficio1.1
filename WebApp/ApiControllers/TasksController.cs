@@ -2,107 +2,300 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.BLL.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using App.DAL.EF;
-using App.Domain;
+using Asp.Versioning;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.ApiControllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// Task management controller
+    /// </summary>
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TasksController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ILogger<TasksController> _logger;
+        private readonly IAppBLL _bll;
 
-        public TasksController(AppDbContext context)
+        private readonly App.DTO.v1.Mappers.TaskMapper _mapper =
+            new App.DTO.v1.Mappers.TaskMapper();
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TasksController(IAppBLL bll, ILogger<TasksController> logger)
         {
-            _context = context;
+            _bll = bll;
+            _logger = logger;
         }
 
-        // GET: api/Tasks
+        /// <summary>
+        /// Get all tasks with relations
+        /// </summary>
+        /// <returns>List of tasks</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<App.Domain.Task>>> GetTasks()
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Task>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Task>>> GetTasks()
         {
-            return await _context.Tasks.ToListAsync();
+            var data = await _bll.TaskService.GetAllWithRelationsAsync();
+            var res = data.Select(x => _mapper.Map(x)!).OrderBy(x => x.DeadLine).ToList();
+            return res;
         }
 
-        // GET: api/Tasks/5
+        /// <summary>
+        /// Get task by id with relations
+        /// </summary>
+        /// <param name="id">Task ID</param>
+        /// <returns>Task with relations</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<App.Domain.Task>> GetTask(Guid id)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Task), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<App.DTO.v1.Task>> GetTask(Guid id)
         {
-            var task = await _context.Tasks.FindAsync(id);
+            var task = await _bll.TaskService.GetWithRelationsAsync(id);
 
             if (task == null)
             {
                 return NotFound();
             }
 
-            return task;
+            return _mapper.Map(task)!;
         }
 
-        // PUT: api/Tasks/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update task
+        /// </summary>
+        /// <param name="id">Task ID</param>
+        /// <param name="task">Task update data</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTask(Guid id, App.Domain.Task task)
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PutTask(Guid id, App.DTO.v1.UpdateTask task)
         {
-            if (id != task.Id)
+            var bllTask = _mapper.Map(task, id);
+            var result = await _bll.TaskService.UpdateAsync(bllTask);
+            
+            if (result == null)
             {
-                return BadRequest();
+                return NotFound();
+            }
+            
+            await _bll.SaveChangesAsync();
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Create new task
+        /// </summary>
+        /// <param name="task">Task creation data</param>
+        /// <returns>Created task</returns>
+        [HttpPost]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Task), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<App.DTO.v1.Task>> PostTask(App.DTO.v1.CreateTask task)
+        {
+            var bllEntity = _mapper.Map(task);
+            _bll.TaskService.Add(bllEntity);
+            await _bll.SaveChangesAsync();
+
+            return CreatedAtAction("GetTask", new
+            {
+                id = bllEntity.Id,
+                version = HttpContext.GetRequestedApiVersion()!.ToString()
+            }, _mapper.Map(bllEntity)!);
+        }
+
+        /// <summary>
+        /// Delete task by id
+        /// </summary>
+        /// <param name="id">Task ID</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteTask(Guid id)
+        {
+            var task = await _bll.TaskService.FindAsync(id);
+            if (task == null)
+            {
+                return NotFound();
             }
 
-            _context.Entry(task).State = EntityState.Modified;
+            _bll.TaskService.Remove(id);
+            await _bll.SaveChangesAsync();
+            return NoContent();
+        }
 
+        /// <summary>
+        /// Complete a task
+        /// </summary>
+        /// <param name="id">Task ID</param>
+        /// <param name="completionNotes">Optional completion notes</param>
+        /// <returns>Updated task</returns>
+        [HttpPost("{id}/complete")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Task), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<App.DTO.v1.Task>> CompleteTask(Guid id, [FromBody] string? completionNotes = null)
+        {
+            var result = await _bll.TaskService.CompleteTaskAsync(id, completionNotes);
+            
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return _mapper.Map(result)!;
+        }
+
+        /// <summary>
+        /// Assign task to a person
+        /// </summary>
+        /// <param name="id">Task ID</param>
+        /// <param name="personId">Person ID to assign to</param>
+        /// <returns>Updated task</returns>
+        [HttpPost("{id}/assign/{personId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Task), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<App.DTO.v1.Task>> AssignTask(Guid id, Guid personId)
+        {
+            var result = await _bll.TaskService.AssignTaskAsync(id, personId);
+            
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return _mapper.Map(result)!;
+        }
+
+        /// <summary>
+        /// Get overdue tasks
+        /// </summary>
+        /// <returns>List of overdue tasks</returns>
+        [HttpGet("overdue")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Task>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Task>>> GetOverdueTasks()
+        {
+            var data = await _bll.TaskService.GetOverdueTasksAsync();
+            var res = data.Select(x => _mapper.Map(x)!).OrderBy(x => x.DeadLine).ToList();
+            return res;
+        }
+
+        /// <summary>
+        /// Get tasks by department
+        /// </summary>
+        /// <param name="departmentId">Department ID</param>
+        /// <returns>List of department tasks</returns>
+        [HttpGet("department/{departmentId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Task>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Task>>> GetTasksByDepartment(Guid departmentId)
+        {
+            var data = await _bll.TaskService.GetByDepartmentAsync(departmentId);
+            var res = data.Select(x => _mapper.Map(x)!).OrderBy(x => x.DeadLine).ToList();
+            return res;
+        }
+
+        /// <summary>
+        /// Get tasks by assigned person
+        /// </summary>
+        /// <param name="personId">Person ID</param>
+        /// <returns>List of assigned tasks</returns>
+        [HttpGet("person/{personId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<App.DTO.v1.Task>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Task>>> GetTasksByPerson(Guid personId)
+        {
+            var data = await _bll.TaskService.GetByTaskKeeperAsync(personId);
+            var res = data.Select(x => _mapper.Map(x)!).OrderBy(x => x.DeadLine).ToList();
+            return res;
+        }
+
+        /// <summary>
+        /// Get task statistics
+        /// </summary>
+        /// <returns>Task statistics</returns>
+        [HttpGet("statistics")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(TaskStatistics), StatusCodes.Status200OK)]
+        public async Task<ActionResult<TaskStatistics>> GetTaskStatistics()
+        {
+            var stats = await _bll.TaskService.GetTaskStatisticsAsync();
+            return stats;
+        }
+
+        /// <summary>
+        /// Change task status
+        /// </summary>
+        /// <param name="id">Task ID</param>
+        /// <param name="status">New status</param>
+        /// <returns>Updated task</returns>
+        [HttpPost("{id}/status")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Task), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<App.DTO.v1.Task>> ChangeTaskStatus(Guid id, [FromBody] App.DTO.v1.TaskStatus status)
+        {
+            var bllStatus = (App.BLL.DTO.TaskStatus)status;
+            var result = await _bll.TaskService.ChangeTaskStatusAsync(id, bllStatus);
+            
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return _mapper.Map(result)!;
+        }
+
+        /// <summary>
+        /// Update task priority
+        /// </summary>
+        /// <param name="id">Task ID</param>
+        /// <param name="priority">New priority (1-5)</param>
+        /// <returns>Updated task</returns>
+        [HttpPost("{id}/priority")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(typeof(App.DTO.v1.Task), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<App.DTO.v1.Task>> UpdateTaskPriority(Guid id, [FromBody] int priority)
+        {
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TaskExists(id))
+                var result = await _bll.TaskService.UpdateTaskPriorityAsync(id, priority);
+                
+                if (result == null)
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                return _mapper.Map(result)!;
             }
-
-            return NoContent();
-        }
-
-        // POST: api/Tasks
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<App.Domain.Task>> PostTask(App.Domain.Task task)
-        {
-            _context.Tasks.Add(task);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTask", new { id = task.Id }, task);
-        }
-
-        // DELETE: api/Tasks/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTask(Guid id)
-        {
-            var task = await _context.Tasks.FindAsync(id);
-            if (task == null)
+            catch (ArgumentException ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-
-            _context.Tasks.Remove(task);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool TaskExists(Guid id)
-        {
-            return _context.Tasks.Any(e => e.Id == id);
         }
     }
 }
