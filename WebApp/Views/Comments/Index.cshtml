@@ -1,77 +1,187 @@
-@model IEnumerable<App.Domain.Comment>
+@model IEnumerable<App.BLL.DTO.Comment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "My Comments";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>My Comments</h1>
+    <div>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Comment
+        </a>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Post)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Feedback)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChangedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChangedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SysNotes)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Post!.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Feedback!.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SysNotes)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+        <h3>No Comments Yet</h3>
+        <p class="text-muted">You haven't made any comments yet.</p>
+        <div class="mt-4">
+            <a asp-controller="Posts" asp-action="Index" class="btn btn-primary me-2">
+                <i class="fas fa-newspaper"></i> Browse Posts
+            </a>
+            <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-outline-success">
+                <i class="fas fa-comment-alt"></i> Browse Feedbacks
+            </a>
+        </div>
+    </div>
 }
-    </tbody>
-</table>
+else
+{
+    <!-- Summary Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-comments fa-2x mb-2"></i>
+                    <h4>@Model.Count()</h4>
+                    <small>Total Comments</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-newspaper fa-2x mb-2"></i>
+                    <h4>@Model.Count(c => c.PostId.HasValue)</h4>
+                    <small>Post Comments</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-comment-alt fa-2x mb-2"></i>
+                    <h4>@Model.Count(c => c.FeedbackId.HasValue)</h4>
+                    <small>Feedback Comments</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comments List -->
+    <div class="row">
+        @foreach (var item in Model) {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @if (item.Post != null)
+                            {
+                                <span class="badge bg-primary">
+                                    <i class="fas fa-newspaper"></i> Post Comment
+                                </span>
+                                <small class="text-muted">#@item.Id.ToString().Substring(0, 8)</small>
+                            }
+                            else if (item.Feedback != null)
+                            {
+                                <span class="badge bg-success">
+                                    <i class="fas fa-comment-alt"></i> Feedback Comment
+                                </span>
+                                <small class="text-muted">#@item.Id.ToString().Substring(0, 8)</small>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Unknown Type</span>
+                                <small class="text-muted">#@item.Id.ToString().Substring(0, 8)</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        @if (item.Post != null)
+                        {
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <i class="fas fa-newspaper"></i> 
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.PostId" class="text-decoration-none">
+                                    @(item.Post.Title.Length > 40 ? item.Post.Title.Substring(0, 40) + "..." : item.Post.Title)
+                                </a>
+                            </h6>
+                        }
+                        else if (item.Feedback != null)
+                        {
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <i class="fas fa-comment-alt"></i>
+                                <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@item.FeedbackId" class="text-decoration-none">
+                                    @(item.Feedback.Title.Length > 40 ? item.Feedback.Title.Substring(0, 40) + "..." : item.Feedback.Title)
+                                </a>
+                            </h6>
+                        }
+                        
+                        <div class="flex-grow-1">
+                            <p class="card-text">
+                                @if (item.Content.Length > 120)
+                                {
+                                    @(item.Content.Substring(0, 120))<text>...</text>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.Content)
+                                }
+                            </p>
+                        </div>
+                        
+                        <div class="mt-auto">
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> 
+                                Length: @item.Content.Length chars
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="btn-group w-100" role="group">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                        <div class="btn-group w-100 mt-2" role="group">
+                            @if (item.Post != null)
+                            {
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.PostId" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-newspaper"></i> View Post
+                                </a>
+                            }
+                            else if (item.Feedback != null)
+                            {
+                                <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@item.FeedbackId" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-comment-alt"></i> View Feedback
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+    <!-- Additional Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h6>Want to contribute more?</h6>
+                    <div class="btn-group" role="group">
+                        <a asp-controller="Posts" asp-action="Index" class="btn btn-outline-primary">
+                            <i class="fas fa-newspaper"></i> Browse Posts
+                        </a>
+                        <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-outline-success">
+                            <i class="fas fa-comment-alt"></i> Browse Feedbacks
+                        </a>
+                        <a asp-action="Create" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add New Comment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

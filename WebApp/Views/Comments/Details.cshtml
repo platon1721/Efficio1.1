@@ -1,66 +1,209 @@
-@model App.Domain.Comment
+@model App.BLL.DTO.Comment
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Comment Details";
+    var isPostComment = Model.PostId.HasValue;
+    var isFeedbackComment = Model.FeedbackId.HasValue;
 }
 
-<h1>Details</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Comment Details</h1>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        @if (isPostComment)
+        {
+            <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.PostId" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Post
+            </a>
+        }
+        else if (isFeedbackComment)
+        {
+            <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@Model.FeedbackId" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Feedback
+            </a>
+        }
+        else
+        {
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Comments
+            </a>
+        }
+    </div>
+</div>
 
-<div>
-    <h4>Comment</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Post)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Post!.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Feedback)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Feedback!.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SysNotes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SysNotes)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Comment Content -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-comment"></i> Comment
+                    @if (isPostComment)
+                    {
+                        <span class="badge bg-primary ms-2">On Post</span>
+                    }
+                    else if (isFeedbackComment)
+                    {
+                        <span class="badge bg-success ms-2">On Feedback</span>
+                    }
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="comment-content">
+                    @Html.DisplayFor(model => model.Content)
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Content -->
+        @if (Model.Post != null)
+        {
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-newspaper"></i> Related Post
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6>@Model.Post.Title</h6>
+                    <p class="text-muted">
+                        @if (Model.Post.Description.Length > 200)
+                        {
+                            @(Model.Post.Description.Substring(0, 200))<text>...</text>
+                        }
+                        else
+                        {
+                            @Model.Post.Description
+                        }
+                    </p>
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.PostId" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i> View Full Post
+                    </a>
+                </div>
+            </div>
+        }
+
+        @if (Model.Feedback != null)
+        {
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-comment-alt"></i> Related Feedback
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6>@Model.Feedback.Title</h6>
+                    <p class="text-muted">
+                        @if (Model.Feedback.Description.Length > 200)
+                        {
+                            @(Model.Feedback.Description.Substring(0, 200))<text>...</text>
+                        }
+                        else
+                        {
+                            @Model.Feedback.Description
+                        }
+                    </p>
+                    <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@Model.FeedbackId" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-eye"></i> View Full Feedback
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Comment Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Comment Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Type:</strong><br />
+                    @if (isPostComment)
+                    {
+                        <span class="badge bg-primary">
+                            <i class="fas fa-newspaper"></i> Post Comment
+                        </span>
+                    }
+                    else if (isFeedbackComment)
+                    {
+                        <span class="badge bg-success">
+                            <i class="fas fa-comment-alt"></i> Feedback Comment
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Unknown Type</span>
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <strong>Content Length:</strong><br />
+                    <span class="text-muted">@Model.Content.Length characters</span>
+                </div>
+
+                <div class="mb-3">
+                    <strong>Comment ID:</strong><br />
+                    <code>@Model.Id</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Edit Comment
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-trash"></i> Delete Comment
+                    </a>
+
+                    <hr />
+
+                    @if (isPostComment)
+                    {
+                        <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.PostId" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-newspaper"></i> View Post
+                        </a>
+                        <a asp-controller="Posts" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-list"></i> All Posts
+                        </a>
+                    }
+                    else if (isFeedbackComment)
+                    {
+                        <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@Model.FeedbackId" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-comment-alt"></i> View Feedback
+                        </a>
+                        <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-list"></i> All Feedbacks
+                        </a>
+                    }
+
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-comments"></i> My Comments
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<style>
+    .comment-content {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        white-space: pre-wrap;
+    }
+</style>

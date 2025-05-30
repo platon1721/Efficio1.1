@@ -1,69 +1,133 @@
-@model App.Domain.Feedback
+@model App.BLL.DTO.Feedback
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Feedback";
 }
 
-<h1>Delete</h1>
+<h1>Delete Feedback</h1>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Feedback</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Department)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Department!.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SysNotes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SysNotes)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="alert alert-warning">
+    <i class="fas fa-exclamation-triangle"></i> <strong>Warning:</strong> Are you sure you want to delete this feedback?
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-trash"></i> Feedback to be Deleted
+                </h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Title:</dt>
+                    <dd class="col-sm-9">
+                        <strong>@Html.DisplayFor(model => model.Title)</strong>
+                    </dd>
+
+                    <dt class="col-sm-3">Description:</dt>
+                    <dd class="col-sm-9">
+                        <div class="bg-light p-3 rounded">
+                            @Html.DisplayFor(model => model.Description)
+                        </div>
+                    </dd>
+
+                    @if (Model.Department != null)
+                    {
+                        <dt class="col-sm-3">Department:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-info">@Model.Department.DepartmentName</span>
+                        </dd>
+                    }
+
+                    @if (Model.Tags?.Any() == true)
+                    {
+                        <dt class="col-sm-3">Tags:</dt>
+                        <dd class="col-sm-9">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <span class="badge bg-secondary me-1">@tag.Title</span>
+                            }
+                        </dd>
+                    }
+
+                    @if (Model.Comments?.Any() == true)
+                    {
+                        <dt class="col-sm-3">Comments:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-warning text-dark">@Model.Comments.Count comment(s) will also be deleted</span>
+                        </dd>
+                    }
+                </dl>
+
+                <form asp-action="Delete" class="mt-4">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Confirm Delete
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle"></i> Deletion Impact
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">Deleting this feedback will:</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-times text-danger"></i> Permanently remove the feedback
+                    </li>
+                    @if (Model.Comments?.Any() == true)
+                    {
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger"></i> Delete all @Model.Comments.Count associated comment(s)
+                        </li>
+                    }
+                    <li class="mb-2">
+                        <i class="fas fa-info-circle text-info"></i> This action cannot be undone
+                    </li>
+                </ul>
+
+                @if (Model.Comments?.Any() == true)
+                {
+                    <div class="alert alert-info mt-3">
+                        <small>
+                            <i class="fas fa-info-circle"></i>
+                            This feedback has comments. Consider if you really want to delete it.
+                        </small>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Alternative Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit"></i> Edit Instead
+                    </a>
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

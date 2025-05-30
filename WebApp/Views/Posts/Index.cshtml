@@ -1,71 +1,179 @@
-@model IEnumerable<App.Domain.Post>
+@model IEnumerable<App.BLL.DTO.Post>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Posts";
+    var userDepartments = ViewBag.UserDepartments as List<App.BLL.DTO.Department> ?? new List<App.BLL.DTO.Department>();
+    var hasDepartments = (bool)(ViewBag.HasDepartments ?? false);
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Posts</h1>
+    <div>
+        @if (hasDepartments)
+        {
+            <span class="badge bg-info">
+                <i class="fas fa-building"></i>
+                @userDepartments.Count department(s)
+            </span>
+        }
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChangedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChangedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SysNotes)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SysNotes)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (!hasDepartments)
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        You are not assigned to any department, so you can only see general posts (posts not assigned to specific departments).
+    </div>
 }
-    </tbody>
-</table>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+        <h3>No Posts Available</h3>
+        @if (hasDepartments)
+        {
+            <p class="text-muted">There are no posts available for your departments or general posts yet.</p>
+        }
+        else
+        {
+            <p class="text-muted">There are no general posts available yet.</p>
+            <p class="text-muted">Contact your administrator to be assigned to departments for more content.</p>
+        }
+    </div>
+}
+else
+{
+    <div class="mb-3">
+        <span class="text-muted">
+            Showing @Model.Count() post(s)
+            @if (hasDepartments)
+            {
+                <text> for your departments and general posts</text>
+            }
+            else
+            {
+                <text> (general posts only)</text>
+            }
+        </span>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model) {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title mb-0">@Html.DisplayFor(modelItem => item.Title)</h5>
+                            @if (item.Departments?.Any() != true)
+                            {
+                                <span class="badge bg-success">
+                                    <i class="fas fa-globe"></i> General
+                                </span>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            @if (item.Description.Length > 150)
+                            {
+                                @(item.Description.Substring(0, 150))<text>...</text>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Description)
+                            }
+                        </p>
+
+                        @if (item.Tags?.Any() == true)
+                        {
+                            <div class="mb-3">
+                                @foreach (var tag in item.Tags.Take(3))
+                                {
+                                    <span class="badge bg-primary me-1">@tag.Title</span>
+                                }
+                                @if (item.Tags.Count() > 3)
+                                {
+                                    <span class="text-muted small">+@(item.Tags.Count() - 3) more</span>
+                                }
+                            </div>
+                        }
+
+                        @if (item.Departments?.Any() == true)
+                        {
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-building"></i> Departments:
+                                </small>
+                                <br>
+                                @foreach (var dept in item.Departments.Take(2))
+                                {
+                                    @if (userDepartments.Any(ud => ud.Id == dept.Id))
+                                    {
+                                        <span class="badge bg-info me-1">@dept.DepartmentName</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary me-1">@dept.DepartmentName</span>
+                                    }
+                                }
+                                @if (item.Departments.Count() > 2)
+                                {
+                                    <span class="text-muted small">+@(item.Departments.Count() - 2) more</span>
+                                }
+                            </div>
+                        }
+
+                        @if (item.Comments?.Any() == true)
+                        {
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-comments"></i> @item.Comments.Count comment(s)
+                                </small>
+                            </div>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group w-100" role="group">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i> Read More
+                            </a>
+                            <a asp-controller="Comments" asp-action="Create" asp-route-postId="@item.Id" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-comment"></i> Comment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Summary at bottom -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="h4 mb-0 text-primary">@Model.Count()</div>
+                            <small class="text-muted">Available Posts</small>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="h4 mb-0 text-success">@Model.Count(p => p.Departments?.Any() != true)</div>
+                            <small class="text-muted">General Posts</small>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="h4 mb-0 text-info">@Model.Count(p => p.Departments?.Any() == true)</div>
+                            <small class="text-muted">Department Posts</small>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="h4 mb-0 text-warning">@Model.Sum(p => p.Comments?.Count ?? 0)</div>
+                            <small class="text-muted">Total Comments</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

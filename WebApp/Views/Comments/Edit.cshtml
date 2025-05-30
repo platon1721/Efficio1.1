@@ -1,69 +1,212 @@
-@model App.Domain.Comment
+@model App.BLL.DTO.Comment
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Comment";
+    var isPostComment = Model.PostId.HasValue;
+    var isFeedbackComment = Model.FeedbackId.HasValue;
 }
 
-<h1>Edit</h1>
+<h1>Edit Comment</h1>
 
-<h4>Comment</h4>
-<hr />
 <div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-edit"></i> Edit Your Comment
+                    @if (isPostComment)
+                    {
+                        <span class="badge bg-primary ms-2">On Post</span>
+                    }
+                    else if (isFeedbackComment)
+                    {
+                        <span class="badge bg-success ms-2">On Feedback</span>
+                    }
+                </h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="PostId" />
+                    <input type="hidden" asp-for="FeedbackId" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Content" class="control-label">Comment</label>
+                        <textarea asp-for="Content" class="form-control" rows="8"
+                                  placeholder="Share your thoughts..." required></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                        <div class="form-text">
+                            Character count: <span id="charCount">@Model.Content.Length</span> / 1000
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Comment
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        @if (isPostComment)
+                        {
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.PostId" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Post
+                            </a>
+                        }
+                        else if (isFeedbackComment)
+                        {
+                            <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@Model.FeedbackId" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Feedback
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Comments
+                            </a>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
+        <!-- Original Comment Preview -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Current Comment</h6>
             </div>
-            <div class="form-group">
-                <label asp-for="PostId" class="control-label"></label>
-                <select asp-for="PostId" class="form-control" asp-items="ViewBag.PostId"></select>
-                <span asp-validation-for="PostId" class="text-danger"></span>
+            <div class="card-body">
+                <div class="original-comment">
+                    @Model.Content
+                </div>
+                <hr />
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i> This is how your comment currently appears.
+                </small>
             </div>
-            <div class="form-group">
-                <label asp-for="FeedbackId" class="control-label"></label>
-                <select asp-for="FeedbackId" class="form-control" asp-items="ViewBag.FeedbackId"></select>
-                <span asp-validation-for="FeedbackId" class="text-danger"></span>
+        </div>
+
+        <!-- Related Content Info -->
+        @if (Model.Post != null)
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-newspaper"></i> Related Post
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">@Model.Post.Title</h6>
+                    <p class="small text-muted">
+                        @if (Model.Post.Description.Length > 100)
+                        {
+                            @(Model.Post.Description.Substring(0, 100))<text>...</text>
+                        }
+                        else
+                        {
+                            @Model.Post.Description
+                        }
+                    </p>
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.PostId" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i> View Post
+                    </a>
+                </div>
             </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+        }
+
+        @if (Model.Feedback != null)
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-comment-alt"></i> Related Feedback
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">@Model.Feedback.Title</h6>
+                    <p class="small text-muted">
+                        @if (Model.Feedback.Description.Length > 100)
+                        {
+                            @(Model.Feedback.Description.Substring(0, 100))<text>...</text>
+                        }
+                        else
+                        {
+                            @Model.Feedback.Description
+                        }
+                    </p>
+                    <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@Model.FeedbackId" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-eye"></i> View Feedback
+                    </a>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+        }
+
+        <!-- Edit Guidelines -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-lightbulb"></i> Editing Tips
+                </h6>
             </div>
-            <div class="form-group">
-                <label asp-for="ChangedBy" class="control-label"></label>
-                <input asp-for="ChangedBy" class="form-control" />
-                <span asp-validation-for="ChangedBy" class="text-danger"></span>
+            <div class="card-body">
+                <ul class="list-unstyled small">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i> Fix typos and improve clarity
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i> Add more context if needed
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i> Keep it relevant to the topic
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-info-circle text-info"></i> Others may have already seen your comment
+                    </li>
+                </ul>
             </div>
-            <div class="form-group">
-                <label asp-for="ChangedAt" class="control-label"></label>
-                <input asp-for="ChangedAt" class="form-control" />
-                <span asp-validation-for="ChangedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SysNotes" class="control-label"></label>
-                <input asp-for="SysNotes" class="form-control" />
-                <span asp-validation-for="SysNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<style>
+    .original-comment {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #6c757d;
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+</style>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Character counter
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.querySelector('textarea[name="Content"]');
+            const charCount = document.getElementById('charCount');
+
+            if (textarea && charCount) {
+                textarea.addEventListener('input', function() {
+                    const count = this.value.length;
+                    charCount.textContent = count;
+
+                    // Change color based on length
+                    if (count > 900) {
+                        charCount.className = 'text-danger';
+                    } else if (count > 800) {
+                        charCount.className = 'text-warning';
+                    } else {
+                        charCount.className = 'text-muted';
+                    }
+                });
+            }
+        });
+    </script>
 }

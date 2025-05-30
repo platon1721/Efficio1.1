@@ -1,64 +1,172 @@
-@model App.Domain.Comment
+@model App.BLL.DTO.Comment
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add Comment";
+    var isPostComment = Model.PostId.HasValue;
+    var isFeedbackComment = Model.FeedbackId.HasValue;
 }
 
-<h1>Create</h1>
+<h1>Add Comment</h1>
 
-<h4>Comment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PostId" class="control-label"></label>
-                <select asp-for="PostId" class ="form-control" asp-items="ViewBag.PostId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FeedbackId" class="control-label"></label>
-                <select asp-for="FeedbackId" class ="form-control" asp-items="ViewBag.FeedbackId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedBy" class="control-label"></label>
-                <input asp-for="ChangedBy" class="form-control" />
-                <span asp-validation-for="ChangedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedAt" class="control-label"></label>
-                <input asp-for="ChangedAt" class="form-control" />
-                <span asp-validation-for="ChangedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SysNotes" class="control-label"></label>
-                <input asp-for="SysNotes" class="form-control" />
-                <span asp-validation-for="SysNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+@if (isPostComment || isFeedbackComment)
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        You are commenting on:
+        @if (isPostComment)
+        {
+            <strong>Post</strong>
+        }
+        else
+        {
+            <strong>Feedback</strong>
+        }
     </div>
-</div>
+}
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-comment"></i> New Comment
+                </h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Content" class="control-label">Comment</label>
+                        <textarea asp-for="Content" class="form-control" rows="6"
+                                  placeholder="Share your thoughts..." required></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                        <div class="form-text">Be respectful and constructive in your comments.</div>
+                    </div>
+
+                    @if (!isPostComment && !isFeedbackComment)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="PostId" class="control-label">Post (Optional)</label>
+                                    <select asp-for="PostId" class="form-control" asp-items="@(ViewData["PostId"] as SelectList)">
+                                        <option value="">-- Select Post --</option>
+                                    </select>
+                                    <span asp-validation-for="PostId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="FeedbackId" class="control-label">Feedback (Optional)</label>
+                                    <select asp-for="FeedbackId" class="form-control" asp-items="@(ViewData["FeedbackId"] as SelectList)">
+                                        <option value="">-- Select Feedback --</option>
+                                    </select>
+                                    <span asp-validation-for="FeedbackId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Please select either a Post OR a Feedback to comment on (not both).
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="PostId" />
+                        <input type="hidden" asp-for="FeedbackId" />
+                    }
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-comment"></i> Add Comment
+                        </button>
+                        @if (isPostComment)
+                        {
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.PostId" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Post
+                            </a>
+                        }
+                        else if (isFeedbackComment)
+                        {
+                            <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@Model.FeedbackId" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Feedback
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Comments
+                            </a>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-lightbulb"></i> Comment Guidelines
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled small">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i> Be respectful and professional
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i> Stay on topic
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i> Provide constructive feedback
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i> Ask questions if you need clarification
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-times text-danger"></i> Avoid personal attacks
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-times text-danger"></i> Don't share confidential information
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        @if (isPostComment || isFeedbackComment)
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        @if (isPostComment)
+                        {
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.PostId" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i> View Post
+                            </a>
+                            <a asp-controller="Posts" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-list"></i> All Posts
+                            </a>
+                        }
+                        else if (isFeedbackComment)
+                        {
+                            <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@Model.FeedbackId" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i> View Feedback
+                            </a>
+                            <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-list"></i> All Feedbacks
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
 @section Scripts {

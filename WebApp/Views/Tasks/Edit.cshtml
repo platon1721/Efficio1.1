@@ -1,92 +1,148 @@
-@model App.Domain.Task
+@model App.BLL.DTO.Task
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Update Task";
 }
 
-<h1>Edit</h1>
+<h1>Update Task</h1>
 
-<h4>Task</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">@Model.Title</h5>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <input asp-for="Priority" class="form-control" />
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeadLine" class="control-label"></label>
-                <input asp-for="DeadLine" class="form-control" />
-                <span asp-validation-for="DeadLine" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TaskKeeperId" class="control-label"></label>
-                <select asp-for="TaskKeeperId" class="form-control" asp-items="ViewBag.TaskKeeperId"></select>
-                <span asp-validation-for="TaskKeeperId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartmentId" class="control-label"></label>
-                <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.DepartmentId"></select>
-                <span asp-validation-for="DepartmentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompletedAt" class="control-label"></label>
-                <input asp-for="CompletedAt" class="form-control" />
-                <span asp-validation-for="CompletedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompletionNotes" class="control-label"></label>
-                <input asp-for="CompletionNotes" class="form-control" />
-                <span asp-validation-for="CompletionNotes" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedBy" class="control-label"></label>
-                <input asp-for="ChangedBy" class="form-control" />
-                <span asp-validation-for="ChangedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangedAt" class="control-label"></label>
-                <input asp-for="ChangedAt" class="form-control" />
-                <span asp-validation-for="ChangedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SysNotes" class="control-label"></label>
-                <input asp-for="SysNotes" class="form-control" />
-                <span asp-validation-for="SysNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+            <div class="card-body">
+                <!-- Task Info (Read-only) -->
+                <div class="mb-4">
+                    <h6>Task Information</h6>
+                    <dl class="row">
+                        <dt class="col-sm-3">Description:</dt>
+                        <dd class="col-sm-9">@Model.Description</dd>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+                        <dt class="col-sm-3">Priority:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge @(Model.Priority >= 4 ? "bg-danger" : (Model.Priority >= 3 ? "bg-warning text-dark" : "bg-secondary"))">
+                                Priority @Model.Priority
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3">Due Date:</dt>
+                        <dd class="col-sm-9">
+                            @Model.DeadLine.ToString("MMMM dd, yyyy HH:mm")
+                            @if (Model.DeadLine < DateTime.UtcNow && Model.TaskStatus != App.BLL.DTO.TaskStatus.Completed)
+                            {
+                                <span class="text-danger ms-2">
+                                    <i class="fas fa-exclamation-triangle"></i> Overdue
+                                </span>
+                            }
+                        </dd>
+
+                        @if (Model.Department != null)
+                        {
+                            <dt class="col-sm-3">Department:</dt>
+                            <dd class="col-sm-9">
+                                <span class="badge bg-info">@Model.Department.DepartmentName</span>
+                            </dd>
+                        }
+                    </dl>
+                </div>
+
+                <hr />
+
+                <!-- Editable Form -->
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="TaskStatus" class="control-label">Task Status</label>
+                        <select asp-for="TaskStatus" class="form-control" asp-items="ViewBag.TaskStatusOptions">
+                        </select>
+                        <span asp-validation-for="TaskStatus" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="CompletionNotes" class="control-label">Completion Notes</label>
+                        <textarea asp-for="CompletionNotes" class="form-control" rows="4"
+                                  placeholder="Add notes about your progress or completion..."></textarea>
+                        <span asp-validation-for="CompletionNotes" class="text-danger"></span>
+                    </div>
+
+                    @if (Model.CompletedAt.HasValue)
+                    {
+                        <div class="alert alert-success">
+                            <i class="fas fa-check"></i> This task was completed on @Model.CompletedAt.Value.ToString("MMMM dd, yyyy HH:mm")
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Task
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Tasks
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Status Guide</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <span class="badge bg-warning text-dark me-2">Open</span>
+                    <small>Task is ready to be worked on</small>
+                </div>
+                <div class="mb-3">
+                    <span class="badge bg-info me-2">In Progress</span>
+                    <small>Currently working on this task</small>
+                </div>
+                <div class="mb-3">
+                    <span class="badge bg-success me-2">Completed</span>
+                    <small>Task has been finished</small>
+                </div>
+                <div class="mb-3">
+                    <span class="badge bg-dark me-2">On Hold</span>
+                    <small>Task is paused or waiting</small>
+                </div>
+                <div class="mb-3">
+                    <span class="badge bg-secondary me-2">Cancelled</span>
+                    <small>Task is no longer needed</small>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.TaskStatus != App.BLL.DTO.TaskStatus.Completed)
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Quick Complete</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">Mark this task as completed with optional notes.</p>
+                    <form asp-action="Complete" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <div class="form-group mb-3">
+                            <textarea name="completionNotes" class="form-control" rows="3"
+                                      placeholder="Completion notes..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm w-100">
+                            <i class="fas fa-check"></i> Complete Task
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
 @section Scripts {

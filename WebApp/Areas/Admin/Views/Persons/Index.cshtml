@@ -4,62 +4,157 @@
     ViewData["Title"] = "Persons";
 }
 
-<h1>Persons</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Persons</h1>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fas fa-plus"></i> Create New Person
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PersonName)
-        </th>
-        <th>
-            User Email
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ChangedBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ChangedAt)
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PersonName)
-            </td>
-            <td>
-                @(item.User?.Email ?? "No User Linked") <!-- PARANDATUD -->
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangedAt)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
-            </td>
+            <th>@Html.DisplayNameFor(model => model.PersonName)</th>
+            <th>User Email</th>
+            <th>Departments</th>
+            <th>Tasks</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
+            <th>Actions</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <strong>@Html.DisplayFor(modelItem => item.PersonName)</strong>
+                </td>
+                <td>
+                    @if (item.User != null)
+                    {
+                        <i class="fas fa-envelope text-muted"></i>
+                        @item.User.Email
+                    }
+                    else
+                    {
+                        <span class="text-muted">No User Linked</span>
+                    }
+                </td>
+                <td>
+                    @if (item.DepartmentPersons?.Any() == true)
+                    {
+                        @foreach (var dp in item.DepartmentPersons)
+                        {
+                            @if (dp.Department != null)
+                            {
+                                <span class="badge bg-primary me-1 mb-1" style="font-size: 0.75em;">
+                                        <i class="fas fa-building"></i> @dp.Department.DepartmentName
+                                    @if (dp.Department.ManagerId == item.Id)
+                                    {
+                                        <span class="badge bg-success ms-1">Manager</span>
+                                    }
+                                    </span>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">No departments</span>
+                    }
+                </td>
+                <td>
+                    @if (item.AssignedTasks?.Any() == true)
+                    {
+                        var totalTasks = item.AssignedTasks.Count();
+                        var completedTasks = item.AssignedTasks.Count(t => t.TaskStatus == App.Domain.TaskStatus.Completed);
+                        var completionRate = totalTasks > 0 ? (completedTasks * 100 / totalTasks) : 0;
+
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary me-1">@totalTasks</span>
+                            <div class="progress flex-grow-1 me-2" style="height: 4px; width: 50px;">
+                                <div class="progress-bar bg-success" style="width: @(completionRate)%"></div>
+                            </div>
+                            <small class="text-muted">@(completionRate)%</small>
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No tasks</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                    <br>
+                    <small class="text-muted">by @item.CreatedBy</small>
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Details">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <div class="h3 mb-0">@Model.Count()</div>
+                <div>Total Persons</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <div class="h3 mb-0">@Model.Count(p => p.User != null)</div>
+                <div>Linked to Users</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <div class="h3 mb-0">@Model.Count(p => p.DepartmentPersons?.Any(dp => dp.Department?.ManagerId == p.Id) == true)</div>
+                <div>Department Managers</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body text-center">
+                <div class="h3 mb-0">@Model.Sum(p => p.AssignedTasks?.Count ?? 0)</div>
+                <div>Total Tasks Assigned</div>
+            </div>
+        </div>
+    </div>
+</div>

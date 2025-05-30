@@ -1,60 +1,380 @@
-@model App.Domain.Department
+@model App.BLL.DTO.Department
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Department Details";
+    var stats = ViewBag.Stats;
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Department</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DepartmentName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DepartmentName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Manager)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Manager!.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SysNotes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SysNotes)
-        </dd>
-    </dl>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@Html.DisplayFor(model => model.DepartmentName)</h1>
+    <div>
+        <a asp-controller="Feedbacks" asp-action="Create" asp-route-departmentId="@Model.Id" class="btn btn-success">
+            <i class="fas fa-comment-alt"></i> Give Feedback
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Departments
+        </a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-2x mb-2"></i>
+                <h4>@stats.TotalMembers</h4>
+                <small>Team Members</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-tasks fa-2x mb-2"></i>
+                <h4>@stats.TotalTasks</h4>
+                <small>Total Tasks</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-comments fa-2x mb-2"></i>
+                <h4>@stats.TotalFeedbacks</h4>
+                <small>Feedbacks</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                <h4>@stats.OverdueTasks</h4>
+                <small>Overdue Tasks</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Department Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-building"></i> Department Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Department Name:</dt>
+                    <dd class="col-sm-9">
+                        <strong>@Html.DisplayFor(model => model.DepartmentName)</strong>
+                    </dd>
+
+                    <dt class="col-sm-3">Manager:</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Manager != null)
+                        {
+                            <span class="badge bg-success fs-6">
+                                <i class="fas fa-user-tie"></i> @Model.Manager.PersonName
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No manager assigned</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Team Size:</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-primary">@stats.TotalMembers member(s)</span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Team Members -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-users"></i> Team Members
+                </h5>
+                <span class="badge bg-primary">@stats.TotalMembers</span>
+            </div>
+            <div class="card-body">
+                @if (Model.Persons?.Any() == true)
+                {
+                    <div class="row">
+                        @foreach (var person in Model.Persons)
+                        {
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        @if (person.Id == Model.ManagerId)
+                                        {
+                                            <i class="fas fa-user-tie text-success fa-lg"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-user text-muted"></i>
+                                        }
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">@person.PersonName</div>
+                                        @if (person.Id == Model.ManagerId)
+                                        {
+                                            <small class="text-success">Department Manager</small>
+                                        }
+                                        else
+                                        {
+                                            <small class="text-muted">Team Member</small>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No team members assigned to this department.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Tasks Overview -->
+        @if (Model.Tasks?.Any() == true)
+        {
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-tasks"></i> Department Tasks
+                    </h5>
+                    <span class="badge bg-info">@stats.TotalTasks</span>
+                </div>
+                <div class="card-body">
+                    <!-- Task Status Overview -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="text-center p-2 bg-warning bg-opacity-25 rounded">
+                                <div class="h5 mb-0">@stats.OpenTasks</div>
+                                <small>Open</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-2 bg-info bg-opacity-25 rounded">
+                                <div class="h5 mb-0">@stats.InProgressTasks</div>
+                                <small>In Progress</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-2 bg-success bg-opacity-25 rounded">
+                                <div class="h5 mb-0">@stats.CompletedTasks</div>
+                                <small>Completed</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-2 bg-danger bg-opacity-25 rounded">
+                                <div class="h5 mb-0">@stats.OverdueTasks</div>
+                                <small>Overdue</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Tasks -->
+                    <h6>Recent Tasks</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Assigned To</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Due Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var task in Model.Tasks.OrderByDescending(t => t.Id).Take(5))
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@task.Title</strong>
+                                        @if (task.Description.Length > 50)
+                                        {
+                                            <br><small class="text-muted">@(task.Description.Substring(0, 50))...</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (task.TaskKeeper != null)
+                                        {
+                                            <span class="badge bg-secondary">@task.TaskKeeper.PersonName</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Unassigned</span>
+                                        }
+                                    </td>
+                                    <td>
+                                            <span class="badge @(task.Priority >= 4 ? "bg-danger" : (task.Priority >= 3 ? "bg-warning text-dark" : "bg-secondary"))">
+                                                @task.Priority
+                                            </span>
+                                    </td>
+                                    <td>
+                                        @switch (task.TaskStatus)
+                                        {
+                                            case App.BLL.DTO.TaskStatus.Open:
+                                                <span class="badge bg-warning text-dark">Open</span>
+                                                break;
+                                            case App.BLL.DTO.TaskStatus.InProgress:
+                                                <span class="badge bg-info">In Progress</span>
+                                                break;
+                                            case App.BLL.DTO.TaskStatus.Completed:
+                                                <span class="badge bg-success">Completed</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@task.TaskStatus</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @task.DeadLine.ToString("MMM dd")
+                                        @if (task.DeadLine < DateTime.UtcNow && task.TaskStatus != App.BLL.DTO.TaskStatus.Completed)
+                                        {
+                                            <i class="fas fa-exclamation-triangle text-danger ms-1"></i>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Department Feedbacks -->
+        @if (Model.Feedbacks?.Any() == true)
+        {
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-comments"></i> Department Feedbacks
+                    </h5>
+                    <span class="badge bg-success">@stats.TotalFeedbacks</span>
+                </div>
+                <div class="card-body">
+                    @foreach (var feedback in Model.Feedbacks.OrderByDescending(f => f.Id).Take(3))
+                    {
+                        <div class="border-bottom pb-3 mb-3">
+                            <h6>@feedback.Title</h6>
+                            <p class="mb-2">
+                                @if (feedback.Description.Length > 150)
+                                {
+                                    @(feedback.Description.Substring(0, 150))<text>...</text>
+                                }
+                                else
+                                {
+                                    @feedback.Description
+                                }
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    @if (feedback.Tags?.Any() == true)
+                                    {
+                                        @foreach (var tag in feedback.Tags.Take(3))
+                                        {
+                                            <span class="badge bg-secondary me-1">@tag.Title</span>
+                                        }
+                                    }
+                                </div>
+                                <a asp-controller="Feedbacks" asp-action="Details" asp-route-id="@feedback.Id" class="btn btn-outline-primary btn-sm">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.Feedbacks?.Count() > 3)
+                    {
+                        <div class="text-center">
+                            <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                                View All @stats.TotalFeedbacks Feedbacks
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-controller="Feedbacks" asp-action="Create" asp-route-departmentId="@Model.Id" class="btn btn-success">
+                        <i class="fas fa-comment-alt"></i> Give Feedback
+                    </a>
+                    <a asp-controller="Tasks" asp-action="Index" class="btn btn-outline-info">
+                        <i class="fas fa-tasks"></i> My Tasks
+                    </a>
+                    <a asp-controller="Posts" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="fas fa-newspaper"></i> View Posts
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Stats -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Department Health</h6>
+            </div>
+            <div class="card-body">
+                @if (stats.TotalTasks > 0)
+                {
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small">Task Completion</span>
+                            <span class="small fw-bold">@Math.Round((double)stats.CompletedTasks / stats.TotalTasks * 100, 1)%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: @(Math.Round((double)stats.CompletedTasks / stats.TotalTasks * 100, 1))%"
+                                 aria-valuenow="@(Math.Round((double)stats.CompletedTasks / stats.TotalTasks * 100, 1))" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="small text-muted">
+                    <div class="d-flex justify-content-between">
+                        <span>Active Members:</span>
+                        <span>@stats.TotalMembers</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Open Tasks:</span>
+                        <span>@stats.OpenTasks</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Recent Feedbacks:</span>
+                        <span>@stats.TotalFeedbacks</span>
+                    </div>
+                    @if (stats.OverdueTasks > 0)
+                    {
+                        <div class="d-flex justify-content-between text-danger">
+                            <span>Overdue Tasks:</span>
+                            <span>@stats.OverdueTasks</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

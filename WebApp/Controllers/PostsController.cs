@@ -3,26 +3,56 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using App.DAL.EF;
-using App.Domain;
+using App.BLL.Contracts;
+using App.BLL.DTO;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class PostsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppBLL _bll;
 
-        public PostsController(AppDbContext context)
+        public PostsController(IAppBLL bll)
         {
-            _context = context;
+            _bll = bll;
         }
 
-        // GET: Posts
+        // GET: Posts - Show posts user has access to
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Posts.ToListAsync());
+            var userId = User.GetUserId();
+            var person = await _bll.PersonService.FindByUserIdAsync(userId);
+            
+            if (person == null)
+            {
+                // User has no person record, redirect to create profile
+                return RedirectToAction("Create", "Persons");
+            }
+
+            // Get all posts with full details
+            var allPosts = await _bll.PostService.GetAllWithTagsDepartmentsAndCommentsAsync();
+            
+            // Get person with departments
+            var personWithDepts = await _bll.PersonService.GetWithDepartmentsAsync(person.Id, userId);
+            var userDepartmentIds = personWithDepts?.Departments?.Select(d => d.Id).ToList() ?? new List<Guid>();
+
+            // Filter posts: show posts with no departments OR posts assigned to user's departments
+            var accessiblePosts = allPosts.Where(post =>
+                // Post has no department restrictions (available to everyone)
+                !post.Departments?.Any() == true ||
+                // OR post is assigned to at least one of user's departments
+                (post.Departments?.Any() == true && userDepartmentIds.Any() && 
+                 post.Departments.Any(pd => userDepartmentIds.Contains(pd.Id)))
+            ).OrderByDescending(p => p.Id);
+
+            // Add user department info to ViewBag for display purposes
+            ViewBag.UserDepartments = personWithDepts?.Departments?.ToList() ?? new List<App.BLL.DTO.Department>();
+            ViewBag.HasDepartments = userDepartmentIds.Any();
+
+            return View(accessiblePosts);
         }
 
         // GET: Posts/Details/5
@@ -33,126 +63,37 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _bll.PostService.GetWithTagsDepartmentsAndCommentsAsync(id.Value);
             if (post == null)
             {
                 return NotFound();
             }
 
-            return View(post);
-        }
-
-        // GET: Posts/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Post post)
-        {
-            if (ModelState.IsValid)
+            // Check if user has access to this post
+            var userId = User.GetUserId();
+            var person = await _bll.PersonService.FindByUserIdAsync(userId);
+            if (person == null)
             {
-                post.Id = Guid.NewGuid();
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(post);
-        }
-
-        // GET: Posts/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
+                return Forbid();
             }
 
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-            return View(post);
-        }
+            var personWithDepts = await _bll.PersonService.GetWithDepartmentsAsync(person.Id, userId);
+            var userDepartmentIds = personWithDepts?.Departments?.Select(d => d.Id).ToList() ?? new List<Guid>();
 
-        // POST: Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Description,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Post post)
-        {
-            if (id != post.Id)
-            {
-                return NotFound();
-            }
+            // Check access: post has no departments OR user is in at least one post department
+            var hasAccess = !post.Departments?.Any() == true || // No department restrictions
+                           (post.Departments?.Any() == true && userDepartmentIds.Any() && 
+                            post.Departments.Any(pd => userDepartmentIds.Contains(pd.Id))); // User in post department
 
-            if (ModelState.IsValid)
+            if (!hasAccess)
             {
-                try
-                {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PostExists(post.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(post);
-        }
-
-        // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
+                return Forbid();
             }
 
             return View(post);
         }
 
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var post = await _context.Posts.FindAsync(id);
-            if (post != null)
-            {
-                _context.Posts.Remove(post);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool PostExists(Guid id)
-        {
-            return _context.Posts.Any(e => e.Id == id);
-        }
+        // Non-admin users cannot create, edit, or delete posts
+        // These actions are admin-only in the Admin area
     }
 }

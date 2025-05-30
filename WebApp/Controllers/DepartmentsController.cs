@@ -3,166 +3,105 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using App.DAL.EF;
-using App.Domain;
+using App.BLL.Contracts;
+using App.BLL.DTO;
+using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
-namespace WebApp.Controllers;
-
-[Authorize]
-public class DepartmentsController : Controller
+namespace WebApp.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public DepartmentsController(AppDbContext context)
+    [Authorize]
+    public class DepartmentsController : Controller
     {
-        _context = context;
-    }
+        private readonly IAppBLL _bll;
 
-    // GET: Departments
-    public async Task<IActionResult> Index()
-    {
-        var appDbContext = _context.Departments.Include(d => d.Manager);
-        return View(await appDbContext.ToListAsync());
-    }
-
-    // GET: Departments/Details/5
-    public async Task<IActionResult> Details(Guid? id)
-    {
-        if (id == null)
+        public DepartmentsController(IAppBLL bll)
         {
-            return NotFound();
+            _bll = bll;
         }
 
-        var department = await _context.Departments.Include(d => d.Manager).FirstOrDefaultAsync(m => m.Id == id);
-        if (department == null)
+        // GET: Departments - Show departments user belongs to
+        public async Task<IActionResult> Index()
         {
-            return NotFound();
-        }
-
-        return View(department);
-    }
-
-    // GET: Departments/Create
-    public IActionResult Create()
-    {
-        ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "CreatedBy");
-        return View();
-    }
-
-    // POST: Departments/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(
-        [Bind("DepartmentName,ManagerId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Department department)
-    {
-        if (ModelState.IsValid)
-        {
-            department.Id = Guid.NewGuid();
-            _context.Add(department);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "CreatedBy", department.ManagerId);
-        return View(department);
-    }
-
-    // GET: Departments/Edit/5
-    public async Task<IActionResult> Edit(Guid? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var department = await _context.Departments.FindAsync(id);
-        if (department == null)
-        {
-            return NotFound();
-        }
-
-        ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "CreatedBy", department.ManagerId);
-        return View(department);
-    }
-
-    // POST: Departments/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id,
-        [Bind("DepartmentName,ManagerId,Id,CreatedBy,CreatedAt,ChangedBy,ChangedAt,SysNotes")] Department department)
-    {
-        if (id != department.Id)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
+            var userId = User.GetUserId();
+            var person = await _bll.PersonService.FindByUserIdAsync(userId);
+            
+            if (person == null)
             {
-                _context.Update(department);
-                await _context.SaveChangesAsync();
+                // User has no person record, redirect to create profile
+                return RedirectToAction("Create", "Persons");
             }
-            catch (DbUpdateConcurrencyException)
+
+            // Get person with departments
+            var personWithDepts = await _bll.PersonService.GetWithDepartmentsAsync(person.Id, userId);
+            
+            if (personWithDepts?.Departments == null || !personWithDepts.Departments.Any())
             {
-                if (!DepartmentExists(department.Id))
+                // User not in any department, show message
+                ViewBag.Message = "You are not assigned to any department. Please contact your administrator.";
+                return View(new List<App.BLL.DTO.Department>());
+            }
+
+            // Get full department details with statistics
+            var departments = new List<App.BLL.DTO.Department>();
+            foreach (var dept in personWithDepts.Departments)
+            {
+                var fullDept = await _bll.DepartmentService.GetWithAllRelationsAsync(dept.Id);
+                if (fullDept != null)
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
+                    departments.Add(fullDept);
                 }
             }
 
-            return RedirectToAction(nameof(Index));
+            return View(departments.OrderBy(d => d.DepartmentName));
         }
 
-        ViewData["ManagerId"] = new SelectList(_context.Persons, "Id", "CreatedBy", department.ManagerId);
-        return View(department);
-    }
-
-    // GET: Departments/Delete/5
-    public async Task<IActionResult> Delete(Guid? id)
-    {
-        if (id == null)
+        // GET: Departments/Details/5
+        public async Task<IActionResult> Details(Guid? id)
         {
-            return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Check if user has access to this department
+            var userId = User.GetUserId();
+            var person = await _bll.PersonService.FindByUserIdAsync(userId);
+            if (person == null)
+            {
+                return Forbid();
+            }
+
+            var personWithDepts = await _bll.PersonService.GetWithDepartmentsAsync(person.Id, userId);
+            if (personWithDepts?.Departments?.Any(d => d.Id == id.Value) != true)
+            {
+                return Forbid();
+            }
+
+            var department = await _bll.DepartmentService.GetWithAllRelationsAsync(id.Value);
+            if (department == null)
+            {
+                return NotFound();
+            }
+
+            // Calculate statistics for ViewBag
+            ViewBag.Stats = new
+            {
+                TotalMembers = department.Persons?.Count() ?? 0,
+                TotalTasks = department.Tasks?.Count() ?? 0,
+                OpenTasks = department.Tasks?.Count(t => t.TaskStatus == App.BLL.DTO.TaskStatus.Open) ?? 0,
+                InProgressTasks = department.Tasks?.Count(t => t.TaskStatus == App.BLL.DTO.TaskStatus.InProgress) ?? 0,
+                CompletedTasks = department.Tasks?.Count(t => t.TaskStatus == App.BLL.DTO.TaskStatus.Completed) ?? 0,
+                OverdueTasks = department.Tasks?.Count(t => 
+                    t.DeadLine < DateTime.UtcNow && t.TaskStatus != App.BLL.DTO.TaskStatus.Completed) ?? 0,
+                TotalFeedbacks = department.Feedbacks?.Count() ?? 0,
+                RecentFeedbacks = department.Feedbacks?.Count(f => f.Id != Guid.Empty) ?? 0 // Placeholder for created date check
+            };
+
+            return View(department);
         }
 
-        var department = await _context.Departments.Include(d => d.Manager).FirstOrDefaultAsync(m => m.Id == id);
-        if (department == null)
-        {
-            return NotFound();
-        }
-
-        return View(department);
-    }
-
-    // POST: Departments/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(Guid id)
-    {
-        var department = await _context.Departments.FindAsync(id);
-        if (department != null)
-        {
-            _context.Departments.Remove(department);
-        }
-
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
-
-    private bool DepartmentExists(Guid id)
-    {
-        return _context.Departments.Any(e => e.Id == id);
+        // Non-admin users cannot create, edit, or delete departments
+        // These actions are admin-only in the Admin area
     }
 }

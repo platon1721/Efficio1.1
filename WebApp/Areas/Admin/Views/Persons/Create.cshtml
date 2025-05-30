@@ -1,38 +1,247 @@
 @model App.Domain.Person
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Person";
 }
 
-<h1>Create</h1>
+<h1>Create Person</h1>
 
 <h4>Person</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="PersonName" class="control-label"></label>
-                <input asp-for="PersonName" class="form-control" />
-                <span asp-validation-for="PersonName" class="text-danger"></span>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="PersonName" class="control-label"></label>
+                        <input asp-for="PersonName" class="form-control" placeholder="Enter person's full name" />
+                        <span asp-validation-for="PersonName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="UserId" class="control-label">User Account</label>
+                        <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
+                            <option value="">-- Select User Account (Optional) --</option>
+                        </select>
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                        <small class="form-text text-muted">Link this person to a user account for system access</small>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label">User</label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
-                    <option value="">-- Select User (Optional) --</option>
+
+            <div class="form-group mb-4">
+                <label class="control-label">Current Department Assignments</label>
+                @if (Model.DepartmentPersons?.Any() == true)
+                {
+                    <div class="mb-2">
+                        @foreach (var dp in Model.DepartmentPersons)
+                        {
+                            @if (dp.Department != null)
+                            {
+                                <span class="badge bg-primary me-1 mb-1">
+                                    <i class="fas fa-building"></i> @dp.Department.DepartmentName
+                                    @if (dp.Department.ManagerId == Model.Id)
+                                    {
+                                        <span class="badge bg-success ms-1">Manager</span>
+                                    }
+                                </span>
+                            }
+                        }
+                    </div>
+                }
+
+                <select name="selectedDepartments" class="form-control" asp-items="ViewBag.Departments" multiple="multiple" size="6">
                 </select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
+                <small class="form-text text-muted">
+                    <i class="fas fa-info-circle"></i>
+                    Hold Ctrl (Cmd on Mac) to select multiple departments. Currently assigned to @(Model.DepartmentPersons?.Count ?? 0) departments.
+                </small>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <!-- Task Summary -->
+            @if (Model.AssignedTasks?.Any() == true)
+            {
+                <div class="form-group mb-4">
+                    <label class="control-label">Task Summary</label>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body py-2">
+                                    <div class="h5 mb-0 text-primary">@ViewBag.TaskStats.TotalTasks</div>
+                                    <small class="text-muted">Total Tasks</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body py-2">
+                                    <div class="h5 mb-0 text-warning">@ViewBag.TaskStats.OpenTasks</div>
+                                    <small class="text-muted">Open</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body py-2">
+                                    <div class="h5 mb-0 text-info">@ViewBag.TaskStats.InProgressTasks</div>
+                                    <small class="text-muted">In Progress</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body py-2">
+                                    <div class="h5 mb-0 text-success">@ViewBag.TaskStats.CompletedTasks</div>
+                                    <small class="text-muted">Completed</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- READ-ONLY metadata info -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="control-label">Created By</label>
+                        <input value="@Model.CreatedBy" class="form-control" readonly />
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label">Created At</label>
+                        <input value="@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-2">
+                        <label class="control-label">Changed By</label>
+                        <input value="@Model.ChangedBy" class="form-control" readonly />
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label">Changed At</label>
+                        <input value="@Model.ChangedAt?.ToString("yyyy-MM-dd HH:mm")" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-chart-pie"></i> Quick Stats
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <div class="h4 mb-0 text-primary">@(Model.DepartmentPersons?.Count ?? 0)</div>
+                            <small class="text-muted">Departments</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="h4 mb-0 text-info">@(ViewBag.TaskStats?.TotalTasks ?? 0)</div>
+                        <small class="text-muted">Tasks</small>
+                    </div>
+                </div>
+
+                @if (ViewBag.TaskStats?.CompletionRate != null && ViewBag.TaskStats.TotalTasks > 0)
+                {
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small">Task Completion</span>
+                            <span class="small fw-bold">@ViewBag.TaskStats.CompletionRate%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: @(ViewBag.TaskStats.CompletionRate)%"
+                                 aria-valuenow="@ViewBag.TaskStats.CompletionRate" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Manager Of -->
+        @{
+            var managedDepartments = Model.DepartmentPersons?.Where(dp => dp.Department?.ManagerId == Model.Id).Select(dp => dp.Department).ToList();
+        }
+        @if (managedDepartments?.Any() == true)
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-crown"></i> Manager Of
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @foreach (var dept in managedDepartments)
+                    {
+                        @if (dept != null)
+                        {
+                            <div class="mb-2">
+                                <i class="fas fa-building text-muted me-1"></i>
+                                @dept.DepartmentName
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Recent Tasks -->
+        @if (Model.AssignedTasks?.Any() == true)
+        {
+            var recentTasks = Model.AssignedTasks.OrderByDescending(t => t.CreatedAt).Take(3);
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-tasks"></i> Recent Tasks
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @foreach (var task in recentTasks)
+                    {
+                        <div class="mb-2">
+                            @{
+                                var statusIcon = task.TaskStatus switch
+                                {
+                                    App.Domain.TaskStatus.Open => "fas fa-circle text-warning",
+                                    App.Domain.TaskStatus.InProgress => "fas fa-circle text-info",
+                                    App.Domain.TaskStatus.Completed => "fas fa-circle text-success",
+                                    App.Domain.TaskStatus.Canceled => "fas fa-circle text-danger",
+                                    App.Domain.TaskStatus.OnHold => "fas fa-circle text-secondary",
+                                    _ => "fas fa-circle text-muted"
+                                };
+                            }
+                            <i class="@statusIcon me-1" style="font-size: 0.6em;"></i>
+                            @task.Title
+                            <br>
+                            <small class="text-muted">@task.CreatedAt.ToString("MMM dd")</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
 </div>
 
 @section Scripts {

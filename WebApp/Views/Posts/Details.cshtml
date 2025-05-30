@@ -1,60 +1,268 @@
-@model App.Domain.Post
+@model App.BLL.DTO.Post
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Post Details";
 }
 
-<h1>Details</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Post Details</h1>
+    <div>
+        <a asp-controller="Comments" asp-action="Create" asp-route-postId="@Model.Id" class="btn btn-success">
+            <i class="fas fa-comment"></i> Add Comment
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Posts
+        </a>
+    </div>
+</div>
 
-<div>
-    <h4>Post</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SysNotes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SysNotes)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Post Content -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h3 class="card-title mb-0">@Html.DisplayFor(model => model.Title)</h3>
+                    @if (Model.Departments?.Any() != true)
+                    {
+                        <span class="badge bg-success fs-6">
+                            <i class="fas fa-globe"></i> General Post
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-info fs-6">
+                            <i class="fas fa-building"></i> Department Post
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="post-content">
+                    @Html.DisplayFor(model => model.Description)
+                </div>
+
+                @if (Model.Tags?.Any() == true)
+                {
+                    <div class="mt-4">
+                        <h6>Tags:</h6>
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <span class="badge bg-primary me-1 mb-1">@tag.Title</span>
+                        }
+                    </div>
+                }
+
+                @if (Model.Departments?.Any() == true)
+                {
+                    <div class="mt-4">
+                        <h6>Target Departments:</h6>
+                        @foreach (var dept in Model.Departments)
+                        {
+                            <span class="badge bg-info me-1 mb-1">
+                                <i class="fas fa-building"></i> @dept.DepartmentName
+                            </span>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-comments"></i> Comments
+                    @if (Model.Comments?.Any() == true)
+                    {
+                        <span class="badge bg-primary">@Model.Comments.Count</span>
+                    }
+                </h5>
+                <a asp-controller="Comments" asp-action="Create" asp-route-postId="@Model.Id" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-plus"></i> Add Comment
+                </a>
+            </div>
+            <div class="card-body">
+                @if (Model.Comments?.Any() == true)
+                {
+                    <div class="comments-list">
+                        @foreach (var comment in Model.Comments.OrderBy(c => c.Id))
+                        {
+                            <div class="comment-item border-bottom pb-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="comment-content mb-2">
+                                            @comment.Content
+                                        </div>
+                                        <div class="comment-meta">
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock"></i> Comment ID: @comment.Id
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="comment-actions">
+                                        <div class="btn-group" role="group">
+                                            <a asp-controller="Comments" asp-action="Edit" asp-route-id="@comment.Id"
+                                               class="btn btn-outline-primary btn-sm" title="Edit Comment">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"
+                                               class="btn btn-outline-danger btn-sm" title="Delete Comment">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                        <h5>No Comments Yet</h5>
+                        <p class="text-muted">Be the first to share your thoughts on this post!</p>
+                        <a asp-controller="Comments" asp-action="Create" asp-route-postId="@Model.Id" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add First Comment
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Post Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Post Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Type:</strong><br />
+                    @if (Model.Departments?.Any() != true)
+                    {
+                        <span class="badge bg-success">
+                            <i class="fas fa-globe"></i> General Post
+                        </span>
+                        <br><small class="text-muted">Visible to all users</small>
+                    }
+                    else
+                    {
+                        <span class="badge bg-info">
+                            <i class="fas fa-building"></i> Department Post
+                        </span>
+                        <br><small class="text-muted">Visible to specific departments</small>
+                    }
+                </div>
+
+                @if (Model.Comments?.Any() == true)
+                {
+                    <div class="mb-3">
+                        <strong>Engagement:</strong><br />
+                        <span class="badge bg-primary">@Model.Comments.Count comment(s)</span>
+                    </div>
+                }
+
+                @if (Model.Tags?.Any() == true)
+                {
+                    <div class="mb-3">
+                        <strong>Tags:</strong><br />
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <span class="badge bg-secondary me-1 mb-1">@tag.Title</span>
+                        }
+                    </div>
+                }
+
+                @if (Model.Departments?.Any() == true)
+                {
+                    <div class="mb-3">
+                        <strong>Target Departments:</strong><br />
+                        @foreach (var dept in Model.Departments)
+                        {
+                            <span class="badge bg-info me-1 mb-1">@dept.DepartmentName</span>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-controller="Comments" asp-action="Create" asp-route-postId="@Model.Id" class="btn btn-success btn-sm">
+                        <i class="fas fa-comment"></i> Add Comment
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-list"></i> View All Posts
+                    </a>
+                    @if (Model.Departments?.Any() == true)
+                    {
+                        <a asp-controller="Departments" asp-action="Index" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-building"></i> My Departments
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Information -->
+        @if (Model.Tags?.Any() == true)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Related Topics</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted mb-2">This post is tagged with:</p>
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <div class="mb-2">
+                            <span class="badge bg-secondary me-2">@tag.Title</span>
+                            @if (!string.IsNullOrEmpty(tag.Description))
+                            {
+                                <small class="text-muted">@tag.Description</small>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<style>
+    .post-content {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        white-space: pre-wrap;
+    }
+
+    .comment-item:last-child {
+        border-bottom: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .comment-content {
+        background-color: #f8f9fa;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border-left: 3px solid #007bff;
+    }
+
+    .comment-actions {
+        min-width: 100px;
+    }
+
+    .comments-list {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+</style>
