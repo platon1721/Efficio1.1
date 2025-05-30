@@ -37,7 +37,7 @@ public class PersonsController : Controller
         var res = new PersonIndexViewModel()
         {
             Persons = (await _bll.PersonService.AllAsync(User.GetUserId())).ToList(),
-            PersonCountByName = await _bll.PersonService.GetPersonCountByNameAsync("Mikk", User.GetUserId())
+            // PersonCountByName = await _bll.PersonService.GetPersonCountByNameAsync("Mikk", User.GetUserId())
         };
         return View(res);
     }

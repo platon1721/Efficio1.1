@@ -17,4 +17,5 @@ public interface IAppBLL : IBaseBLL
     IFeedbackService FeedbackService { get; }
     ICommentService CommentService { get; }
     IFeedbackTagService FeedbackTagService { get; }
+    IUserRegistrationService UserRegistrationService { get; }
 }

@@ -10,6 +10,7 @@ public interface IPersonRepository: IBaseRepository<App.DAL.DTO.Person>, IPerson
 
 public interface IPersonRepositoryCustom
 {
+    Task<App.DAL.DTO.Person?> FindByUserIdAsync(Guid userId);
     Task<int> GetPersonCountByNameAsync(string name, Guid userId);
     Task<App.DAL.DTO.Person?> GetWithDepartmentsAsync(Guid id, Guid userId);
     Task<IEnumerable<App.DAL.DTO.Person>> GetAllByDepartmentAsync(Guid departmentId, Guid userId);

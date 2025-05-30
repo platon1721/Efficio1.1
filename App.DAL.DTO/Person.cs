@@ -9,6 +9,9 @@ public class Person: IDomainId
 
     [MaxLength(128)]
     public string PersonName { get; set; } = default!;
+    
+    public Guid UserId { get; set; }
+
 
     public ICollection<Contact>? Contacts { get; set; }
     public ICollection<Department>? Departments { get; set; }

@@ -5,7 +5,6 @@ using App.BLL.Services;
 using App.DAL.Contracts;
 using App.DAL.EF;
 using Base.BLL;
-
 namespace App.BLL;
 
 public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
@@ -98,4 +97,9 @@ public class AppBLL : BaseBLL<IAppUOW>, IAppBLL
             BLLUOW,
             new FeedbackBLLMapper(),
             FeedbackTagService); 
+    
+    private IUserRegistrationService? _userRegistrationService;
+
+    public IUserRegistrationService UserRegistrationService =>
+        _userRegistrationService ??= new UserRegistrationService(PersonService);
 }

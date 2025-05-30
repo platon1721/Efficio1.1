@@ -1,4 +1,5 @@
 using App.DAL.Contracts;
+using App.DAL.DTO;
 using App.DAL.EF.Mappers;
 using Base.DAL.EF;
 
@@ -46,5 +47,12 @@ public class PersonRepository :BaseRepository<App.DAL.DTO.Person, App.Domain.Per
             .ToListAsync();
             
         return domainEntities.Select(e => Mapper.Map(e)!);
+    }
+    
+    public async Task<Person?> FindByUserIdAsync(Guid userId)
+    {
+        var res = await RepositoryDbSet
+            .FirstOrDefaultAsync(p => p.UserId == userId);
+        return Mapper.Map(res);
     }
 }

@@ -16,21 +16,52 @@ public class PersonService : BaseService<App.BLL.DTO.Person, App.DAL.DTO.Person,
     {
     }
 
-    public virtual async Task<int> GetPersonCountByNameAsync(string name, Guid userId)
+    public async Task<int> GetPersonCountByNameAsync(string name, Guid userId)
     {
         var count = await ServiceRepository.GetPersonCountByNameAsync(name, userId);
         return count;
     }
     
-    public virtual async Task<App.DAL.DTO.Person?> GetWithDepartmentsAsync(Guid id, Guid userId)
+    public async Task<App.BLL.DTO.Person?> GetWithDepartmentsAsync(Guid id, Guid userId)
     {
         var result = await ServiceRepository.GetWithDepartmentsAsync(id, userId);
-        return result;
+        return Mapper.Map(result);
     }
     
-    public virtual async Task<IEnumerable<App.DAL.DTO.Person>> GetAllByDepartmentAsync(Guid departmentId, Guid userId)
+    public async Task<IEnumerable<App.BLL.DTO.Person>> GetAllByDepartmentAsync(Guid departmentId, Guid userId)
     {
         var result = await ServiceRepository.GetAllByDepartmentAsync(departmentId, userId);
-        return result;
+        return result.Select(p => Mapper.Map(p)!);
+    }
+    
+    public async Task<App.BLL.DTO.Person?> FindByUserIdAsync(Guid userId)
+    {
+        var persons = await ServiceRepository.AllAsync(userId);
+        var person = persons.FirstOrDefault();
+        return Mapper.Map(person);
+    }
+
+    public async Task<App.BLL.DTO.Person?> CreatePersonForUserAsync(Guid userId, string firstName, string lastName)
+    {
+        // Check if person already exists
+        var existingPerson = await FindByUserIdAsync(userId);
+        if (existingPerson != null)
+        {
+            return existingPerson;
+        }
+
+        // Create new person DTO
+        var personDto = new App.BLL.DTO.Person // Fixed: was using DAL.DTO.Person
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            PersonName = $"{firstName} {lastName}".Trim()
+        };
+
+        var dalPersonDto = Mapper.Map(personDto);
+        ServiceRepository.Add(dalPersonDto!, userId);
+        await ServiceUOW.SaveChangesAsync();
+
+        return personDto;
     }
 }

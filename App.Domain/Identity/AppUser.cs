@@ -14,6 +14,8 @@ public class AppUser : BaseUser<AppUserRole>
     [MinLength(1)]
     [MaxLength(128)]
     public string LastName { get; set; } = default!;
+    
+    public Person? Person { get; set; }
 
     // Base module
     public ICollection<Person>? Persons { get; set; }

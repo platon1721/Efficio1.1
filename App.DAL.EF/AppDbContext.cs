@@ -60,7 +60,13 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
         builder.Entity<AppUserRole>().HasAlternateKey(a => a.Id);
         builder.Entity<AppUserRole>().HasIndex(a => new { a.UserId, a.RoleId }).IsUnique();
         */
-
+        
+        builder.Entity<AppUser>()
+            .HasOne<Person>()
+            .WithOne(p => p.User)
+            .HasForeignKey<Person>(p => p.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         builder.Entity<AppUserRole>()
             .HasOne(a => a.User)
             .WithMany(u => u.UserRoles)
@@ -70,6 +76,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
             .HasOne(a => a.Role)
             .WithMany(r => r.UserRoles)
             .HasForeignKey(a => a.RoleId);
+
         // Configure Department entity
         builder.Entity<Department>()
             .HasOne(d => d.Manager)

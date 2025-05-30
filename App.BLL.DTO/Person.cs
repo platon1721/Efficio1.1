@@ -16,6 +16,9 @@ public class Person: IDomainId
     [Display(Name = nameof(Contacts), Prompt = nameof(Contacts), ResourceType = typeof(App.Resources.Domain.Person))]
     public ICollection<Contact>? Contacts { get; set; }
     
+    public Guid UserId { get; set; }
+
+    
     // Add departments
     public ICollection<Department>? Departments { get; set; }
     

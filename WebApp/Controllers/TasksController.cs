@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
-using App.Domain;
+using Task = App.Domain.Task;
+
 
 namespace WebApp.Controllers
 {

@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using App.BLL.Contracts;
 using App.Domain.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+
 
 namespace WebApp.Areas.Identity.Pages.Account
 {
@@ -30,13 +32,15 @@ namespace WebApp.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<AppUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IAppBLL _bll;
 
         public RegisterModel(
             UserManager<AppUser> userManager,
             IUserStore<AppUser> userStore,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IAppBLL bll)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +48,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _bll = bll;
+            
         }
 
         /// <summary>
@@ -122,7 +128,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
+    
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 
@@ -130,11 +136,19 @@ namespace WebApp.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
+    
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+    
+                    // Create Person for the new user
+                    var personCreated = await _bll.UserRegistrationService.CreatePersonForUserAsync(user);
+                    if (!personCreated)
+                    {
+                        _logger.LogWarning("Failed to create Person for user {UserId}", user.Id);
+                        // You might want to handle this error case
+                    }
+    
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -143,10 +157,10 @@ namespace WebApp.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
-
+    
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+    
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
@@ -166,6 +180,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
 
         private AppUser CreateUser()
         {

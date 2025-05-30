@@ -464,6 +464,9 @@ namespace App.DAL.EF.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
@@ -489,6 +492,8 @@ namespace App.DAL.EF.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
+                    b.HasIndex("PersonId");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -511,6 +516,9 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AppUserId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("ChangedAt")
@@ -541,7 +549,10 @@ namespace App.DAL.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Persons");
                 });
@@ -1026,6 +1037,15 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("App.Domain.Identity.AppUser", b =>
+                {
+                    b.HasOne("App.Domain.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId");
+
+                    b.Navigation("Person");
+                });
+
             modelBuilder.Entity("App.Domain.Identity.AppUserRole", b =>
                 {
                     b.HasOne("App.Domain.Identity.AppRole", "Role")
@@ -1047,10 +1067,14 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.Person", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppUser", "User")
+                    b.HasOne("App.Domain.Identity.AppUser", null)
                         .WithMany("Persons")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("App.Domain.Identity.AppUser", "User")
+                        .WithOne()
+                        .HasForeignKey("App.Domain.Person", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
