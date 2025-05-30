@@ -1,37 +1,179 @@
 @model WebApp.ViewModels.PersonIndexViewModel
 
 @{
-    ViewData["Title"] = App.Resources.Views.Common.Persons;
+    ViewData["Title"] = "My Profile";
 }
 
-<h1>@App.Resources.Views.Common.Persons</h1> 
-<h3>@App.Resources.Views.Persons.Index.MikkCount @Model.PersonCountByName</h3>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="fas fa-user me-2"></i>My Profile
+    </h1>
+    <div>
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fas fa-plus"></i> Add Person
+        </a>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">@Base.Resources.Common.CreateNew</a>
-</p>
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Persons.First().PersonName)
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.Persons)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PersonName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">@Base.Resources.Common.Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">@Base.Resources.Common.Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">@Base.Resources.Common.Delete</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+@if (Model.PersonCountByName > 0)
+{
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Note:</strong> @App.Resources.Views.Persons.Index.MikkCount @Model.PersonCountByName
+    </div>
+}
+
+@if (!Model.Persons.Any())
+{
+    <div class="text-center py-5">
+        <i class="fas fa-user-plus fa-3x text-muted mb-3"></i>
+        <h3>No Profile Found</h3>
+        <p class="text-muted mb-4">You haven't created your profile yet. Create one to start using the system effectively.</p>
+        <a asp-action="Create" class="btn btn-primary btn-lg">
+            <i class="fas fa-plus me-2"></i>Create My Profile
+        </a>
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model.Persons)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-user me-2"></i>Profile
+                            </h5>
+                            <span class="badge bg-primary">Active</span>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto"
+                                 style="width: 80px; height: 80px; font-size: 2rem;">
+                                @(string.IsNullOrEmpty(item.PersonName) ? "?" : item.PersonName[0].ToString().ToUpper())
+                            </div>
+                        </div>
+                        <h4 class="card-title mb-3">@Html.DisplayFor(modelItem => item.PersonName)</h4>
+
+                        <div class="text-muted mb-3">
+                            <small>
+                                <i class="fas fa-id-card me-1"></i>
+                                ID: @item.Id.ToString().Substring(0, 8)...
+                            </small>
+                        </div>
+
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <div class="h6 mb-0 text-primary">0</div>
+                                    <small class="text-muted">Tasks</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <div class="h6 mb-0 text-info">0</div>
+                                    <small class="text-muted">Depts</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="h6 mb-0 text-success">0</div>
+                                <small class="text-muted">Comments</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="btn-group w-100" role="group">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Additional Information -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Profile Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <strong>Total Profiles:</strong>
+                                <span class="badge bg-primary ms-2">@Model.Persons.Count()</span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Account Status:</strong>
+                                <span class="badge bg-success ms-2">Active</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <strong>Last Updated:</strong>
+                                <span class="text-muted ms-2">Recently</span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Profile Type:</strong>
+                                <span class="badge bg-info ms-2">User Profile</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a asp-controller="Tasks" asp-action="Index" class="btn btn-outline-primary w-100 btn-sm">
+                            <i class="fas fa-tasks me-2"></i>My Tasks
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a asp-controller="Departments" asp-action="Index" class="btn btn-outline-info w-100 btn-sm">
+                            <i class="fas fa-building me-2"></i>My Departments
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a asp-controller="Comments" asp-action="Index" class="btn btn-outline-success w-100 btn-sm">
+                            <i class="fas fa-comments me-2"></i>My Comments
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-outline-warning w-100 btn-sm">
+                            <i class="fas fa-comment-alt me-2"></i>My Feedbacks
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

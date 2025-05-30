@@ -2,7 +2,245 @@
     ViewData["Title"] = App.Resources.Views.Home.Index.Title;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Course materials: <a href="https://courses.taltech.akaver.com/web-applications-with-csharp/lectures/http">Web applications with C#</a>.</p>
+<div class="hero-section text-center py-5 mb-5">
+    <div class="container">
+        <h1 class="display-4 mb-4">Welcome to Efficio</h1>
+        <p class="lead mb-4">Streamline your workflow, manage tasks, and collaborate effectively with your team.</p>
+        
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <p class="text-muted mb-4">Hello @User.Identity.Name! Ready to get productive?</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary btn-lg">
+                            <i class="fas fa-tasks me-2"></i>My Tasks
+                        </a>
+                        <a asp-controller="Posts" asp-action="Index" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-newspaper me-2"></i>View Posts
+                        </a>
+                        <a asp-controller="Departments" asp-action="Index" class="btn btn-outline-info btn-lg">
+                            <i class="fas fa-building me-2"></i>My Departments
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </a>
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>Register
+                </a>
+            </div>
+        }
+    </div>
 </div>
+
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Quick Actions Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-grid">
+                                <a asp-controller="Tasks" asp-action="Index" class="btn btn-outline-primary">
+                                    <i class="fas fa-tasks me-2"></i>View My Tasks
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-grid">
+                                <a asp-controller="Feedbacks" asp-action="Create" class="btn btn-outline-success">
+                                    <i class="fas fa-comment-alt me-2"></i>Give Feedback
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-grid">
+                                <a asp-controller="Posts" asp-action="Index" class="btn btn-outline-info">
+                                    <i class="fas fa-newspaper me-2"></i>Browse Posts
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-grid">
+                                <a asp-controller="Comments" asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-comments me-2"></i>My Comments
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Getting Started Guide -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-compass me-2"></i>Getting Started
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Set Up Your Profile</h6>
+                                    <p class="text-muted small mb-0">Make sure your personal information is up to date.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Join Departments</h6>
+                                    <p class="text-muted small mb-0">Contact your administrator to be assigned to departments.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-tasks"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Manage Tasks</h6>
+                                    <p class="text-muted small mb-0">Keep track of your assigned tasks and update their status.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-comments"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Collaborate</h6>
+                                    <p class="text-muted small mb-0">Comment on posts and provide feedback to improve teamwork.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- System Features Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-star me-2"></i>System Features
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>Task Management
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>Department Organization
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>Post & Comments System
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>Feedback Collection
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>Tag Organization
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>Multi-language Support
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Help & Support Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-question-circle me-2"></i>Need Help?
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text small">If you need assistance or have questions about using the system, don't hesitate to reach out.</p>
+                    <div class="d-grid gap-2">
+                        <a href="https://courses.taltech.akaver.com/web-applications-with-csharp/lectures/http" target="_blank" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-external-link-alt me-2"></i>Course Materials
+                        </a>
+                        <a href="/swagger" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-code me-2"></i>API Documentation
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Features for non-authenticated users -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-tasks fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Task Management</h5>
+                    <p class="card-text">Organize and track your tasks efficiently with priority levels and deadlines.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-users fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">Team Collaboration</h5>
+                    <p class="card-text">Work together with your team members across different departments.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-comments fa-3x text-info"></i>
+                    </div>
+                    <h5 class="card-title">Communication</h5>
+                    <p class="card-text">Share posts, provide feedback, and engage in meaningful discussions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
